@@ -1,27 +1,25 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <pthread.h>
-#include <unistd.h>
+#include "philo.h"
+
 /* Ressources :
  *	https://www.youtube.com/watch?v=o_GbRujGCnM
  *	https://www.youtube.com/watch?v=d9s_d28yJq0&list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2
  *	Differences entre threads et processus : https://www.youtube.com/watch?v=IKG1P4rgm54&list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2&index=2
  * 
  * - Contrairement aux processus parent/enfant (fork), les threads partagent les memes variables.
- * - N threads au seins d'un programme = un seul processus id (pid).
+ * - N threads au sein d'un programme = un seul processus id (pid).
  *
  * Compiler avec le flag -lpthread
- * Instruction sleep(<duree>) permet de temporiser un thread.
+ * Instruction usleep(<millisecondes>) permet de temporiser un thread.
+ * usleep : 1 seconde = 1000000 microsecondes
  *
  * Tuto : https://medium.com/@ruinadd/philosophers-42-guide-the-dining-philosophers-problem-893a24bc0fe2
- * usleep : 1 seconde = 1000000 microsecondes
  * 
  */
 // pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;
 
 pthread_mutex_t	mutex;
 
-void	*func1(void *arg)
+/*void	*func1(void *arg)
 {
 	for(int	i = 0; i < 100; i++)
 	{
@@ -41,9 +39,9 @@ void	*func2(void *arg)
 		pthread_mutex_unlock(&mutex);
 	}
 	pthread_exit(arg);
-}
+}*/
 
-void	test_thread(void)
+/*void	test_thread(void)
 {
 	char	*s1, *s2;
 
@@ -59,6 +57,19 @@ void	test_thread(void)
 	pthread_join(p2, (void **)&s2);
 	pthread_mutex_destroy(&mutex);
 	printf("%s %s\n", s1, s2);
+}*/
+
+void	philo_routine(t_philo philo, int id)
+{
+	while (!philo.dead)
+	{
+		// Think
+		printf("%d is thinking.\n", id);
+		// Sleep
+		printf("%d is sleeping.\n", id);
+		// Eat
+		printf("%d is eating.\n", id);
+	}
 }
 
 int	main(int argc, char **argv)
@@ -72,42 +83,27 @@ int	main(int argc, char **argv)
 	 *
 	 * Verifier :
 	 * 	- Le nombre d'arguments.
-	 * 	- Le contenu des arguments (ils ne doivent comporter que les caracteres numeriques.
+	 * 	- Le contenu des arguments (ils ne doivent comporter que les caracteres numeriques).
 	 */
-
-	if (argc == 5 || argc == 6)
-	{
-		compliance_args(char **argv);
-	}
-	else
-		exit(1);
-
-	/* Initialisation des data :
-	 * 	- Creation d'un tableau *t_philo
-	 * 
-	 */
+	compliance_args(argc, argv)
+//-------------------------------------------------------------------------------------------------------------------
+	// Initialisation des data.
 	t_args		args;
-	t_philo		philo[200];
-
-	args->number_of_philosopers = argv[1];
-	args->time_to_die = argv[2];
-	args->time_to_eat = argv[3];
-	args->time_to_sleep = argv[4];
-	if (argc == 6)
-		args->number_of_times_each_philosophers_must_eat = argv[5];
-
+	args = init(args);
+//-------------------------------------------------------------------------------------------------------------------
+	// Threads
 	int		i;
 	pthread	monitor;
 
 	i = 0;
-	while (++i <= 200)
+	while (++i <= args->number_of_philosophers)
 	{
 		philo[i]->thread = i;
 		if (pthread_create(&i, NULL, /**/ , /**/))
 			exit(1);
 		philo[i].id = i;
 		philo[i].life = ft_atoi(argv[2]);
-		philo[i]->dead = NULL;
+		philo[i].dead = 0;
 		philo[i].meal_number = 0;
 		philo[i]->right_fork = TRUE;
 		philo[i]->left_fork = FALSE;
@@ -117,11 +113,11 @@ int	main(int argc, char **argv)
 	}
 	pthread_create(&monitor, NULL, /**/, /**/);
 	i = 0;
-	while (++i <= 200)
+	while (++i <= args->number_of_philosophers)
 		pthread_join(philo[i], /**/);
 	
 	
-	// 
-	test_thread();
+	// Routine
+	philo_routine();
 	return (0);
 }
