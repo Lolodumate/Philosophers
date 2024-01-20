@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/19 16:51:49 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/20 07:58:18 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct	s_args
 	unsigned int		time_to_eat;
 	unsigned int		time_to_sleep;
 	unsigned int		number_of_times_each_philosopher_must_eat;
-	t_philo		*philo;
+	t_philo		*philo_ptr;
 }               t_args;
 
 // Verification de la conformite des arguments
@@ -62,11 +62,11 @@ void	take_back_forks(); // Remet les fourchettes en place une fois le repas term
 void	philo_routine(t_philo philo, int id);
 void	monitoring();
 void	seconde(unsigned int n);
-t_args	*ft_eat(t_args args);
-t_args	*ft_sleep(t_args args);
-t_args	*ft_think(t_args args);
-t_args	*philo_is_dead(t_args args);
-t_args	init(t_args args);
+t_args	ft_eat(t_args args);
+t_args	ft_sleep(t_args args);
+t_args	ft_think(t_args args);
+t_args	philo_is_dead(t_args args);
+t_args	init(int argc, char **argv, t_args args);
 
 #endif
 

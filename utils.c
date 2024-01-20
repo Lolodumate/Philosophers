@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/19 16:24:25 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/20 08:12:43 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	strisdigit(char *str)
 	int		i;
 
 	i = 0;
+	if (str == NULL)
+		exit(0);
 	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
 		i++;
 	if (str[i] && str[i] == '-')
@@ -57,10 +59,8 @@ void	check_nbphilo(unsigned int n)
 
 void	compliance_args(int argc, char **argv)
 {
-	int		i;
 	int		j;
 
-	i = 0;
 	j = 1;
 	if (argc < 5 || argc > 6)
 	{
@@ -69,5 +69,5 @@ void	compliance_args(int argc, char **argv)
 	}
 	while (j++ <= argc)
 		strisdigit(argv[j]);
-	check_nbphilo(argv[1]);
+	check_nbphilo(ft_atoi(argv[1]));
 }
