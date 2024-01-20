@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/20 07:58:18 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/20 13:58:23 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,17 @@ typedef struct	s_args
 unsigned int			ft_atoi(char *str);
 void	strisdigit(char *str);
 void	compliance_args(int argc, char **argv);
-void	check_forks(); // Verifie la disponibilite des fourchettes.
 void	check_nbphilo(unsigned int n);
+void	check_forks(); // Verifie la disponibilite des fourchettes.
 void	take_forks(); // Prend les fourchettes apres avoir verifie leur disponibilite.
 void	take_back_forks(); // Remet les fourchettes en place une fois le repas termine.
-void	philo_routine(t_philo philo, int id);
+void	philo_routine(void *arg);
+void	philosophers(void *mtx, t_args args);
 void	monitoring();
 void	seconde(unsigned int n);
-t_args	ft_eat(t_args args);
-t_args	ft_sleep(t_args args);
-t_args	ft_think(t_args args);
+t_args	ft_eat(void *mtx, t_args args);
+t_args	ft_sleep(void *mtx, t_args args);
+t_args	ft_think(void *mtx, t_args args);
 t_args	philo_is_dead(t_args args);
 t_args	init(int argc, char **argv, t_args args);
 

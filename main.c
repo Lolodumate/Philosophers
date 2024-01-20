@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 07:34:19 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/20 07:40:45 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/20 10:34:32 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 int	main(int argc, char **argv)
 {
+	// Creation du Mutex
+	pthread_mutex_t	mtx;
+
 	/* Verification de la conformite des arguments :
 	 *      1. number_of_philosophers (doit etre > 0 et <= 200)
 	 *      2. time_to_die (doit etre > 0)
@@ -33,6 +36,7 @@ int	main(int argc, char **argv)
 	args = init(args);
 //-------------------------------------------------------------------------------------------------------------------
 	// Threads
+	philosophers(&mtx, args);
 /*	int             i;
 	pthread monitor;
 

@@ -39,7 +39,7 @@ void	*func2(void *arg)
 	pthread_exit(arg);
 }*/
 
-/*void	test_thread(void)
+/*void	test_thread(void *) // Mettre le mutex (&mtx) en parametre d'entree
 {
 	char	*s1, *s2;
 
@@ -57,15 +57,49 @@ void	*func2(void *arg)
 	printf("%s %s\n", s1, s2);
 }*/
 
-void	philo_routine(t_philo philo, int id)
+void	philosophers(void *mtx, t_args args) // philosophers(&mtx, args)
+{
+	int		i;
+	int		*p;
+
+	i = 0;
+	pthread_mutex_init(&mtx, NULL)
+
+//	1. Creation loop pour la creation des threads (1 thread = 1 philosophe)
+	while (++i <= args.philo->number_of_philosophers)
+	{
+		p = malloc(sizeof(int)); // p sera libere dans la fonction &routine
+		if (p == NULL)
+		{
+			printf("Erreur allocation dynamique\n");
+			exit(EXIT_FAILURE);
+		}
+		if (pthread_create(args.(&philo[i]), NULL, &philo_routine, p) != 0)
+		{
+			printf("Failure : creation thread\n");
+			exit(1);
+		}
+		printf("Thread %d has started\n", i);<function>
+	}
+	i = 0;
+
+//	2. Creation loop pour les join
+	while (++i <= args.philo->number_of_philosophers)
+	{
+		if (pthread_join(philo[i], NULL) != 0)
+			exit(1);
+		printf("Thread %d has finished execution\n");
+	}
+	pthread_mutex_destroy(&mtx);
+}
+
+void	philo_routine(void *mtx, void *arg)
 {
 	while (!philo.dead)
 	{
-		// Think
-		printf("%d is thinking.\n", id);
-		// Sleep
-		printf("%d is sleeping.\n", id);
-		// Eat
-		printf("%d is eating.\n", id);
+		ft_eat(&mtx, args, philo);
+		ft_sleep(&mtx, args, philo);
+		ft_think(&mtx, args, philo);
 	}
+	free(arg);
 }
