@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/22 16:59:54 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/22 17:31:14 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	create_philo_threads(t_args args) // philosophers(&mtx, args)
 	pthread_mutex_init(&args.mtx, NULL);
 	while (i++ < args.number_of_philosophers)
 	{
-		if (pthread_create(&args.philo_ptr[i].thread, NULL, &routine, args.philo_ptr[i]) != 0)
+		if (pthread_create(&args.philo_ptr[i].thread, NULL, &routine(args.philo_ptr), args.philo_ptr) != 0)
 		{
 			printf("Failure : creation thread\n");
 			exit(1);
@@ -64,7 +64,7 @@ void	create_philo_threads(t_args args) // philosophers(&mtx, args)
 // Thread routine avec boucle !dead
 void	routine(t_philo *philo)
 {
-	if (pthread_create(&philo->thread, NULL, &checker, philo) != 0)
+	if (pthread_create(&philo->thread, NULL, &checker(philo->args), philo) != 0)
 	{
 		printf("Erreur creation thread routine\n");
 		exit(1);
@@ -81,25 +81,25 @@ void	routine(t_philo *philo)
 }
 
 // Verifier l'etat si les philosophes sont toujours en vie
-void	checker(t_philo *philo)
+void	checker(struct s_args *args)
 {
-	pthread_mutex_lock(&philo->mtx);
-	while (!philo->is_dead)
+	pthread_mutex_lock(&args->mtx);
+	while (!args->philo_ptr->is_dead)
 	{
 		
 		// 1. Verifier que l'heure courante est inferieure a l'heure prevue de la mort du philosophe
-		if (get_time() >= philo->death_time)
-			ft_exit(philo->args, philo->id, "died");
+		if (get_time() >= args->philo_ptr->death_time)
+			ft_exit(args, args->philo_ptr->id, "died");
 
 		// 2. Verifier le nombre de repas pris et le cas echeant mettre a jour le status "meal_complete"
-		if (philo->meal_number >= philo->args->number_of_times_each_philosopher_must_eat)	
+		if (args->philo_ptr->meal_number >= args->number_of_times_each_philosopher_must_eat)	
 		{
-			pthread_mutex_lock(&philo->mtx);
-			philo->meal_complete = 1;
-			pthread_mutex_unlock(&philo->mtx);
+			pthread_mutex_lock(&args->mtx);
+			args->philo_ptr->meal_complete = 1;
+			pthread_mutex_unlock(&args->mtx);
 		}
 	}
-	pthread_mutex_unlock(&philo->mtx);
+	pthread_mutex_unlock(&args->mtx);
 }
 
 void	join_philo_thread(t_philo *philo)
