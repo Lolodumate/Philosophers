@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/22 14:46:41 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/22 16:48:42 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 // https://medium.com/@ruinadd/philosophers-42-guide-the-dining-philosophers-problem-893a24bc0fe2
 // https://github.com/TommyJD93/Philosophers
 
-struct	s_args;
+typedef struct	s_args	t_args;
 
 typedef enum s_bool
 {
@@ -32,7 +32,7 @@ typedef enum s_bool
 
 typedef struct s_philo
 {
-	struct s_args		*args;
+	t_args		*args;
 	pthread_t						thread;
 	unsigned int					id;
 	int					is_eating;
@@ -76,14 +76,14 @@ void	take_forks(); // Prend les fourchettes apres avoir verifie leur disponibili
 void	take_back_forks(); // Remet les fourchettes en place une fois le repas termine.
 void	routine(t_philo *philo);
 void	create_philo_threads(t_args args);
-void	create_forks(t_args args);
-void	join_philo_threads(t_args args);
+void	create_forks_ptr(t_args args);
+void	join_philo_threads(t_philo *philo);
 void	philosophers(t_args args);
 void	seconde(unsigned int n);
 void	ft_eat(t_philo *philo);
 void	ft_sleep(t_philo *philo);
 void	ft_think(t_philo *philo);
-void	ft_exit(t_args args, unsigned int philo_id, char *exit_message);
+void	ft_exit(struct s_args *args, unsigned int philo_id, char *exit_message);
 t_args	init_args(int argc, char **argv, t_args args);
 
 

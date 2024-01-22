@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/22 15:32:27 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/22 16:46:19 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	compliance_args(int argc, char **argv)
 	check_nbphilo(ft_atoi(argv[1]));
 }
 
-void	ft_exit(t_args args, unsigned int philo_id, char *exit_message)
+void	ft_exit(struct s_args *args, unsigned int philo_id, char *exit_message)
 {
 	int		i;
 
