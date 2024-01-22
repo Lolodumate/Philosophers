@@ -6,7 +6,7 @@
 #    By: laroges <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/18 16:16:20 by laroges           #+#    #+#              #
-#    Updated: 2024/01/20 08:17:41 by laroges          ###   ########.fr        #
+#    Updated: 2024/01/21 12:48:36 by laroges          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ SRC =	main.c \
 	philosophers.c \
 	utils.c \
 	tasks.c \
+	time.c \
 
 CC = gcc
 

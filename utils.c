@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/21 12:38:22 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/22 15:32:27 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,18 @@ void	compliance_args(int argc, char **argv)
 	while (j++ <= argc)
 		strisdigit(argv[j]);
 	check_nbphilo(ft_atoi(argv[1]));
+}
+
+void	ft_exit(t_args args, unsigned int philo_id, char *exit_message)
+{
+	int		i;
+
+	i = 0;
+	printf("%ld %u %s\n", get_time(), philo_id, exit_message);
+	pthread_mutex_destroy(&args.mtx);
+	while (args.philo_ptr[i] && i++ < args.number_of_philosophers)
+	{
+		pthread_mutex_destroy(&args.philo_ptr[i].mtx);
+	}
+	exit(1);
 }

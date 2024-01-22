@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/21 12:40:20 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/22 14:46:41 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,37 @@ typedef struct s_philo
 	pthread_t						thread;
 	unsigned int					id;
 	int					is_eating;
-	int					dead;
+	int					is_dead;
+	int					meal_complete;
 	unsigned int					meal_number;
-	pthread_mutex_t		*right_fork;
-	pthread_mutex_t		*left_fort;
-	pthread_mutex_t		*lock;
+	long					start_time;
+	long					death_time;
+	pthread_mutex_t		right_fork;
+	pthread_mutex_t		*left_fork;
+	pthread_mutex_t		mtx;
 }		t_philo;
+/*
+typedef struct s_forks
+{
+	pthread_mutex_t		*rf;
+	pthread_mutex_t		*lf;
+}	t_forks;*/
 
 typedef struct s_args
 {
+	pthread_mutex_t		mtx;
 	unsigned int				number_of_philosophers;
+	unsigned int				number_of_dead;
 	unsigned int				time_to_die;
 	unsigned int				time_to_eat;
 	unsigned int				time_to_sleep;
 	unsigned int				number_of_times_each_philosopher_must_eat;
+	long		time_start;
 	t_philo		*philo_ptr;
+//	t_forks		*forks_ptr;
 }               t_args;
 
-// Verification de la conformite des arguments
+long				get_time(void);
 unsigned int			ft_atoi(char *str);
 void	strisdigit(char *str);
 void	compliance_args(int argc, char **argv);
@@ -62,13 +75,16 @@ void	check_forks(); // Verifie la disponibilite des fourchettes.
 void	take_forks(); // Prend les fourchettes apres avoir verifie leur disponibilite.
 void	take_back_forks(); // Remet les fourchettes en place une fois le repas termine.
 void	routine(t_philo *philo);
-void	philosophers(void *mtx, t_args args);
+void	create_philo_threads(t_args args);
+void	create_forks(t_args args);
+void	join_philo_threads(t_args args);
+void	philosophers(t_args args);
 void	seconde(unsigned int n);
-void	get_time(void);
 void	ft_eat(t_philo *philo);
 void	ft_sleep(t_philo *philo);
 void	ft_think(t_philo *philo);
-void	philo_is_dead(t_args args);
-t_args	init(int argc, char **argv, t_args args);
+void	ft_exit(t_args args, unsigned int philo_id, char *exit_message);
+t_args	init_args(int argc, char **argv, t_args args);
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 07:34:19 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/21 08:46:48 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/22 12:07:00 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,12 @@
 
 int	main(int argc, char **argv)
 {
-	pthread_mutex_t	mtx;
 	t_args          args;
 
 	compliance_args(argc, argv);
-	pthread_mutex_init(&mtx, NULL); // Ecrire une fonction ft_exit avec la destruction des mutex.
 	// Initialisation des data.
-	args = init(args);
+	args = init_args(args);
 	// Threads
-	philosophers(&mtx, args);
+	philosophers(args);
 	return (0);
 }
