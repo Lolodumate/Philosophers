@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/24 10:44:54 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/24 13:24:24 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,15 @@ void	compliance_args(int argc, char **argv)
 		printf("Le nombre d'arguments saisi est incorrect.\n");
 		exit(1);
 	}
-	while (j++ <= argc)
+	while (argv[j] && j <= argc)
+	{
 		strisdigit(argv[j]);
+		j++;
+	}
 	check_nbphilo(ft_atoi(argv[1]));
 }
 
-void	ft_exit(struct s_args *args, unsigned int philo_id, char *exit_message)
+void	ft_exit(struct s_args *args, t_philo **philo, unsigned int philo_id, char *exit_message)
 {
 	unsigned int		i;
 
@@ -81,7 +84,10 @@ void	ft_exit(struct s_args *args, unsigned int philo_id, char *exit_message)
 	pthread_mutex_destroy(&args->mtx);
 	while (&args->philo_ptr[i] && i++ < args->number_of_philosophers)
 	{
+		free(philo[i]);
 		pthread_mutex_destroy(&args->philo_ptr[i].mtx);
 	}
+	free(philo);
+	free(args);
 	exit(1);
 }
