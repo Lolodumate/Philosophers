@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/22 16:02:48 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/24 10:11:28 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 t_args	init_args(int argc, char **argv, t_args args)
 {
 	t_philo		philo[200];
-//	t_forks		forks[200];
 
 	args.philo_ptr = philo;
-//	args.forks_ptr = &forks;
 	args.number_of_philosophers = ft_atoi(argv[1]);
 	args.time_to_die = ft_atoi(argv[2]);
 	args.time_to_eat = ft_atoi(argv[3]);

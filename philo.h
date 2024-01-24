@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/22 17:21:22 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/24 10:34:55 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ void	check_nbphilo(unsigned int n);
 void	check_forks(); // Verifie la disponibilite des fourchettes.
 void	take_forks(); // Prend les fourchettes apres avoir verifie leur disponibilite.
 void	take_back_forks(); // Remet les fourchettes en place une fois le repas termine.
-void	routine(t_philo *philo);
-void	checker(struct s_args *args);
+void	*routine(void *philo);
+void	*checker(void *args);
 void	create_philo_threads(t_args args);
 void	create_forks_ptr(t_args args);
 void	join_philo_threads(t_philo *philo);

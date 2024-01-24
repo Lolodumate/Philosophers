@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/22 16:46:19 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/24 10:44:54 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,14 @@ void	compliance_args(int argc, char **argv)
 
 void	ft_exit(struct s_args *args, unsigned int philo_id, char *exit_message)
 {
-	int		i;
+	unsigned int		i;
 
 	i = 0;
 	printf("%ld %u %s\n", get_time(), philo_id, exit_message);
-	pthread_mutex_destroy(&args.mtx);
-	while (args.philo_ptr[i] && i++ < args.number_of_philosophers)
+	pthread_mutex_destroy(&args->mtx);
+	while (&args->philo_ptr[i] && i++ < args->number_of_philosophers)
 	{
-		pthread_mutex_destroy(&args.philo_ptr[i].mtx);
+		pthread_mutex_destroy(&args->philo_ptr[i].mtx);
 	}
 	exit(1);
 }
