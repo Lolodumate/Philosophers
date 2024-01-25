@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/24 10:47:31 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/25 14:21:12 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ft_drop_forks(t_philo *philo)
 void	ft_sleep(t_philo *philo)
 {
 	printf("%ld %d is sleeping\n", get_time(), philo->id);
-	seconde(philo->args->time_to_sleep);
+	ft_usleep(philo->args->time_to_sleep);
 }
 
 void	ft_eat(t_philo *philo)
@@ -52,7 +52,7 @@ void	ft_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->mtx);
 	printf("%ld %d is eating\n", get_time(), philo->id);
 	philo->is_eating = 1; // So the monitor knows that this philosopher is eating.
-	seconde(philo->args->time_to_eat);
+	ft_usleep(philo->args->time_to_eat);
 	philo->is_eating = 0; // So the monitor knows that this philosopher is not eating any more.
 	philo->meal_number++;
 	pthread_mutex_unlock(&philo->mtx);

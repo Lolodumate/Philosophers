@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/24 14:48:50 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/25 18:24:19 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,34 +29,40 @@
  */
 // pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;
 
-void	create_philo_threads(t_args *args) // philosophers(&mtx, args)
+void	create_philo_threads(t_args *args, t_philo *philo) // philosophers(&mtx, args)
 {
 	unsigned int		i;
-
+	pthread_t	*t;
 	i = 0;
-	args->philo_ptr->start_time = get_time();
+
 	pthread_mutex_init(&args->mtx, NULL);
-	while (i++ < args->number_of_philosophers)
+	while (i < args->number_of_philosophers)
 	{
-		if (pthread_create(&args->philo_ptr[i].thread, NULL, &routine, &args->philo_ptr[i]) != 0)
+		t = &philo[i].thread;
+		if (pthread_create(t, NULL, &routine, &philo[i]) != 0)
 		{
 			printf("Failure thread creation\n");
 			exit(1);
 		}
-		args->philo_ptr[i].is_eating = 0;
-		args->philo_ptr[i].is_dead = 0;
-		args->philo_ptr[i].meal_complete = 0;
-		args->philo_ptr[i].meal_number = 0;
-		args->philo_ptr[i].start_time = get_time();
-		args->philo_ptr[i].death_time = args->philo_ptr[i].start_time + args->time_to_die;
+		philo[i].start_time = get_time();
+		philo[i].is_eating = 0;
+		philo[i].is_dead = 0;
+		philo[i].meal_complete = 0;
+		philo[i].meal_number = 0;
+		philo[i].start_time = get_time();
+		philo[i].death_time = philo[i].start_time + args->time_to_die;
 		/* Si le philo[i] a un voisin a sa droite philo[i - 1] alors :
 		 * - La fourchette droite de philo[i] correspond a la fourchette gauche de philo[i - 1].
 		 * - Donc la fourchette gauche de philo[i- 1] est un pointeur vers la fourchette droite de philo[i].
 		 */
-		if (&args->philo_ptr[i - 1])
-			args->philo_ptr[i - 1].left_fork = &args->philo_ptr[i].right_fork;
-		pthread_mutex_init(&args->philo_ptr->mtx, NULL); // 1 philosophe = 1 thread
+		if (i > 0)
+		{
+			philo[i - 1].left_fork = &philo[i].right_fork;
+			printf("philo[%d].left_fork = &philo[%d].right_fork\n", i - 1, i);
+		}
+		pthread_mutex_init(&philo->mtx, NULL); // 1 philosophe = 1 thread
 		printf("Thread %d has started\n", i);
+		i++;
 	}
 }
 
@@ -66,18 +72,18 @@ void	*routine(void *philo)
 	t_philo		*p;
 
 	p = (t_philo *)philo;
-	if (pthread_create(&p->thread, NULL, &checker, p->args) != 0)
+	if (pthread_create(&p->thread, NULL, &checker, p->args_ptr) != 0)
 	{
 		printf("Erreur creation thread routine\n");
 		exit(1);
 	}
-	pthread_mutex_lock(&p->mtx);
-	while (!p->is_dead)
+	while (p->is_dead == 0)
 	{
-		if (p->args->number_of_dead == p->args->number_of_philosophers)
+		pthread_mutex_lock(&p->mtx);
+		if (p->args_ptr->number_of_dead == p->args_ptr->number_of_philosophers)
 			p->is_dead = 1;
+		pthread_mutex_unlock(&p->mtx);
 	}
-	pthread_mutex_unlock(&p->mtx);
 	if (pthread_join(p->thread, NULL) != 0)
 		exit(1);
 	return (p);
@@ -114,16 +120,16 @@ void	join_philo_threads(t_philo *philo)
 	unsigned int		i;
 
 	i = 0;
-	while (i++ < philo->args->number_of_philosophers)
+	while (i++ < philo->args_ptr->number_of_philosophers)
 	{
 		if (pthread_join(philo->thread, NULL) != 0)
-			ft_exit(philo->args, &philo, philo->id, "has finished execution");
+			ft_exit(philo->args_ptr, &philo, philo->id, "has finished execution");
 	}
-	pthread_mutex_destroy(&philo->args->mtx);
+	pthread_mutex_destroy(&philo->args_ptr->mtx);
 }
 
-void	philosophers(t_args *args)
+void	philosophers(t_args *args, t_philo *philo)
 {
-	create_philo_threads(args);
+	create_philo_threads(args, philo);
 	join_philo_threads(args->philo_ptr);
 }

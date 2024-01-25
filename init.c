@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/24 15:00:49 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/25 17:37:17 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,30 @@
 
 t_args	*init_args(int argc, char **argv, t_args *args)
 {
-	unsigned int			i;
-	t_philo		**philo;
-
-	i = 0;
-	args = malloc(sizeof(t_args *));
+	args = malloc(sizeof(t_args));
 	if (!args)
 		return (NULL);
+	args->philo_ptr = malloc(sizeof(t_philo *));
+	if (!args->philo_ptr)
+		return (NULL);
+	args->number_of_dead = 0;
 	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
 		args->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
-	philo = malloc(sizeof(t_philo *) * args->number_of_philosophers);
+	return (args);
+}
+
+t_philo	*init_philo(t_args *args)
+{
+	t_philo		*philo;
+
+	philo = malloc(sizeof(t_philo) * args->number_of_philosophers);
 	if (!philo)
 		return (NULL);
-	args->philo_ptr = *philo;
-	while (i < args->number_of_philosophers)
-	{
-		philo[i] = malloc(sizeof(t_philo));
-		if (!philo[i])
-			return (NULL);
-		args->philo_ptr[i] = *philo[i];
-		i++;
-	}
-	return (args);
+	return (philo);
 }
 /*
 void	create_forks_ptr(t_args args)
