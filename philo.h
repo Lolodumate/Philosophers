@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/25 18:18:47 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/26 19:57:10 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ typedef enum s_bool
 
 typedef struct s_philo
 {
-	t_args		*args_ptr;
-	pthread_t						thread;
-	unsigned int					id;
+	t_args		*args_ptr; // malloc
+	pthread_t		thread;
+	int					id;
 	int					is_eating;
 	int					is_dead;
 	int					meal_complete;
@@ -42,12 +42,13 @@ typedef struct s_philo
 	unsigned long					start_time;
 	unsigned long					death_time;
 	pthread_mutex_t		right_fork;
-	pthread_mutex_t		*left_fork;
+	pthread_mutex_t		*left_fork; // Pointeur vers la fourchette du philosophe de gauche.
 	pthread_mutex_t		mtx;
 }		t_philo;
 
 typedef struct s_args
 {
+	pthread_t		*t; // malloc
 	pthread_mutex_t		mtx;
 	pthread_mutex_t		mtx_printf;
 	unsigned int				number_of_philosophers;
@@ -57,7 +58,7 @@ typedef struct s_args
 	unsigned int				time_to_sleep;
 	unsigned int				number_of_times_each_philosopher_must_eat;
 	long		time_start;
-	t_philo		*philo_ptr;
+	t_philo		*philo_ptr; // malloc
 }               t_args;
 
 u_int64_t			get_time(void);
@@ -70,6 +71,7 @@ void	take_forks(); // Prend les fourchettes apres avoir verifie leur disponibili
 void	take_back_forks(); // Remet les fourchettes en place une fois le repas termine.
 void	*routine(void *philo);
 void	*checker(void *args);
+void	create_forks(t_args *args);
 void	create_philo_threads(t_args *args, t_philo *philo);
 void	join_philo_threads(t_philo *philo);
 void	philosophers(t_args *args, t_philo *philo);
@@ -79,8 +81,8 @@ void	*ft_usleep(long requested_sleep_time);
 void	ft_eat(t_philo *philo);
 void	ft_sleep(t_philo *philo);
 void	ft_think(t_philo *philo);
-void	ft_exit(struct s_args *args, t_philo **philo, unsigned int philo_id, char *exit_message);
+void	ft_exit(struct s_args *args, t_philo *philo, unsigned int philo_id, char *exit_message);
 t_args	*init_args(int argc, char **argv, t_args *args);
-t_philo	*init_philo(t_args *args);
+t_philo	init_philo(t_args *args, t_philo *philo, int index);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/25 18:24:19 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/26 18:17:44 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,31 +38,31 @@ void	create_philo_threads(t_args *args, t_philo *philo) // philosophers(&mtx, ar
 	pthread_mutex_init(&args->mtx, NULL);
 	while (i < args->number_of_philosophers)
 	{
+		args->philo_ptr[i] = philo[i];
+		philo[i] = init_philo(args, philo, i);
 		t = &philo[i].thread;
-		if (pthread_create(t, NULL, &routine, &philo[i]) != 0)
+		if (pthread_create(t, NULL, routine, philo[i]) != 0)
 		{
 			printf("Failure thread creation\n");
 			exit(1);
 		}
-		philo[i].start_time = get_time();
-		philo[i].is_eating = 0;
-		philo[i].is_dead = 0;
-		philo[i].meal_complete = 0;
-		philo[i].meal_number = 0;
-		philo[i].start_time = get_time();
-		philo[i].death_time = philo[i].start_time + args->time_to_die;
-		/* Si le philo[i] a un voisin a sa droite philo[i - 1] alors :
-		 * - La fourchette droite de philo[i] correspond a la fourchette gauche de philo[i - 1].
-		 * - Donc la fourchette gauche de philo[i- 1] est un pointeur vers la fourchette droite de philo[i].
-		 */
+/* Si le philo[i] a un voisin a sa droite philo[i - 1] alors :
+ * - La fourchette droite de philo[i] correspond a la fourchette gauche de philo[i - 1].
+ * - Donc la fourchette gauche de philo[i - 1] est un pointeur vers la fourchette droite de philo[i].
+ */
+		pthread_mutex_init(&philo[i].mtx, NULL); // 1 philosophe = 1 thread
+		printf("Thread %d has started\n", i);
 		if (i > 0)
 		{
 			philo[i - 1].left_fork = &philo[i].right_fork;
 			printf("philo[%d].left_fork = &philo[%d].right_fork\n", i - 1, i);
 		}
-		pthread_mutex_init(&philo->mtx, NULL); // 1 philosophe = 1 thread
-		printf("Thread %d has started\n", i);
 		i++;
+		if (i == args->number_of_philosophers)
+		{
+			philo[i - 1].left_fork = &philo[0].right_fork;
+			printf("philo[%d].left_fork = &philo[%d].right_fork\n", i - 1, 0);
+		}
 	}
 }
 
@@ -80,38 +80,41 @@ void	*routine(void *philo)
 	while (p->is_dead == 0)
 	{
 		pthread_mutex_lock(&p->mtx);
-		if (p->args_ptr->number_of_dead == p->args_ptr->number_of_philosophers)
+		ft_eat(p);
+		ft_think(p);
+		//if (p->args_ptr->number_of_dead == p->args_ptr->number_of_philosophers)
+		if (get_time() >= p->death_time && p->is_eating == 0)
 			p->is_dead = 1;
+		p->args_ptr->number_of_dead++;
 		pthread_mutex_unlock(&p->mtx);
 	}
 	if (pthread_join(p->thread, NULL) != 0)
 		exit(1);
-	return (p);
+	return (NULL);
 }
 
 // Verifier l'etat si les philosophes sont toujours en vie
 void	*checker(void *args)
 {
-	t_args	*data;
+	t_args	*a;
 
-	data = (t_args *)args;
-	pthread_mutex_lock(&data->mtx);
-	while (!data->philo_ptr->is_dead)
+	a = (t_args *)args;
+	pthread_mutex_lock(&a->mtx);
+	//while (a->philo_ptr->is_dead == 0)
+	while (a->number_of_dead < a->number_of_philosophers)
 	{
-		
-		// 1. Verifier que l'heure courante est inferieure a l'heure prevue de la mort du philosophe
-		if (get_time() >= data->philo_ptr->death_time)
-			ft_exit(data, &data->philo_ptr, data->philo_ptr->id, "died");
-
-		// 2. Verifier le nombre de repas pris et le cas echeant mettre a jour le status "meal_complete"
-		if (data->philo_ptr->meal_number >= data->number_of_times_each_philosopher_must_eat)	
+// 1. Verifier que l'heure courante est inferieure a l'heure prevue de la mort du philosophe
+		if (get_time() >= a->philo_ptr->death_time)
+			ft_exit(a, a->philo_ptr, a->philo_ptr->id, "died");
+// 2. Verifier le nombre de repas pris et le cas echeant mettre a jour le status "meal_complete"
+		if (a->philo_ptr->meal_number >= a->number_of_times_each_philosopher_must_eat)	
 		{
-			pthread_mutex_lock(&data->mtx);
-			data->philo_ptr->meal_complete = 1;
-			pthread_mutex_unlock(&data->mtx);
+			pthread_mutex_lock(&a->mtx);
+			a->philo_ptr->meal_complete = 1;
+			pthread_mutex_unlock(&a->mtx);
 		}
 	}
-	pthread_mutex_unlock(&data->mtx);
+	pthread_mutex_unlock(&a->mtx);
 	return (NULL);
 }
 
@@ -123,7 +126,7 @@ void	join_philo_threads(t_philo *philo)
 	while (i++ < philo->args_ptr->number_of_philosophers)
 	{
 		if (pthread_join(philo->thread, NULL) != 0)
-			ft_exit(philo->args_ptr, &philo, philo->id, "has finished execution");
+			ft_exit(philo->args_ptr, philo, philo->id, "has finished execution");
 	}
 	pthread_mutex_destroy(&philo->args_ptr->mtx);
 }

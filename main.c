@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 07:34:19 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/25 17:15:21 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/26 17:31:08 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int	main(int argc, char **argv)
 	args = NULL;
 	philo = NULL;
 	compliance_args(argc, argv);
-	// Initialisation des data.
 	args = init_args(argc, argv, args);
-//	args->philo_ptr = philo;
-	philo = init_philo(args);
-	// Threads
+	philo = malloc(sizeof(t_philo) * args->number_of_philosophers);
+	if (!philo)
+		exit(1);
 	philosophers(args, philo);
 	free(args);
+	free(philo);
 	return (0);
 }
