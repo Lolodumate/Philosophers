@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/26 19:57:10 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/27 16:24:38 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct s_philo
 	unsigned int					meal_number;
 	unsigned long					start_time;
 	unsigned long					death_time;
-	pthread_mutex_t		right_fork;
+	pthread_mutex_t		*right_fork;
 	pthread_mutex_t		*left_fork; // Pointeur vers la fourchette du philosophe de gauche.
 	pthread_mutex_t		mtx;
 }		t_philo;
@@ -52,7 +52,7 @@ typedef struct s_args
 	pthread_mutex_t		mtx;
 	pthread_mutex_t		mtx_printf;
 	unsigned int				number_of_philosophers;
-	unsigned int				number_of_dead;
+	unsigned int				death;
 	unsigned int				time_to_die;
 	unsigned int				time_to_eat;
 	unsigned int				time_to_sleep;
@@ -73,10 +73,11 @@ void	*routine(void *philo);
 void	*checker(void *args);
 void	create_forks(t_args *args);
 void	create_philo_threads(t_args *args, t_philo *philo);
-void	join_philo_threads(t_philo *philo);
 void	philosophers(t_args *args, t_philo *philo);
 
 void	*ft_usleep(long requested_sleep_time);
+
+void	ft_pick_forks(t_philo *philo);
 
 void	ft_eat(t_philo *philo);
 void	ft_sleep(t_philo *philo);

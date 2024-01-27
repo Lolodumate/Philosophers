@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/26 11:47:16 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/27 16:24:19 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 void	ft_pick_forks(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->right_fork);
+	pthread_mutex_lock(philo->right_fork);
 	printf("%ld %d has taken a fork\n", get_time(), philo->id);
 	pthread_mutex_lock(philo->left_fork);
 	printf("%ld %d has taken a fork\n", get_time(), philo->id);
@@ -34,7 +34,7 @@ void	ft_pick_forks(t_philo *philo)
 
 void	ft_drop_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(&philo->right_fork);
+	pthread_mutex_unlock(philo->right_fork);
 	pthread_mutex_unlock(philo->left_fork);
 }
 

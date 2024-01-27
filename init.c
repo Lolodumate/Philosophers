@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/26 20:20:35 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/27 15:46:56 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args = malloc(sizeof(t_args));
 	if (!args)
 		return (NULL);
-	args->number_of_dead = 0;
 	args->number_of_philosophers = ft_atoi(argv[1]);
+	args->death = 0;
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
@@ -52,14 +52,21 @@ t_philo	init_philo(t_args *args, t_philo *philo, int index)
 	philo->meal_complete = 0;
 	philo->meal_number = 0;
 	philo->death_time = philo->start_time + args->time_to_die;
+	printf("philo->death_time = %ld\n", philo->death_time);
 	pthread_mutex_init(&philo->mtx, NULL);
-	pthread_mutex_init(&philo->right_fork, NULL);
-	return (&philo);
+	philo->right_fork = malloc(sizeof(pthread_mutex_t));
+	if (!philo->right_fork)
+	{
+		printf("Erreur allocation dynamique phil->right_fork\n");
+		exit(1);
+	}
+	pthread_mutex_init(philo->right_fork, NULL);
+	return (philo[index]);
 }
-
+/*
 t_philo	*create_philos_and_forks(t_args *args)
 {
-	int		i;
+	unsigned int		i;
 	t_philo	*philo;
 
 	i = 0;
@@ -69,8 +76,8 @@ t_philo	*create_philos_and_forks(t_args *args)
 	while (i < args->number_of_philosophers)
 	{
 		philo[i] = init_philo(args, philo, i);
-		args->philo_ptr[i] = &philo[i];
+		args->philo_ptr[i] = philo[i];
 		i++;
 	}
 	return (philo);
-}
+}*/

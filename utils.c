@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/26 12:20:02 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/27 13:42:07 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,10 @@ void	ft_exit(struct s_args *args, t_philo *philo, unsigned int philo_id, char *e
 		free(args->philo_ptr->philo);
 		pthread_mutex_destroy(&args->philo_ptr[i].mtx);
 	}*/
+	pthread_mutex_destroy(&args->mtx);
+	pthread_mutex_destroy(&args->mtx_printf);
+	pthread_mutex_destroy(&philo->mtx);
+	pthread_mutex_destroy(philo->right_fork);
 	pthread_mutex_destroy(&args->philo_ptr[i].mtx);
 	free(philo);
 	free(args);
