@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/27 15:46:56 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/28 12:20:45 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 {
 	args = malloc(sizeof(t_args));
 	if (!args)
-		return (NULL);
+		exit(1);
 	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->death = 0;
 	args->time_to_die = ft_atoi(argv[2]);
@@ -24,18 +24,20 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
 		args->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
+	else
+		args->number_of_times_each_philosopher_must_eat = ft_atoi("0");
 	args->t = malloc(sizeof(pthread_t) * args->number_of_philosophers);
 	if (!args->t)
 	{
 		free(args);
-		return (NULL);
+		exit(1);
 	}
 	args->philo_ptr = malloc(sizeof(t_philo) * args->number_of_philosophers);
 	if (!args->philo_ptr)
 	{
 		free(args);
 		free(args->t);
-		return (NULL);
+		exit(1);
 	}
 	pthread_mutex_init(&args->mtx, NULL);
 	pthread_mutex_init(&args->mtx_printf, NULL);
@@ -53,31 +55,52 @@ t_philo	init_philo(t_args *args, t_philo *philo, int index)
 	philo->meal_number = 0;
 	philo->death_time = philo->start_time + args->time_to_die;
 	printf("philo->death_time = %ld\n", philo->death_time);
-	pthread_mutex_init(&philo->mtx, NULL);
 	philo->right_fork = malloc(sizeof(pthread_mutex_t));
 	if (!philo->right_fork)
 	{
 		printf("Erreur allocation dynamique phil->right_fork\n");
+		free(args);
+		free(args->t);
 		exit(1);
 	}
-	pthread_mutex_init(philo->right_fork, NULL);
 	return (philo[index]);
 }
-/*
-t_philo	*create_philos_and_forks(t_args *args)
+
+t_philo	*set_philos(t_args *args, t_philo *philo)
 {
 	unsigned int		i;
-	t_philo	*philo;
 
 	i = 0;
 	philo = malloc(sizeof(t_philo) * args->number_of_philosophers);
 	if (!philo)
-		exit(1);
+		exit(1); // ************************Liberer la memoire !
 	while (i < args->number_of_philosophers)
 	{
 		philo[i] = init_philo(args, philo, i);
 		args->philo_ptr[i] = philo[i];
 		i++;
+		pthread_mutex_init(&philo[i].mtx, NULL);
+	}
+	i = 0;
+/* Si le philo[i] a un voisin a sa droite philo[i - 1] alors :
+ * - La fourchette droite de philo[i] correspond a la fourchette gauche de philo[i - 1].
+ * - Donc la fourchette gauche de philo[i - 1] est un pointeur vers la fourchette droite de philo[i].
+ */
+	while (i < args->number_of_philosophers)
+	{
+		if (i > 0)
+		{
+			philo[i - 1].left_fork = philo[i].right_fork;
+			printf("philo[%d].left_fork = philo[%d].right_fork\n", i - 1, i);
+		}
+		if ((i + 1) == args->number_of_philosophers)
+		{
+			philo[i].left_fork = philo[0].right_fork;
+			printf("philo[%d].left_fork = philo[%d].right_fork\n", i, 0);
+		}
+		pthread_mutex_init(philo[i].right_fork, NULL);
+		pthread_mutex_init(philo[i].left_fork, NULL); // Mutex sur fourchette de gauche vraiment necessaire ?
+		i++;
 	}
 	return (philo);
-}*/
+}

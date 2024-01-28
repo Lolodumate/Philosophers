@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/27 15:59:33 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/28 11:12:18 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,24 +44,6 @@ void	create_philo_threads(t_args *args, t_philo *philo) // philosophers(&mtx, ar
 			printf("Failure thread creation\n");
 			exit(1);
 		}
-/* Si le philo[i] a un voisin a sa droite philo[i - 1] alors :
- * - La fourchette droite de philo[i] correspond a la fourchette gauche de philo[i - 1].
- * - Donc la fourchette gauche de philo[i - 1] est un pointeur vers la fourchette droite de philo[i].
- */
-		pthread_mutex_init(&philo[i].mtx, NULL); // 1 philosophe = 1 thread
-		printf("Thread %d has started\n", i);
-		if (i > 0)
-		{
-			philo[i - 1].left_fork = philo[i].right_fork;
-			printf("philo[%d].left_fork = &philo[%d].right_fork\n", i - 1, i);
-		}
-		if ((i + 1) == args->number_of_philosophers)
-		{
-			philo[i].left_fork = philo[0].right_fork;
-			printf("philo[%d].left_fork = &philo[%d].right_fork\n", i, 0);
-		}
-		i++;
-//		usleep(10);
 	}
 	i = 0;
 	while (i < args->number_of_philosophers)

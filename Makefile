@@ -6,12 +6,13 @@
 #    By: laroges <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/18 16:16:20 by laroges           #+#    #+#              #
-#    Updated: 2024/01/24 17:20:48 by laroges          ###   ########.fr        #
+#    Updated: 2024/01/28 11:51:05 by laroges          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC =	main.c \
 	init.c \
+	clean.c \
 	philosophers.c \
 	utils.c \
 	tasks.c \

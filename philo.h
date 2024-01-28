@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/27 16:24:38 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/28 11:54:14 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef struct s_args
 u_int64_t			get_time(void);
 unsigned int			ft_atoi(char *str);
 void	strisdigit(char *str);
-void	compliance_args(int argc, char **argv);
+int	compliance_args(int argc, char **argv);
 void	check_nbphilo(unsigned int n);
 void	check_forks(); // Verifie la disponibilite des fourchettes.
 void	take_forks(); // Prend les fourchettes apres avoir verifie leur disponibilite.
@@ -82,8 +82,10 @@ void	ft_pick_forks(t_philo *philo);
 void	ft_eat(t_philo *philo);
 void	ft_sleep(t_philo *philo);
 void	ft_think(t_philo *philo);
+void	ft_clean(t_args *args, t_philo *philo);
 void	ft_exit(struct s_args *args, t_philo *philo, unsigned int philo_id, char *exit_message);
 t_args	*init_args(int argc, char **argv, t_args *args);
 t_philo	init_philo(t_args *args, t_philo *philo, int index);
+t_philo	*set_philos(t_args *args, t_philo *philo);
 
 #endif
