@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/28 11:12:18 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/28 14:03:06 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,22 @@
  */
 // pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;
 
-void	create_philo_threads(t_args *args, t_philo *philo) // philosophers(&mtx, args)
+void	create_threads(t_args *args) // philosophers(&mtx, args)
 {
 	unsigned int		i;
+	
 	i = 0;
-
 	while (i < args->number_of_philosophers)
 	{
-		philo[i] = init_philo(args, philo, i);
-		args->philo_ptr[i].args_ptr = args;
 		printf("args->time_to_eat = %d\n", args->time_to_eat);
 		if (pthread_create(&args->t[i], NULL, &routine, &args->philo_ptr[i]) != 0)
 		{
 			printf("Failure thread creation\n");
 			exit(1);
 		}
+		else
+			printf("Thread t[%d] cree avec success\n", i);
+		i++;
 	}
 	i = 0;
 	while (i < args->number_of_philosophers)
@@ -64,6 +65,7 @@ void	*routine(void *philo)
 	if (pthread_create(&p->thread, NULL, &checker, &p) != 0)
 	{
 		printf("Erreur creation thread routine\n");
+		ft_clean(p->args_ptr, philo);
 		exit(1);
 	}
 	while (p->args_ptr->death == 0)
@@ -100,7 +102,7 @@ void	*checker(void *args)
 	return (NULL);
 }
 
-void	philosophers(t_args *args, t_philo *philo)
+void	philosophers(t_args *args)
 {
-	create_philo_threads(args, philo);
+	create_threads(args);
 }

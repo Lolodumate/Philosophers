@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/28 11:54:14 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/28 14:44:37 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct s_philo
 	unsigned int					meal_number;
 	unsigned long					start_time;
 	unsigned long					death_time;
-	pthread_mutex_t		*right_fork;
+	pthread_mutex_t		right_fork;
 	pthread_mutex_t		*left_fork; // Pointeur vers la fourchette du philosophe de gauche.
 	pthread_mutex_t		mtx;
 }		t_philo;
@@ -72,8 +72,8 @@ void	take_back_forks(); // Remet les fourchettes en place une fois le repas term
 void	*routine(void *philo);
 void	*checker(void *args);
 void	create_forks(t_args *args);
-void	create_philo_threads(t_args *args, t_philo *philo);
-void	philosophers(t_args *args, t_philo *philo);
+void	create_threads(t_args *args);
+void	philosophers(t_args *args);
 
 void	*ft_usleep(long requested_sleep_time);
 
@@ -85,7 +85,7 @@ void	ft_think(t_philo *philo);
 void	ft_clean(t_args *args, t_philo *philo);
 void	ft_exit(struct s_args *args, t_philo *philo, unsigned int philo_id, char *exit_message);
 t_args	*init_args(int argc, char **argv, t_args *args);
-t_philo	init_philo(t_args *args, t_philo *philo, int index);
+t_philo	*init_philo(t_args *args, t_philo *philo, int index);
 t_philo	*set_philos(t_args *args, t_philo *philo);
 
 #endif

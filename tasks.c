@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/27 16:24:19 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/28 15:04:10 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 void	ft_pick_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->right_fork);
+	pthread_mutex_lock(&philo->right_fork);
 	printf("%ld %d has taken a fork\n", get_time(), philo->id);
 	pthread_mutex_lock(philo->left_fork);
 	printf("%ld %d has taken a fork\n", get_time(), philo->id);
@@ -34,7 +34,7 @@ void	ft_pick_forks(t_philo *philo)
 
 void	ft_drop_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_unlock(&philo->right_fork);
 	pthread_mutex_unlock(philo->left_fork);
 }
 
@@ -46,9 +46,9 @@ void	ft_sleep(t_philo *philo)
 
 void	ft_eat(t_philo *philo)
 {
-	// 1. Picking forks : right one, then left one.
+// 1. Picking forks : right one, then left one.
 	ft_pick_forks(philo);
-	// 2. Eating
+// 2. Eating
 	pthread_mutex_lock(&philo->mtx);
 	printf("%ld %d is eating\n", get_time(), philo->id);
 	philo->is_eating = 1; // So the monitor knows that this philosopher is eating.
@@ -56,7 +56,7 @@ void	ft_eat(t_philo *philo)
 	philo->is_eating = 0; // So the monitor knows that this philosopher is not eating any more.
 	philo->meal_number++;
 	pthread_mutex_unlock(&philo->mtx);
-	// 3. Dropping forks and sleep.
+// 3. Dropping forks and sleep.
 	ft_drop_forks(philo);
 	ft_sleep(philo); // After eating, philosopher is sleeping.	
 }

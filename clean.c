@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:28:04 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/28 12:23:08 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/28 15:10:00 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_clean(t_args *args, t_philo *philo)
 	while (i < args->number_of_philosophers)
 	{
 		pthread_mutex_destroy(&philo[i].mtx);
-		pthread_mutex_destroy(philo[i].right_fork);
+		pthread_mutex_destroy(&philo[i].right_fork);
 		pthread_mutex_destroy(philo[i].left_fork);
 		i++;
 	}
@@ -29,7 +29,7 @@ void	ft_clean(t_args *args, t_philo *philo)
 	free(args->t);
 	free(args->philo_ptr);
 	free(args);
-	free(philo->right_fork);
+	free(philo->left_fork);
 	free(philo);
 }
 
@@ -47,4 +47,3 @@ void	ft_exit(struct s_args *args, t_philo *philo, unsigned int philo_id, char *e
 */
 	exit(1);
 }
-i
