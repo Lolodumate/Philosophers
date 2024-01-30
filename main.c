@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 07:34:19 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/28 12:58:07 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/30 13:21:29 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	main(int argc, char **argv)
 		
 /* Creation des threads.
  */
-	philosophers(args);
+		philosophers(args);
 
 /* Liberation de la memoire (free & destroy mutex).
  */

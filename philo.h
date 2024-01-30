@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/28 14:44:37 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/30 16:09:16 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_args
 	pthread_mutex_t		mtx;
 	pthread_mutex_t		mtx_printf;
 	unsigned int				number_of_philosophers;
+	unsigned int				meal_complete;
 	unsigned int				death;
 	unsigned int				time_to_die;
 	unsigned int				time_to_eat;
@@ -70,7 +71,8 @@ void	check_forks(); // Verifie la disponibilite des fourchettes.
 void	take_forks(); // Prend les fourchettes apres avoir verifie leur disponibilite.
 void	take_back_forks(); // Remet les fourchettes en place une fois le repas termine.
 void	*routine(void *philo);
-void	*checker(void *args);
+void	*check_philos(void *args);
+void	*check_meal(void *args);
 void	create_forks(t_args *args);
 void	create_threads(t_args *args);
 void	philosophers(t_args *args);
@@ -78,12 +80,12 @@ void	philosophers(t_args *args);
 void	*ft_usleep(long requested_sleep_time);
 
 void	ft_pick_forks(t_philo *philo);
-
+void	print_countdown(t_philo *philo);
 void	ft_eat(t_philo *philo);
 void	ft_sleep(t_philo *philo);
 void	ft_think(t_philo *philo);
 void	ft_clean(t_args *args, t_philo *philo);
-void	ft_exit(struct s_args *args, t_philo *philo, unsigned int philo_id, char *exit_message);
+void	ft_exit(struct s_args *args, t_philo *philo, unsigned int philo_id);
 t_args	*init_args(int argc, char **argv, t_args *args);
 t_philo	*init_philo(t_args *args, t_philo *philo, int index);
 t_philo	*set_philos(t_args *args, t_philo *philo);
