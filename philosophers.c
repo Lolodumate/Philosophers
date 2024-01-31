@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 12:58:38 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 14:08:50 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 			exit(1);
 		}
 		i++;
-		ft_usleep(10);
+		ft_usleep(1);
 	}
 	if (args->number_of_times_each_philosopher_must_eat > 0)
 	{

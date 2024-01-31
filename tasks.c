@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 12:49:47 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 15:50:17 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,18 @@
  *	- When all the philosophers are set as "complete" the program ends.
  */
 
-void	ft_pick_forks(t_philo *philo)
+void	ft_pick_forks(t_philo *philo, unsigned int i)
 {
-	pthread_mutex_lock(&philo->right_fork);
+	pthread_mutex_lock(philo[i].right_fork);
 	ft_output(philo, " has taken a fork");
-	pthread_mutex_lock(&philo->left_fork);
+	pthread_mutex_lock(philo[i].left_fork);
 	ft_output(philo, " has taken a fork");
 }
 
-void	ft_drop_forks(t_philo *philo)
+void	ft_drop_forks(t_philo *philo, unsigned int i)
 {
-	pthread_mutex_unlock(&philo->right_fork);
-	pthread_mutex_unlock(&philo->left_fork);
+	pthread_mutex_unlock(philo[i].right_fork);
+	pthread_mutex_unlock(philo[i].left_fork);
 }
 
 void	ft_sleep(t_philo *philo)
@@ -49,7 +49,7 @@ void	ft_sleep(t_philo *philo)
 void	ft_eat(t_philo *philo)
 {
 // 1. Picking forks : right one, then left one.
-	ft_pick_forks(philo);
+	ft_pick_forks(philo, philo->id);
 // 2. Eating
 	pthread_mutex_lock(&philo->mtx);
 	ft_output(philo, " is eating");
@@ -67,7 +67,7 @@ void	ft_eat(t_philo *philo)
 //	printf("philo->meal_complete = %d\n", philo->meal_complete);
 	pthread_mutex_unlock(&philo->mtx);
 // 3. Dropping forks and sleep.
-	ft_drop_forks(philo);
+	ft_drop_forks(philo, philo->id);
 	ft_sleep(philo); // After eating, philosopher is sleeping.
 }
 

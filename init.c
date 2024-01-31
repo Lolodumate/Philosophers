@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 12:57:00 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 16:14:45 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,13 @@ t_philo	*init_philo(t_args *args, t_philo *philo, int index)
 	philo->meal_number = 0;
 	philo->death_time = philo->start_time + args->time_to_die;
 	pthread_mutex_init(&philo->mtx, NULL);
-	pthread_mutex_init(&philo->right_fork, NULL);
-	pthread_mutex_init(&philo->left_fork, NULL);
-/*	philo->left_fork = malloc(sizeof(pthread_mutex_t *));
+	philo->right_fork = malloc(sizeof(pthread_mutex_t *));
+	if (!philo->right_fork)
+		exit(1);
+	philo->left_fork = malloc(sizeof(pthread_mutex_t *));
 	if (!philo->left_fork)
 		exit(1);
-*/	return (philo);
+	return (philo);
 }
 
 t_philo	*set_philos(t_args *args, t_philo *philo)
@@ -83,26 +84,41 @@ t_philo	*set_philos(t_args *args, t_philo *philo)
 		pthread_mutex_init(&philo[i].mtx, NULL);
 		i++;
 	}
-	i = 0;
+	return (philo);
+}
+
 /* Si le philo[i] a un voisin a sa droite philo[i - 1] alors :
  * - La fourchette droite de philo[i] correspond a la fourchette gauche de philo[i - 1].
  * - Donc la fourchette gauche de philo[i - 1] est un pointeur vers la fourchette droite de philo[i].
  */
-//	init_forks(args);
-/*	while (i < args->number_of_philosophers)
+void	init_forks(t_args *args, t_philo *philo)
+{
+	unsigned int		i;
+
+	i = 0;
+	args->forks = malloc(sizeof(pthread_mutex_t) * args->number_of_philosophers);
+	if (!args->forks)
+		exit(1); // ***********************Liberer la memoire !
+	while (i < args->number_of_philosophers)
 	{
-		pthread_mutex_init(&args->philo_ptr[i].right_fork, NULL);
+		args->philo_ptr[i].right_fork = &args->forks[i];
+		printf("*	args->philo_ptr[%d].right_fork = &args->forks[%d]\n", i, i);
+		philo[i].right_fork = &args->forks[i];
 		if (i > 0)
 		{
-			philo[i - 1].left_fork = &philo[i].right_fork;
-			printf("philo[%d].left_fork = philo[%d].right_fork\n", i - 1, i);
+			args->philo_ptr[i - 1].left_fork = &args->forks[i];
+			printf("args->philo_ptr[%d].left_fork = &args->forks[%d]\n", i - 1, i);
+			philo[i - 1].left_fork = &args->forks[i];
 		}
 		if ((i + 1) == args->number_of_philosophers)
 		{
-			philo[i].left_fork = &philo[0].right_fork;
-			printf("philo[%d].left_fork = philo[%d].right_fork\n", i, 0);
+			args->philo_ptr[i].left_fork = &args->forks[0];
+			printf("	args->philo_ptr[%d].left_fork = &args->forks[%d]\n", i, 0);
+			philo[i].left_fork = &args->forks[0];
 		}
+		pthread_mutex_init(&args->forks[i], NULL);
+		pthread_mutex_init(philo[i].right_fork, NULL);
+		pthread_mutex_init(philo[i].left_fork, NULL);
 		i++;
 	}
-*/	return (philo);
 }

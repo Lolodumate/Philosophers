@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 07:34:19 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 08:35:51 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 16:01:24 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	main(int argc, char **argv)
  */
 		args = init_args(argc, argv, args);
 		philo = set_philos(args, philo);
+		init_forks(args, philo);
 		
 /* Creation des threads.
  */
