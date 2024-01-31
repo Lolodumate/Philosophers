@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/30 14:13:54 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 09:10:36 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,16 @@ void	ft_eat(t_philo *philo)
 	print_countdown(philo);
 	printf(" %d is eating\n", philo->id);
 	philo->is_eating = 1; // So the monitor knows that this philosopher is eating.
+	philo->death_time = get_time() + philo->args_ptr->time_to_die;
 	ft_usleep(philo->args_ptr->time_to_eat);
 	philo->is_eating = 0; // So the monitor knows that this philosopher is not eating any more.
 	philo->meal_number++;
+	printf("philo[%d].meal_number = %d\n", philo->id, philo->meal_number);
 	if (philo->meal_number >= philo->args_ptr->number_of_times_each_philosopher_must_eat)
+	{
 		philo->meal_complete = 1;
+		printf("philo[%d].meal_complete = 1\n", philo->id);
+	}
 //	printf("philo->meal_number = %d\n", philo->meal_number);
 //	printf("philo->meal_complete = %d\n", philo->meal_complete);
 	pthread_mutex_unlock(&philo->mtx);

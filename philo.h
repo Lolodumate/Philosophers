@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/30 16:09:16 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 08:55:40 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct s_philo
 	int					id;
 	int					is_eating;
 	int					is_dead;
-	int					meal_complete;
+	unsigned int					meal_complete;
 	unsigned int					meal_number;
 	unsigned long					start_time;
 	unsigned long					death_time;
@@ -49,10 +49,11 @@ typedef struct s_philo
 typedef struct s_args
 {
 	pthread_t		*t; // malloc
+	pthread_mutex_t		mtx_check;
 	pthread_mutex_t		mtx;
 	pthread_mutex_t		mtx_printf;
 	unsigned int				number_of_philosophers;
-	unsigned int				meal_complete;
+	unsigned int				meals_complete;
 	unsigned int				death;
 	unsigned int				time_to_die;
 	unsigned int				time_to_eat;
@@ -67,18 +68,13 @@ unsigned int			ft_atoi(char *str);
 void	strisdigit(char *str);
 int	compliance_args(int argc, char **argv);
 void	check_nbphilo(unsigned int n);
-void	check_forks(); // Verifie la disponibilite des fourchettes.
-void	take_forks(); // Prend les fourchettes apres avoir verifie leur disponibilite.
-void	take_back_forks(); // Remet les fourchettes en place une fois le repas termine.
 void	*routine(void *philo);
 void	*check_philos(void *args);
-void	*check_meal(void *args);
+void	*check_meals(void *args);
 void	create_forks(t_args *args);
 void	create_threads(t_args *args);
 void	philosophers(t_args *args);
-
 void	*ft_usleep(long requested_sleep_time);
-
 void	ft_pick_forks(t_philo *philo);
 void	print_countdown(t_philo *philo);
 void	ft_eat(t_philo *philo);

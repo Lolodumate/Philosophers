@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:28:04 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/30 13:47:23 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 08:59:46 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	ft_clean(t_args *args, t_philo *philo)
 		pthread_mutex_destroy(philo[i].left_fork);
 		i++;
 	}
+	pthread_mutex_destroy(&args->mtx_check);
 	pthread_mutex_destroy(&args->mtx);
 	pthread_mutex_destroy(&args->mtx_printf);
 	free(args->t);

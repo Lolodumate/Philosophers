@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/30 15:44:20 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 08:56:37 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	if (!args)
 		exit(1);
 	args->number_of_philosophers = ft_atoi(argv[1]);
-	args->meal_complete = 0;
+	args->meals_complete = 0;
 	args->death = 0;
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
@@ -40,6 +40,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 		free(args->t);
 		exit(1);
 	}
+	pthread_mutex_init(&args->mtx_check, NULL);
 	pthread_mutex_init(&args->mtx, NULL);
 	pthread_mutex_init(&args->mtx_printf, NULL);
 	return (args);

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/30 16:17:50 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 08:56:12 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
  * usleep : 1 seconde = 1000000 microsecondes
  *
  * Tuto : https://medium.com/@ruinadd/philosophers-42-guide-the-dining-philosophers-problem-893a24bc0fe2
- * 
+ * Vizualizer : https://nafuka11.github.io/philosophers-visualizer/
  */
 // pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;
 
@@ -37,7 +37,7 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 	i = 0;
 	if (args->number_of_times_each_philosopher_must_eat > 0)
 	{
-		if (pthread_create(&t_meal, NULL, &check_meal, &args->meal_complete) != 0)
+		if (pthread_create(&t_meal, NULL, &check_meals, &args) != 0)
 		{
 			printf("Failure thread creation\n");
 			exit(1);
@@ -53,6 +53,11 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 		}
 		i++;
 		ft_usleep(10);
+	}
+	if (args->number_of_times_each_philosopher_must_eat > 0)
+	{
+		if (pthread_join(t_meal, NULL) != 0)
+			exit(1);
 	}
 	i = 0;
 	while (i < args->number_of_philosophers)
@@ -103,7 +108,6 @@ void	*check_philos(void *philo)
 			print_countdown(p);
 			printf("%d died\n", p->id);
 			p->is_dead = 1;
-//			ft_exit(p->args_ptr, p, p->id);
 		}
 // 2. Verifier le nombre de repas pris et le cas echeant mettre a jour le status "meal_complete"
 		pthread_mutex_unlock(&p->mtx);
@@ -111,35 +115,26 @@ void	*check_philos(void *philo)
 	return (NULL);
 }
 
-void	*check_meal(void *args)
+void	*check_meals(void *args)
 {
 	unsigned int		i;
-	unsigned int		check_meal;
-	unsigned int		target;
+	unsigned int		check_meals;
 	t_args	*a;
 
 	i = 0;
-	check_meal = 0;
-	target = 0;
+	check_meals = 0;
 	a = (t_args *)args;
-	while (a->meal_complete < a->number_of_philosophers)
+	pthread_mutex_lock(&a->mtx_check);
+	while (check_meals < a->number_of_philosophers)
 	{
-		pthread_mutex_lock(&a->mtx);
+		check_meals = 0;
 		while (i < a->number_of_philosophers)
 		{
-			check_meal = a->philo_ptr[i].meal_number;
-			target = a->number_of_times_each_philosopher_must_eat;
-			if (check_meal == target)
-				a->meal_complete++;
+			check_meals += a->philo_ptr[i].meal_complete;
 			i++;
 		}
 		i = 0;
-		pthread_mutex_unlock(&a->mtx);
 	}
+	pthread_mutex_unlock(&a->mtx_check);
 	return (NULL);
-}
-
-void	philosophers(t_args *args)
-{
-	create_threads(args);
 }

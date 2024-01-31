@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 07:34:19 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/30 13:21:29 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 08:35:51 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@
  *      - Le nombre d'arguments.
  *      - Le contenu des arguments (ils ne doivent comporter que les caracteres numeriques).
 */
+
+void	philosophers(t_args *args)
+{
+	create_threads(args);
+}
 
 int	main(int argc, char **argv)
 {
