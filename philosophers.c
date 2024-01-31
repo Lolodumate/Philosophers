@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 08:56:12 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 12:58:38 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 	i = 0;
 	if (args->number_of_times_each_philosopher_must_eat > 0)
 	{
-		if (pthread_create(&t_meal, NULL, &check_meals, &args) != 0)
+		if (pthread_create(&t_meal, NULL, &check_ending, &args) != 0)
 		{
 			printf("Failure thread creation\n");
 			exit(1);
@@ -74,19 +74,23 @@ void	*routine(void *philo)
 	t_philo		*p;
 
 	p = (t_philo *)philo;
-	p->death_time = get_time() + p->args_ptr->time_to_die;
+	p->death_time = get_time() + (u_int64_t)p->args_ptr->time_to_die;
 	if (pthread_create(&p->thread, NULL, &check_philos, &p) != 0)
 	{
 		printf("Failure thread creation (routine)\n");
 		ft_clean(p->args_ptr, philo);
 		exit(1);
 	}
-	while (p->args_ptr->death == 0)
+	//while (p->args_ptr->death == 0)
+	while (p->is_dead == 0)
 	{
 		ft_eat(p);
 		ft_think(p);
 		if (get_time() >= p->death_time && p->is_eating == 0)
-			p->args_ptr->death = 1;
+		{
+			p->is_dead = 1;
+			p->args_ptr->deaths += 1;
+		}
 	}
 	if (pthread_join(p->thread, NULL) != 0)
 		exit(1);
@@ -105,8 +109,7 @@ void	*check_philos(void *philo)
 // 1. Verifier que l'heure courante est inferieure a l'heure prevue de la mort du philosophe
 		if (p->is_eating == 0 && (get_time() >= p->death_time))
 		{
-			print_countdown(p);
-			printf("%d died\n", p->id);
+			ft_output(philo, " died");
 			p->is_dead = 1;
 		}
 // 2. Verifier le nombre de repas pris et le cas echeant mettre a jour le status "meal_complete"
@@ -115,26 +118,23 @@ void	*check_philos(void *philo)
 	return (NULL);
 }
 
-void	*check_meals(void *args)
+void	*check_ending(void *args)
 {
-	unsigned int		i;
+	unsigned int		x;
 	unsigned int		check_meals;
+	unsigned int		check_deaths;
 	t_args	*a;
 
-	i = 0;
-	check_meals = 0;
 	a = (t_args *)args;
-	pthread_mutex_lock(&a->mtx_check);
-	while (check_meals < a->number_of_philosophers)
+	x = a->number_of_philosophers;
+	check_meals = 0;
+	check_deaths = 0;
+	while ((check_meals < x) && (check_deaths < x))
 	{
-		check_meals = 0;
-		while (i < a->number_of_philosophers)
-		{
-			check_meals += a->philo_ptr[i].meal_complete;
-			i++;
-		}
-		i = 0;
+		pthread_mutex_lock(&a->mtx_check);
+		check_meals = a->meals_complete;
+		check_deaths = a->deaths;
+		pthread_mutex_unlock(&a->mtx_check);
 	}
-	pthread_mutex_unlock(&a->mtx_check);
 	return (NULL);
 }

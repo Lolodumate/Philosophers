@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 08:55:40 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 12:49:27 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct s_philo
 	unsigned long					start_time;
 	unsigned long					death_time;
 	pthread_mutex_t		right_fork;
-	pthread_mutex_t		*left_fork; // Pointeur vers la fourchette du philosophe de gauche.
+	pthread_mutex_t		left_fork; // Pointeur vers la fourchette du philosophe de gauche.
 	pthread_mutex_t		mtx;
 }		t_philo;
 
@@ -54,7 +54,7 @@ typedef struct s_args
 	pthread_mutex_t		mtx_printf;
 	unsigned int				number_of_philosophers;
 	unsigned int				meals_complete;
-	unsigned int				death;
+	unsigned int				deaths;
 	unsigned int				time_to_die;
 	unsigned int				time_to_eat;
 	unsigned int				time_to_sleep;
@@ -70,13 +70,13 @@ int	compliance_args(int argc, char **argv);
 void	check_nbphilo(unsigned int n);
 void	*routine(void *philo);
 void	*check_philos(void *args);
-void	*check_meals(void *args);
+void	*check_ending(void *args);
 void	create_forks(t_args *args);
 void	create_threads(t_args *args);
 void	philosophers(t_args *args);
-void	*ft_usleep(long requested_sleep_time);
+void	*ft_usleep(u_int64_t requested_sleep_time);
 void	ft_pick_forks(t_philo *philo);
-void	print_countdown(t_philo *philo);
+void	ft_output(t_philo *philo, char *task);
 void	ft_eat(t_philo *philo);
 void	ft_sleep(t_philo *philo);
 void	ft_think(t_philo *philo);

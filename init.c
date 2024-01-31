@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 08:56:37 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 12:57:00 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 		exit(1);
 	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->meals_complete = 0;
-	args->death = 0;
+	args->deaths = 0;
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
@@ -56,11 +56,13 @@ t_philo	*init_philo(t_args *args, t_philo *philo, int index)
 	philo->meal_complete = 0;
 	philo->meal_number = 0;
 	philo->death_time = philo->start_time + args->time_to_die;
-	philo->left_fork = malloc(sizeof(pthread_mutex_t *));
+	pthread_mutex_init(&philo->mtx, NULL);
+	pthread_mutex_init(&philo->right_fork, NULL);
+	pthread_mutex_init(&philo->left_fork, NULL);
+/*	philo->left_fork = malloc(sizeof(pthread_mutex_t *));
 	if (!philo->left_fork)
 		exit(1);
-//	printf("philo->death_time = %ld\n", philo->death_time);
-	return (philo);
+*/	return (philo);
 }
 
 t_philo	*set_philos(t_args *args, t_philo *philo)
@@ -87,20 +89,20 @@ t_philo	*set_philos(t_args *args, t_philo *philo)
  * - Donc la fourchette gauche de philo[i - 1] est un pointeur vers la fourchette droite de philo[i].
  */
 //	init_forks(args);
-	while (i < args->number_of_philosophers)
+/*	while (i < args->number_of_philosophers)
 	{
 		pthread_mutex_init(&args->philo_ptr[i].right_fork, NULL);
 		if (i > 0)
 		{
 			philo[i - 1].left_fork = &philo[i].right_fork;
-//			printf("philo[%d].left_fork = philo[%d].right_fork\n", i - 1, i);
+			printf("philo[%d].left_fork = philo[%d].right_fork\n", i - 1, i);
 		}
 		if ((i + 1) == args->number_of_philosophers)
 		{
 			philo[i].left_fork = &philo[0].right_fork;
-//			printf("philo[%d].left_fork = philo[%d].right_fork\n", i, 0);
+			printf("philo[%d].left_fork = philo[%d].right_fork\n", i, 0);
 		}
 		i++;
 	}
-	return (philo);
+*/	return (philo);
 }

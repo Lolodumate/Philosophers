@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/28 12:21:29 by laroges          ###   ########.fr       */
+/*   Updated: 2024/01/31 12:15:13 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,12 @@ int	compliance_args(int argc, char **argv)
 	}
 	check_nbphilo(ft_atoi(argv[1]));
 	return (TRUE);
+}
+
+void	ft_output(t_philo *philo, char *task)
+{
+	u_int64_t	time;
+
+	time = get_time() - philo->start_time;
+	printf("%ld %d %s\n", time, philo->id, task);	
 }
