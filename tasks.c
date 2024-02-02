@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 13:09:50 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 16:00:26 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,22 @@
  *	- When all the philosophers are set as "complete" the program ends.
  */
 
-void	ft_pick_forks(t_philo *philo, unsigned int i)
+void	ft_pick_forks(t_philo *philo, int i)
 {
 	pthread_mutex_lock(&philo[i].args_ptr->forks[i]);
-	ft_output(philo, " has taken a fork");
+	ft_output(philo, " \033[0mhas taken a fork", 5);
 	if (i == (philo[i].args_ptr->number_of_philosophers - 1))
-		pthread_mutex_lock(&philo[0].args_ptr->forks[0]);
+		pthread_mutex_lock(&philo[i].args_ptr->forks[0]);
 	else
 		pthread_mutex_lock(&philo[i].args_ptr->forks[i + 1]);
-	ft_output(philo, " has taken a fork");
+	ft_output(philo, " \033[0mhas taken a fork", 5);
 }
 
-void	ft_drop_forks(t_philo *philo, unsigned int i)
+void	ft_drop_forks(t_philo *philo, int i)
 {
 	pthread_mutex_unlock(&philo[i].args_ptr->forks[i]);
 	if (i == (philo[i].args_ptr->number_of_philosophers - 1))
-		pthread_mutex_unlock(&philo[0].args_ptr->forks[0]);
+		pthread_mutex_unlock(&philo[i].args_ptr->forks[0]);
 	else
 		pthread_mutex_unlock(&philo[i].args_ptr->forks[i + 1]);
 }
@@ -47,7 +47,7 @@ void	ft_drop_forks(t_philo *philo, unsigned int i)
 void	ft_sleep(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->mtx);
-	ft_output(philo, " is sleeping");
+	ft_output(philo, " is sleeping", 4);
 	pthread_mutex_unlock(&philo->mtx);
 	ft_usleep(philo->args_ptr->time_to_sleep, philo->args_ptr);
 }
@@ -56,9 +56,10 @@ void	ft_eat(t_philo *philo)
 {
 // 1. Picking forks : right one, then left one.
 	ft_pick_forks(philo, philo->id);
+	usleep(1);
 // 2. Eating
 	pthread_mutex_lock(&philo->mtx);
-	ft_output(philo, " is eating");
+	ft_output(philo, " is eating", 2);
 	philo->is_eating = 1; // So the monitor knows that this philosopher is eating.
 	philo->death_time = get_time(MILLISECOND) + philo->args_ptr->time_to_die;
 	ft_usleep(philo->args_ptr->time_to_eat, philo->args_ptr);
@@ -80,7 +81,6 @@ void	ft_eat(t_philo *philo)
 
 void	ft_think(t_philo *philo)
 { 
-	pthread_mutex_lock(&philo->mtx);
-	ft_output(philo, " is thinking");
-	pthread_mutex_unlock(&philo->mtx);
+	ft_output(philo, " is thinking", 3);
+	
 }

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 13:23:20 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 15:50:29 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 
 void	create_threads(t_args *args) // philosophers(&mtx, args)
 {
-	unsigned int		i;
+	int		i;
 	pthread_t		t_meal;
 
 	i = 0;
@@ -47,14 +47,10 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 	{
 	//	printf("args->time_to_eat = %d\n", args->time_to_eat);
 		if (pthread_create(&args->t[i], NULL, &routine, &args->philo_ptr[i]) != 0)
-		{
-			printf("Failure thread creation\n");
-			exit(1);
-		}
+			exit_error("Failure thread creation");
 		i++;
-		ft_usleep(1, args);
 	}
-	args->time_start = get_time(MILLISECOND); // **************************************************************
+//	args->time_start = get_time(MILLISECOND); // **************************************************************
 	if (args->number_of_times_each_philosopher_must_eat > 0)
 	{
 		if (pthread_join(t_meal, NULL) != 0)
@@ -75,6 +71,8 @@ void	*routine(void *philo)
 	t_philo		*p;
 
 	p = (t_philo *)philo;
+	if (p->id % 2 == 0)
+		usleep(1);
 	p->death_time = get_time(MILLISECOND) + (long)p->args_ptr->time_to_die;
 	if (pthread_create(&p->thread, NULL, &check_philos, &p) != 0)
 	{

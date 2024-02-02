@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 13:17:38 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 15:30:10 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->t = malloc(sizeof(pthread_t) * args->number_of_philosophers);
 	if (!args->t)
 	{
+		printf("\033[1;31mErreur allocation dynamique args\033[0m\n");
 		free(args);
 		exit(1);
 	}
@@ -101,7 +102,7 @@ void	init_forks(t_args *args, t_philo *philo)
 		exit(1); // ***********************Liberer la memoire !
 	while (i < args->number_of_philosophers)
 	{
-		pthread_mutex_init(&args->forks[i], NULL);
+		pthread_mutex_init(&philo[i].args_ptr->forks[i], NULL);
 		i++;
 	}
 	i = 0;
@@ -110,6 +111,7 @@ void	init_forks(t_args *args, t_philo *philo)
 		args->philo_ptr[i].right_fork = &args->forks[i];
 //		printf("*	args->philo_ptr[%d].right_fork = &args->forks[%d]\n", i, i);
 		philo[i].right_fork = &args->forks[i];
+		philo[i].args_ptr->forks[i] = args->forks[i];
 		if (i > 0)
 		{
 			args->philo_ptr[i - 1].left_fork = &args->forks[i];

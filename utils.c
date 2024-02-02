@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 13:22:33 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 15:58:54 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	exit_error(const char *error)
 	exit(1);
 }
 
-unsigned int	ft_atoi(char *str)
+int	ft_atoi(char *str)
 {
 	unsigned int		i;
 	long			res;
@@ -32,7 +32,7 @@ unsigned int	ft_atoi(char *str)
 	}
 	if (res > INT_MAX)
 		exit_error("Arguments must be < INT_MAX");
-	return (res);
+	return ((int)res);
 }
 
 void	strisdigit(char *str)
@@ -44,8 +44,6 @@ void	strisdigit(char *str)
 		exit(0);
 	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
 		i++;
-	if (str[i] && str[i] == '-')
-		exit_error("Negatives are not allowed");
 	if (str[i])
 		exit_error("Only digits are allowed");
 }
@@ -66,10 +64,10 @@ void	compliance_args(int argc, char **argv)
 		exit_error("Philosophers number must be > 0 and <= 200");
 }
 
-void	ft_output(t_philo *philo, char *task)
+void	ft_output(t_philo *philo, char *task, int color)
 {
 	long	time;
 
 	time = get_time(MILLISECOND) - philo->start_time;
-	printf("%ld %d %s\n", time, philo->id, task);	
+	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", time, color, philo->id, task);
 }
