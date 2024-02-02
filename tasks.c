@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 15:50:17 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 09:17:12 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,22 @@
 
 void	ft_pick_forks(t_philo *philo, unsigned int i)
 {
-	pthread_mutex_lock(philo[i].right_fork);
+	pthread_mutex_lock(&philo[i].args_ptr->forks[i]);
 	ft_output(philo, " has taken a fork");
-	pthread_mutex_lock(philo[i].left_fork);
+	if (i == (philo[i].args_ptr->number_of_philosophers - 1))
+		pthread_mutex_lock(&philo[0].args_ptr->forks[0]);
+	else
+		pthread_mutex_lock(&philo[i].args_ptr->forks[i + 1]);
 	ft_output(philo, " has taken a fork");
 }
 
 void	ft_drop_forks(t_philo *philo, unsigned int i)
 {
-	pthread_mutex_unlock(philo[i].right_fork);
-	pthread_mutex_unlock(philo[i].left_fork);
+	pthread_mutex_unlock(&philo[i].args_ptr->forks[i]);
+	if (i == (philo[i].args_ptr->number_of_philosophers - 1))
+		pthread_mutex_unlock(&philo[0].args_ptr->forks[0]);
+	else
+		pthread_mutex_unlock(&philo[i].args_ptr->forks[i + 1]);
 }
 
 void	ft_sleep(t_philo *philo)

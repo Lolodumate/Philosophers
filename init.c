@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 16:14:45 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 08:52:44 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,24 +101,27 @@ void	init_forks(t_args *args, t_philo *philo)
 		exit(1); // ***********************Liberer la memoire !
 	while (i < args->number_of_philosophers)
 	{
+		pthread_mutex_init(&args->forks[i], NULL);
+		i++;
+	}
+	i = 0;
+	while (i < args->number_of_philosophers)
+	{
 		args->philo_ptr[i].right_fork = &args->forks[i];
-		printf("*	args->philo_ptr[%d].right_fork = &args->forks[%d]\n", i, i);
+//		printf("*	args->philo_ptr[%d].right_fork = &args->forks[%d]\n", i, i);
 		philo[i].right_fork = &args->forks[i];
 		if (i > 0)
 		{
 			args->philo_ptr[i - 1].left_fork = &args->forks[i];
-			printf("args->philo_ptr[%d].left_fork = &args->forks[%d]\n", i - 1, i);
+//			printf("args->philo_ptr[%d].left_fork = &args->forks[%d]\n", i - 1, i);
 			philo[i - 1].left_fork = &args->forks[i];
 		}
 		if ((i + 1) == args->number_of_philosophers)
 		{
 			args->philo_ptr[i].left_fork = &args->forks[0];
-			printf("	args->philo_ptr[%d].left_fork = &args->forks[%d]\n", i, 0);
+//			printf("	args->philo_ptr[%d].left_fork = &args->forks[%d]\n", i, 0);
 			philo[i].left_fork = &args->forks[0];
 		}
-		pthread_mutex_init(&args->forks[i], NULL);
-		pthread_mutex_init(philo[i].right_fork, NULL);
-		pthread_mutex_init(philo[i].left_fork, NULL);
 		i++;
 	}
 }
