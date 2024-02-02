@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 07:34:19 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 16:01:24 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 11:00:17 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,7 @@ int	main(int argc, char **argv)
 
 	args = NULL;
 	philo = NULL;
-	if (compliance_args(argc, argv))
-	{
-
+	compliance_args(argc, argv);
 /* 1. Initialisation des donnees de la structure args :
  *	- Structure args
  *	- Pointeurs args->philos
@@ -46,17 +44,16 @@ int	main(int argc, char **argv)
  *
  * Note : initialisation = malloc, <donnee> = 0, et pthread_mutex_init.
  */
-		args = init_args(argc, argv, args);
-		philo = set_philos(args, philo);
-		init_forks(args, philo);
+	args = init_args(argc, argv, args);
+	philo = set_philos(args, philo);
+	init_forks(args, philo);
 		
 /* Creation des threads.
  */
-		philosophers(args);
+	philosophers(args);
 
 /* Liberation de la memoire (free & destroy mutex).
  */
-		ft_clean(args, philo);
-	}
+	ft_clean(args, philo);
 	return (0);
 }

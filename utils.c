@@ -6,16 +6,22 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 12:15:13 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 13:22:33 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	exit_error(const char *error)
+{
+	printf("%s\n", error);
+	exit(1);
+}
+
 unsigned int	ft_atoi(char *str)
 {
 	unsigned int		i;
-	unsigned int		res;
+	long			res;
 
 	i = 0;
 	res = 0;
@@ -24,6 +30,8 @@ unsigned int	ft_atoi(char *str)
 		res = (res * 10) + (str[i] - '0');
 		i++;
 	}
+	if (res > INT_MAX)
+		exit_error("Arguments must be < INT_MAX");
 	return (res);
 }
 
@@ -37,49 +45,31 @@ void	strisdigit(char *str)
 	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
 		i++;
 	if (str[i] && str[i] == '-')
-	{
-		printf("Les nombres negatifs ne sont pas autorises.\n");
-		exit(1);
-	}
+		exit_error("Negatives are not allowed");
 	if (str[i])
-	{
-		printf("Les arguments contiennent des caracteres non numeriques.\n");
-		exit(1);
-	}
+		exit_error("Only digits are allowed");
 }
 
-void	check_nbphilo(unsigned int n)
-{
-	if (n < 1 || n > 200)
-	{
-		printf("Le nombre de philosophes doit etre compris entre 1 et 200.\n");
-		exit(1);
-	}
-}
-
-int	compliance_args(int argc, char **argv)
+void	compliance_args(int argc, char **argv)
 {
 	int		j;
 
 	j = 1;
 	if (argc < 5 || argc > 6)
-	{
-		printf("Le nombre d'arguments saisi est incorrect.\n");
-		return (FALSE);
-	}
+		exit_error("Number of arguments must be 5 or 6");
 	while (argv[j] && j <= argc)
 	{
 		strisdigit(argv[j]);
 		j++;
 	}
-	check_nbphilo(ft_atoi(argv[1]));
-	return (TRUE);
+	if (ft_atoi(argv[1]) < 1 || ft_atoi(argv[1]) > 200)
+		exit_error("Philosophers number must be > 0 and <= 200");
 }
 
 void	ft_output(t_philo *philo, char *task)
 {
-	u_int64_t	time;
+	long	time;
 
-	time = get_time() - philo->start_time;
+	time = get_time(MILLISECOND) - philo->start_time;
 	printf("%ld %d %s\n", time, philo->id, task);	
 }

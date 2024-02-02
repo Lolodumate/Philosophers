@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 08:52:44 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 13:17:38 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_philo	*init_philo(t_args *args, t_philo *philo, int index)
 {
 	philo->id = index;
 	philo->args_ptr = args;
-	philo->start_time = get_time();
+	philo->start_time = get_time(MILLISECOND);
 	philo->is_eating = 0;
 	philo->is_dead = 0;
 	philo->meal_complete = 0;

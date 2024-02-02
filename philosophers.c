@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 14:08:50 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 13:23:20 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,9 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 			exit(1);
 		}
 		i++;
-		ft_usleep(1);
+		ft_usleep(1, args);
 	}
+	args->time_start = get_time(MILLISECOND); // **************************************************************
 	if (args->number_of_times_each_philosopher_must_eat > 0)
 	{
 		if (pthread_join(t_meal, NULL) != 0)
@@ -74,7 +75,7 @@ void	*routine(void *philo)
 	t_philo		*p;
 
 	p = (t_philo *)philo;
-	p->death_time = get_time() + (u_int64_t)p->args_ptr->time_to_die;
+	p->death_time = get_time(MILLISECOND) + (long)p->args_ptr->time_to_die;
 	if (pthread_create(&p->thread, NULL, &check_philos, &p) != 0)
 	{
 		printf("Failure thread creation (routine)\n");
@@ -84,9 +85,10 @@ void	*routine(void *philo)
 	//while (p->args_ptr->death == 0)
 	while (p->is_dead == 0)
 	{
+		// Ajouter ici une verification de l'etat du philosophe pour sortir de la boucle (philo mort ou repas termines)
 		ft_eat(p);
 		ft_think(p);
-		if (get_time() >= p->death_time && p->is_eating == 0)
+		if (get_time(MILLISECOND) >= (long)p->death_time && p->is_eating == 0)
 		{
 			p->is_dead = 1;
 			p->args_ptr->deaths += 1;
@@ -107,7 +109,7 @@ void	*check_philos(void *philo)
 	{
 		pthread_mutex_lock(&p->mtx);
 // 1. Verifier que l'heure courante est inferieure a l'heure prevue de la mort du philosophe
-		if (p->is_eating == 0 && (get_time() >= p->death_time))
+		if (p->is_eating == 0 && (get_time(MILLISECOND) >= (long)p->death_time))
 		{
 			ft_output(philo, " died");
 			p->is_dead = 1;

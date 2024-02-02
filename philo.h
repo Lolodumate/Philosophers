@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/01/31 15:59:23 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 13:13:00 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,25 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <limits.h>
 
 // https://medium.com/@ruinadd/philosophers-42-guide-the-dining-philosophers-problem-893a24bc0fe2
 // https://github.com/TommyJD93/Philosophers
 
 typedef struct	s_args	t_args;
 
-typedef enum s_bool
+typedef enum e_bool
 {
 	FALSE,
 	TRUE
 }		t_bool;
+
+typedef enum e_time_code
+{
+	SECOND,
+	MILLISECOND,
+	MICROSECOND
+}		t_time_code;
 
 typedef struct s_philo
 {
@@ -39,8 +47,8 @@ typedef struct s_philo
 	int					is_dead;
 	unsigned int					meal_complete;
 	unsigned int					meal_number;
-	unsigned long					start_time;
-	unsigned long					death_time;
+	long					start_time;
+	long					death_time;
 	pthread_mutex_t		*right_fork; // malloc
 	pthread_mutex_t		*left_fork; // pointeur
 	pthread_mutex_t		mtx;
@@ -64,18 +72,20 @@ typedef struct s_args
 	t_philo		*philo_ptr; // malloc
 }               t_args;
 
-u_int64_t			get_time(void);
+//u_int64_t			get_time(void);
+long				get_time(t_time_code time_code);
 unsigned int			ft_atoi(char *str);
+void	exit_error(const char *error);
 void	strisdigit(char *str);
-int	compliance_args(int argc, char **argv);
-void	check_nbphilo(unsigned int n);
+void	compliance_args(int argc, char **argv);
 void	*routine(void *philo);
 void	*check_philos(void *args);
 void	*check_ending(void *args);
 void	create_forks(t_args *args);
 void	create_threads(t_args *args);
 void	philosophers(t_args *args);
-void	*ft_usleep(u_int64_t requested_sleep_time);
+//void	*ft_usleep(long requested_sleep_time);
+void	ft_usleep(long usec, t_args *args);
 void	ft_pick_forks(t_philo *philo, unsigned int i);
 void	ft_drop_forks(t_philo *philo, unsigned int i);
 void	ft_output(t_philo *philo, char *task);
