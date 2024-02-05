@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 13:45:24 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 14:28:48 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 //	printf("get_time(SECOND)      = %ld\n", get_time(SECOND));
 //	printf("get_time(MILLISECOND) = %ld\n", get_time(MILLISECOND));
 //	printf("get_time(MICROSECOND) = %ld\n", get_time(MICROSECOND));
-	args->time_to_die = ft_atoi(argv[2]) * 1000; // Arguments saisis millisecondes et converties en microsecondes
+	args->time_to_die = ft_atoi(argv[2]) * 1000; // Arguments saisis millisecondes et convertis en microsecondes
 	args->time_to_eat = ft_atoi(argv[3]) * 1000;
 	args->time_to_sleep = ft_atoi(argv[4]) * 1000;
 	args->time_start_simulation = get_time(MILLISECOND);

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 12:50:50 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 14:22:33 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 	i = 0;
 	if (args->number_of_times_each_philosopher_must_eat > 0)
 	{
-		if (pthread_create(&t_meal, NULL, &check_ending, &args) != 0)
+		printf("args->number_of_philosophers = %d\n", args->number_of_philosophers);
+		if (pthread_create(&t_meal, NULL, &check_ending, args) != 0)
 		{
 			printf("Failure thread creation\n");
 			exit(1);
@@ -81,7 +82,7 @@ void	*routine(void *philo)
 		exit(1);
 	}
 	//while (p->args_ptr->death == 0)
-	while (p->is_dead == 0)
+	while (p->is_dead == 0 && p->meal_number < p->args_ptr->number_of_times_each_philosopher_must_eat)
 	{
 		ft_eat(p);
 		ft_think(p);
@@ -101,7 +102,7 @@ void	*check_philos(void *philo)
 	{
 		pthread_mutex_lock(&p->mtx);
 // 1. Verifier que l'heure courante est inferieure a l'heure prevue de la mort du philosophe
-		if (p->is_eating == 0 && (get_time(MILLISECOND) >= p->death_time))
+		if (p->is_eating == 0 && (get_time(MICROSECOND) >= p->death_time))
 		{
 			p->is_dead = 1;
 			ft_output(philo, " died", 1);
@@ -120,21 +121,27 @@ void	*check_philos(void *philo)
 
 void	*check_ending(void *args)
 {
-	unsigned int		x;
-	unsigned int		check_meals;
-	unsigned int		check_deaths;
+	int		x;
+	int		check_meals;
+	int		check_deaths;
 	t_args	*a;
 
 	a = (t_args *)args;
 	x = a->number_of_philosophers;
+	printf("a->number_of_philosophers = %d\n", a->number_of_philosophers);
+	printf("a->time_to_die = %ld\n", a->time_to_die);
+	printf("a->time_to_eat = %ld\n", a->time_to_eat);
+	printf("a->time_to_sleep = %ld\n", a->time_to_sleep);
 	check_meals = 0;
 	check_deaths = 0;
 	while ((check_meals < x) && (check_deaths < x))
 	{
 		pthread_mutex_lock(&a->mtx_check);
 		check_meals = a->meals_complete;
+//		printf("check_meals = %d\n", check_meals);
 		check_deaths = a->deaths;
 		pthread_mutex_unlock(&a->mtx_check);
 	}
+	printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
 	return (NULL);
 }
