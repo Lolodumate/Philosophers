@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 09:54:57 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 12:22:51 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ typedef struct s_args
 	t_philo		*philo_ptr; // malloc
 }               t_args;
 
-//u_int64_t			get_time(void);
 long				get_time(t_time_code time_code);
 int			ft_atoi(char *str);
 void	exit_error(const char *error);

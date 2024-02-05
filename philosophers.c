@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 16:16:49 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 12:50:50 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,8 @@ void	*routine(void *philo)
 	//while (p->args_ptr->death == 0)
 	while (p->is_dead == 0)
 	{
-		// Ajouter ici une verification de l'etat du philosophe pour sortir de la boucle (philo mort ou repas termines)
 		ft_eat(p);
 		ft_think(p);
-		if (get_time(MILLISECOND) >= (long)p->death_time && p->is_eating == 0)
-		{
-			p->is_dead = 1;
-			p->args_ptr->deaths += 1;
-		}
 	}
 	if (pthread_join(p->thread, NULL) != 0)
 		exit(1);
@@ -107,12 +101,18 @@ void	*check_philos(void *philo)
 	{
 		pthread_mutex_lock(&p->mtx);
 // 1. Verifier que l'heure courante est inferieure a l'heure prevue de la mort du philosophe
-		if (p->is_eating == 0 && (get_time(MILLISECOND) >= (long)p->death_time))
+		if (p->is_eating == 0 && (get_time(MILLISECOND) >= p->death_time))
 		{
-			ft_output(philo, " died", 1);
 			p->is_dead = 1;
+			ft_output(philo, " died", 1);
 		}
 // 2. Verifier le nombre de repas pris et le cas echeant mettre a jour le status "meal_complete"
+		if (p->meal_number >= p->args_ptr->number_of_times_each_philosopher_must_eat)
+		{
+			p->meal_complete = 1;
+			p->args_ptr->meals_complete++;
+			printf("philo->args_ptr->meals_complete = %d\n", p->args_ptr->meals_complete);
+		}
 		pthread_mutex_unlock(&p->mtx);
 	}
 	return (NULL);

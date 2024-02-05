@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 15:58:54 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 13:31:29 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,6 @@ void	ft_output(t_philo *philo, char *task, int color)
 {
 	long	time;
 
-	time = get_time(MILLISECOND) - philo->start_time;
+	time = get_time(MILLISECOND) - (philo->start_time / 1000);
 	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", time, color, philo->id, task);
 }
