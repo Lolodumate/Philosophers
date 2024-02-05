@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:28:04 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 13:17:17 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 16:16:22 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_clean(t_args *args, t_philo *philo)
 {
-	unsigned int		i;
+	int		i;
 
 	i = 0;
 	while (i < args->number_of_philosophers)

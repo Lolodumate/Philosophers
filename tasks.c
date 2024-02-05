@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 16:00:26 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 10:02:51 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,22 @@
 
 void	ft_pick_forks(t_philo *philo, int i)
 {
-	pthread_mutex_lock(&philo[i].args_ptr->forks[i]);
+	pthread_mutex_lock(&philo->args_ptr->forks[i]);
 	ft_output(philo, " \033[0mhas taken a fork", 5);
-	if (i == (philo[i].args_ptr->number_of_philosophers - 1))
-		pthread_mutex_lock(&philo[i].args_ptr->forks[0]);
+	if (i == (philo->args_ptr->number_of_philosophers - 1))
+		pthread_mutex_lock(&philo->args_ptr->forks[0]);
 	else
-		pthread_mutex_lock(&philo[i].args_ptr->forks[i + 1]);
+		pthread_mutex_lock(&philo->args_ptr->forks[i + 1]);
 	ft_output(philo, " \033[0mhas taken a fork", 5);
 }
 
 void	ft_drop_forks(t_philo *philo, int i)
 {
-	pthread_mutex_unlock(&philo[i].args_ptr->forks[i]);
-	if (i == (philo[i].args_ptr->number_of_philosophers - 1))
-		pthread_mutex_unlock(&philo[i].args_ptr->forks[0]);
+	pthread_mutex_unlock(&philo->args_ptr->forks[i]);
+	if (i == (philo->args_ptr->number_of_philosophers - 1))
+		pthread_mutex_unlock(&philo->args_ptr->forks[0]);
 	else
-		pthread_mutex_unlock(&philo[i].args_ptr->forks[i + 1]);
+		pthread_mutex_unlock(&philo->args_ptr->forks[i + 1]);
 }
 
 void	ft_sleep(t_philo *philo)
@@ -50,13 +50,14 @@ void	ft_sleep(t_philo *philo)
 	ft_output(philo, " is sleeping", 4);
 	pthread_mutex_unlock(&philo->mtx);
 	ft_usleep(philo->args_ptr->time_to_sleep, philo->args_ptr);
+	//pthread_mutex_unlock(&philo->mtx);
 }
 
 void	ft_eat(t_philo *philo)
 {
 // 1. Picking forks : right one, then left one.
 	ft_pick_forks(philo, philo->id);
-	usleep(1);
+	usleep(10);
 // 2. Eating
 	pthread_mutex_lock(&philo->mtx);
 	ft_output(philo, " is eating", 2);

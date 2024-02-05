@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 15:53:34 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 09:54:57 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ typedef struct s_args
 	long				time_to_eat;
 	long				time_to_sleep;
 	int				number_of_times_each_philosopher_must_eat;
-	long		time_start;
+	long		time_start_simulation;
 	t_philo		*philo_ptr; // malloc
 }               t_args;
 

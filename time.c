@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:38:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 13:05:46 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 09:44:11 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ long	get_time(t_time_code time_code)
 		return ((tv.tv_sec * 1e6) + tv.tv_usec);
 	else
 		exit_error("Wrong input to gettime");
-	return (1337);
+	return (0);
 }
 
 void	ft_usleep(long usec, t_args *args)

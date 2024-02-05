@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 15:30:10 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 10:05:55 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->meals_complete = 0;
 	args->deaths = 0;
-	args->time_to_die = ft_atoi(argv[2]);
-	args->time_to_eat = ft_atoi(argv[3]);
-	args->time_to_sleep = ft_atoi(argv[4]);
+	args->time_to_die = ft_atoi(argv[2]) * 1000;
+	args->time_to_eat = ft_atoi(argv[3]) * 1000;
+	args->time_to_sleep = ft_atoi(argv[4]) * 1000;
+	args->time_start_simulation = get_time(MILLISECOND);
 	if (argc == 6)
 		args->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
 	else
@@ -69,7 +70,7 @@ t_philo	*init_philo(t_args *args, t_philo *philo, int index)
 
 t_philo	*set_philos(t_args *args, t_philo *philo)
 {
-	unsigned int		i;
+	int		i;
 
 	i = 0;
 	philo = malloc(sizeof(t_philo) * args->number_of_philosophers);
@@ -94,7 +95,7 @@ t_philo	*set_philos(t_args *args, t_philo *philo)
  */
 void	init_forks(t_args *args, t_philo *philo)
 {
-	unsigned int		i;
+	int		i;
 
 	i = 0;
 	args->forks = malloc(sizeof(pthread_mutex_t) * args->number_of_philosophers);
@@ -111,7 +112,7 @@ void	init_forks(t_args *args, t_philo *philo)
 		args->philo_ptr[i].right_fork = &args->forks[i];
 //		printf("*	args->philo_ptr[%d].right_fork = &args->forks[%d]\n", i, i);
 		philo[i].right_fork = &args->forks[i];
-		philo[i].args_ptr->forks[i] = args->forks[i];
+		philo->args_ptr->forks[i] = args->forks[i];
 		if (i > 0)
 		{
 			args->philo_ptr[i - 1].left_fork = &args->forks[i];

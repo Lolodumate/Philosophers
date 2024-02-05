@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 15:50:29 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/02 16:16:49 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	*check_philos(void *philo)
 // 1. Verifier que l'heure courante est inferieure a l'heure prevue de la mort du philosophe
 		if (p->is_eating == 0 && (get_time(MILLISECOND) >= (long)p->death_time))
 		{
-			ft_output(philo, " died");
+			ft_output(philo, " died", 1);
 			p->is_dead = 1;
 		}
 // 2. Verifier le nombre de repas pris et le cas echeant mettre a jour le status "meal_complete"
