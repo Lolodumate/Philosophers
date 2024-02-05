@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 12:22:51 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 16:47:48 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,8 @@ void	compliance_args(int argc, char **argv);
 void	*routine(void *philo);
 void	*check_philos(void *args);
 void	*check_ending(void *args);
-void	create_forks(t_args *args);
 void	create_threads(t_args *args);
 void	philosophers(t_args *args);
-//void	*ft_usleep(long requested_sleep_time);
 void	ft_usleep(long usec, t_args *args);
 void	ft_pick_forks(t_philo *philo, int i);
 void	ft_drop_forks(t_philo *philo, int i);

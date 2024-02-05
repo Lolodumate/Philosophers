@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 16:36:19 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 17:18:25 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 	i = 0;
 	if (args->number_of_times_each_philosopher_must_eat > 0)
 	{
-		printf("args->number_of_philosophers = %d\n", args->number_of_philosophers);
 		if (pthread_create(&t_meal, NULL, &check_ending, args) != 0)
 		{
 			printf("Failure thread creation\n");
@@ -46,7 +45,6 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 	}
 	while (i < args->number_of_philosophers)
 	{
-	//	printf("args->time_to_eat = %d\n", args->time_to_eat);
 		if (pthread_create(&args->t[i], NULL, &routine, &args->philo_ptr[i]) != 0)
 			exit_error("Failure thread creation");
 		usleep(10);
@@ -82,7 +80,6 @@ void	*routine(void *philo)
 		ft_clean(p->args_ptr, philo);
 		exit(1);
 	}
-	//while (p->args_ptr->death == 0)
 	while (p->is_dead == 0 && p->meal_number < p->args_ptr->number_of_times_each_philosopher_must_eat)
 	{
 		ft_eat(p);
@@ -125,28 +122,20 @@ void	*check_ending(void *args)
 {
 	int		x;
 	int		check_meals;
-	int		check_deaths;
 	t_args	*a;
 
 	a = (t_args *)args;
 	x = a->number_of_philosophers;
-//	printf("a->number_of_philosophers = %d\n", a->number_of_philosophers);
-//	printf("a->time_to_die = %ld\n", a->time_to_die);
-//	printf("a->time_to_eat = %ld\n", a->time_to_eat);
-//	printf("a->time_to_sleep = %ld\n", a->time_to_sleep);
 	check_meals = 0;
-	check_deaths = 0;
-	while ((check_meals < x) && check_deaths == 0)
+	while ((check_meals < x) && a->deaths == 0)
 	{
 		pthread_mutex_lock(&a->mtx_check);
 		check_meals = a->meals_complete;
 		if (check_meals > 0)
 			printf("		check_meals = %d\n", check_meals);
-		check_deaths = a->deaths;
-		if (check_deaths > 0)
-			printf("		check_deaths = %d\n", check_deaths);
+		if (a->deaths > 0)
+			printf("		a->deaths = %d\n", a->deaths);
 		pthread_mutex_unlock(&a->mtx_check);
 	}
-	printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
 	return (NULL);
 }
