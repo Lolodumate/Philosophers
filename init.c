@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 14:28:48 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 15:43:05 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,12 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->meals_complete = 0;
 	args->deaths = 0;
 //	printf("get_time(SECOND)      = %ld\n", get_time(SECOND));
-//	printf("get_time(MILLISECOND) = %ld\n", get_time(MILLISECOND));
+	printf("get_time(MILLISECOND) = %ld\n", get_time(MILLISECOND));
 //	printf("get_time(MICROSECOND) = %ld\n", get_time(MICROSECOND));
-	args->time_to_die = ft_atoi(argv[2]) * 1000; // Arguments saisis millisecondes et convertis en microsecondes
-	args->time_to_eat = ft_atoi(argv[3]) * 1000;
-	args->time_to_sleep = ft_atoi(argv[4]) * 1000;
+	args->time_to_die = ft_atoi(argv[2]); // Arguments saisis millisecondes et convertis en microsecondes
+	printf("time_to_die = %ld\n", args->time_to_die);
+	args->time_to_eat = ft_atoi(argv[3]);
+	args->time_to_sleep = ft_atoi(argv[4]);
 	args->time_start_simulation = get_time(MILLISECOND);
 	if (argc == 6)
 		args->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
@@ -55,13 +56,13 @@ t_philo	*init_philo(t_args *args, t_philo *philo, int index)
 {
 	philo->id = index;
 	philo->args_ptr = args;
-	philo->start_time = get_time(MICROSECOND);
+	philo->start_time = get_time(MILLISECOND);
 	philo->is_eating = 0;
 	philo->is_dead = 0;
 	philo->meal_complete = 0;
 	philo->meal_number = 0;
 	philo->death_time = philo->start_time + args->time_to_die; // death_time a mettre a jour a chaque repas
-//	printf("philo->death_time = %ld\n", philo->death_time);
+	printf("philo[%d]->death_time  = %ld\n", philo->id, philo->death_time);
 	pthread_mutex_init(&philo->mtx, NULL);
 	philo->right_fork = malloc(sizeof(pthread_mutex_t *));
 	if (!philo->right_fork)

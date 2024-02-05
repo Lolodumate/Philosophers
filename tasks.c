@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 13:45:54 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 16:34:55 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,12 @@ void	ft_pick_forks(t_philo *philo, int i)
 {
 	pthread_mutex_lock(&philo->args_ptr->forks[i]); //****************MUTEX LOCK
 	ft_output(philo, " \033[0mhas taken a fork", 5);
-	if (i == (philo->args_ptr->number_of_philosophers - 1))
-		pthread_mutex_lock(&philo->args_ptr->forks[0]); //***************MUTEX LOCK
+	pthread_mutex_lock(&philo->args_ptr->forks[(i + 1) % philo->args_ptr->number_of_philosophers]);
+/*	if (i == (philo->args_ptr->number_of_philosophers - 1))
+		pthread_mutex_lock(&philo->args_ptr->forks[0]); ***************MUTEX LOCK
 	else
-		pthread_mutex_lock(&philo->args_ptr->forks[i + 1]); //*************MUTEX LOCK
-	ft_output(philo, " \033[0mhas taken a fork", 5);
+		pthread_mutex_lock(&philo->args_ptr->forks[i + 1]); *************MUTEX LOCK
+*/	ft_output(philo, " \033[0mhas taken a fork", 5);
 }
 
 void	ft_drop_forks(t_philo *philo, int i)
@@ -49,7 +50,7 @@ void	ft_sleep(t_philo *philo)
 	pthread_mutex_lock(&philo->mtx); //*****************MUTEX LOCK
 	ft_output(philo, " is sleeping", 4);
 	pthread_mutex_unlock(&philo->mtx); //*****************MUTEX UNLOCK
-	ft_usleep(philo->args_ptr->time_to_sleep, philo->args_ptr);
+	ft_usleep(philo->args_ptr->time_to_sleep * 1000, philo->args_ptr);
 }
 
 void	ft_eat(t_philo *philo)
@@ -60,9 +61,11 @@ void	ft_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->mtx);
 	ft_output(philo, " is eating", 2);
 	philo->is_eating = 1; // So the monitor knows that this philosopher is eating.
-	philo->death_time = get_time(MILLISECOND) + (philo->args_ptr->time_to_die / 1000);
-//	printf("UPDATE philo[%d]->death_time = %ld\n", philo->id, philo->death_time);
-	ft_usleep(philo->args_ptr->time_to_eat, philo->args_ptr);
+	printf("philo->args_ptr->time_to_die = %ld\n", philo->args_ptr->time_to_die);
+	printf("get_time(MILLISECOND) = %ld\n", get_time(MILLISECOND));
+	philo->death_time = get_time(MILLISECOND) + philo->args_ptr->time_to_die;
+	printf("UPDATE philo[%d]->death_time = %ld\n", philo->id, philo->death_time);
+	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr);
 	philo->is_eating = 0; // So the monitor knows that this philosopher is not eating any more.
 	//Ajouter booleen philo->last_meal
 	philo->meal_number++;

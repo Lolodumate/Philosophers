@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 14:22:33 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/05 16:36:19 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 	//	printf("args->time_to_eat = %d\n", args->time_to_eat);
 		if (pthread_create(&args->t[i], NULL, &routine, &args->philo_ptr[i]) != 0)
 			exit_error("Failure thread creation");
+		usleep(10);
 		i++;
 	}
 //	args->time_start = get_time(MILLISECOND); // **************************************************************
@@ -75,7 +76,7 @@ void	*routine(void *philo)
 	if (p->id % 2 == 0)
 		usleep(1);
 	p->death_time = get_time(MILLISECOND) + (long)p->args_ptr->time_to_die;
-	if (pthread_create(&p->thread, NULL, &check_philos, &p) != 0)
+	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 	{
 		printf("Failure thread creation (routine)\n");
 		ft_clean(p->args_ptr, philo);
@@ -102,9 +103,10 @@ void	*check_philos(void *philo)
 	{
 		pthread_mutex_lock(&p->mtx);
 // 1. Verifier que l'heure courante est inferieure a l'heure prevue de la mort du philosophe
-		if (p->is_eating == 0 && (get_time(MICROSECOND) >= p->death_time))
+		if (p->is_eating == 0 && (get_time(MILLISECOND) >= p->death_time))
 		{
 			p->is_dead = 1;
+			p->args_ptr->deaths++;
 			ft_output(philo, " died", 1);
 		}
 // 2. Verifier le nombre de repas pris et le cas echeant mettre a jour le status "meal_complete"
@@ -128,18 +130,21 @@ void	*check_ending(void *args)
 
 	a = (t_args *)args;
 	x = a->number_of_philosophers;
-	printf("a->number_of_philosophers = %d\n", a->number_of_philosophers);
-	printf("a->time_to_die = %ld\n", a->time_to_die);
-	printf("a->time_to_eat = %ld\n", a->time_to_eat);
-	printf("a->time_to_sleep = %ld\n", a->time_to_sleep);
+//	printf("a->number_of_philosophers = %d\n", a->number_of_philosophers);
+//	printf("a->time_to_die = %ld\n", a->time_to_die);
+//	printf("a->time_to_eat = %ld\n", a->time_to_eat);
+//	printf("a->time_to_sleep = %ld\n", a->time_to_sleep);
 	check_meals = 0;
 	check_deaths = 0;
-	while ((check_meals < x) && (check_deaths < x))
+	while ((check_meals < x) && check_deaths == 0)
 	{
 		pthread_mutex_lock(&a->mtx_check);
 		check_meals = a->meals_complete;
-//		printf("check_meals = %d\n", check_meals);
+		if (check_meals > 0)
+			printf("		check_meals = %d\n", check_meals);
 		check_deaths = a->deaths;
+		if (check_deaths > 0)
+			printf("		check_deaths = %d\n", check_deaths);
 		pthread_mutex_unlock(&a->mtx_check);
 	}
 	printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
