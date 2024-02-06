@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 17:14:44 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/06 11:06:41 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,12 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 //	printf("time_to_die = %ld\n", args->time_to_die);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
-	args->time_start_simulation = get_time(MILLISECOND);
+	args->time_start_diner = get_time(MILLISECOND);
+	args->end_of_diner = 0;
 	if (argc == 6)
-		args->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
+		args->target_nb_meals = ft_atoi(argv[5]);
 	else
-		args->number_of_times_each_philosopher_must_eat = ft_atoi("0");
+		args->target_nb_meals = 0;
 	args->t = malloc(sizeof(pthread_t) * args->number_of_philosophers);
 	if (!args->t)
 	{

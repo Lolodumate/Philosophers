@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 17:18:25 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/06 11:12:00 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,34 +34,31 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 	int		i;
 	pthread_t		t_meal;
 
-	i = 0;
-	if (args->number_of_times_each_philosopher_must_eat > 0)
+	i = -1;
+	if (args->target_nb_meals > 0)
 	{
-		if (pthread_create(&t_meal, NULL, &check_ending, args) != 0)
+		if (pthread_create(&t_meal, NULL, &check_meals, args) != 0)
 		{
 			printf("Failure thread creation\n");
 			exit(1);
 		}
 	}
-	while (i < args->number_of_philosophers)
+	while (++i < args->number_of_philosophers)
 	{
 		if (pthread_create(&args->t[i], NULL, &routine, &args->philo_ptr[i]) != 0)
 			exit_error("Failure thread creation");
-		usleep(10);
-		i++;
 	}
-//	args->time_start = get_time(MILLISECOND); // **************************************************************
-	if (args->number_of_times_each_philosopher_must_eat > 0)
+	args->time_start_diner = get_time(MILLISECOND);
+	if (args->target_nb_meals > 0)
 	{
 		if (pthread_join(t_meal, NULL) != 0)
 			exit(1);
 	}
-	i = 0;
-	while (i < args->number_of_philosophers)
+	i = -1;
+	while (++i < args->number_of_philosophers)
 	{
 		if (pthread_join(args->t[i], NULL) != 0)
 			exit(1);
-		i++;
 	}
 }
 
@@ -73,14 +70,14 @@ void	*routine(void *philo)
 	p = (t_philo *)philo;
 	if (p->id % 2 == 0)
 		usleep(1);
-	p->death_time = get_time(MILLISECOND) + (long)p->args_ptr->time_to_die;
+	p->death_time = get_time(MILLISECOND) + p->args_ptr->time_to_die;
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 	{
 		printf("Failure thread creation (routine)\n");
 		ft_clean(p->args_ptr, philo);
 		exit(1);
 	}
-	while (p->is_dead == 0 && p->meal_number < p->args_ptr->number_of_times_each_philosopher_must_eat)
+	while (p->is_dead == 0)
 	{
 		ft_eat(p);
 		ft_think(p);
@@ -99,42 +96,44 @@ void	*check_philos(void *philo)
 	while (p->is_dead == 0 && p->meal_complete == 0)
 	{
 		pthread_mutex_lock(&p->mtx);
-// 1. Verifier que l'heure courante est inferieure a l'heure prevue de la mort du philosophe
 		if (p->is_eating == 0 && (get_time(MILLISECOND) >= p->death_time))
 		{
 			p->is_dead = 1;
+			p->args_ptr->end_of_diner = 1;
 			p->args_ptr->deaths++;
 			ft_output(philo, " died", 1);
+			pthread_mutex_unlock(&p->mtx);
+			break ;
 		}
-// 2. Verifier le nombre de repas pris et le cas echeant mettre a jour le status "meal_complete"
-		if (p->meal_number >= p->args_ptr->number_of_times_each_philosopher_must_eat)
-		{
+		if (p->meal_number == p->args_ptr->target_nb_meals)
 			p->meal_complete = 1;
-			p->args_ptr->meals_complete++;
-			printf("philo->args_ptr->meals_complete = %d\n", p->args_ptr->meals_complete);
-		}
 		pthread_mutex_unlock(&p->mtx);
 	}
 	return (NULL);
 }
 
-void	*check_ending(void *args)
+void	*check_meals(void *args)
 {
-	int		x;
 	int		check_meals;
+	int		i;
 	t_args	*a;
 
-	a = (t_args *)args;
-	x = a->number_of_philosophers;
 	check_meals = 0;
-	while ((check_meals < x) && a->deaths == 0)
+	i = 0;
+	a = (t_args *)args;
+	while (check_meals < a->number_of_philosophers)
 	{
 		pthread_mutex_lock(&a->mtx_check);
-		check_meals = a->meals_complete;
-		if (check_meals > 0)
-			printf("		check_meals = %d\n", check_meals);
-		if (a->deaths > 0)
-			printf("		a->deaths = %d\n", a->deaths);
+		i = -1;
+		while (++i < a->number_of_philosophers)
+			check_meals += a->philo_ptr[i].meal_complete;
+		if (check_meals == a->number_of_philosophers)
+		{
+			printf("meals complete\n");
+			pthread_mutex_unlock(&a->mtx_check);
+			break ;
+		}
+		check_meals = 0;
 		pthread_mutex_unlock(&a->mtx_check);
 	}
 	return (NULL);

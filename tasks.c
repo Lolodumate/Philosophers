@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 17:13:56 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/06 10:36:56 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,12 @@ void	ft_eat(t_philo *philo)
 	philo->is_eating = 0; // So the monitor knows that this philosopher is not eating any more.
 	//Ajouter booleen philo->last_meal
 	philo->meal_number++;
-	if (philo->meal_number == philo->args_ptr->number_of_times_each_philosopher_must_eat && philo->args_ptr->number_of_times_each_philosopher_must_eat != 0)
+	if (philo->meal_number == philo->args_ptr->target_nb_meals && philo->args_ptr->target_nb_meals != 0)
 	{
 		philo->meal_complete = 1;
 		philo->args_ptr->meals_complete++;
-		printf("philo[%d].meal_complete = 1\n", philo->id);
-		printf("philo->args_ptr->meals_complete = %d\n", philo->args_ptr->meals_complete);
+		printf("ft_eat : philo[%d].meal_complete = 1\n", philo->id);
+		printf("ft_eat : philo->args_ptr->meals_complete = %d\n", philo->args_ptr->meals_complete);
 	}
 //	printf("philo->meal_number = %d\n", philo->meal_number);
 //	printf("philo->meal_complete = %d\n", philo->meal_complete);

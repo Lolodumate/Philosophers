@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 16:47:48 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/06 11:02:31 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,9 @@ typedef struct s_args
 	long				time_to_die;
 	long				time_to_eat;
 	long				time_to_sleep;
-	int				number_of_times_each_philosopher_must_eat;
-	long		time_start_simulation;
+	int				target_nb_meals;
+	long		time_start_diner;
+	int		end_of_diner;
 	t_philo		*philo_ptr; // malloc
 }               t_args;
 
@@ -79,7 +80,7 @@ void	strisdigit(char *str);
 void	compliance_args(int argc, char **argv);
 void	*routine(void *philo);
 void	*check_philos(void *args);
-void	*check_ending(void *args);
+void	*check_meals(void *args);
 void	create_threads(t_args *args);
 void	philosophers(t_args *args);
 void	ft_usleep(long usec, t_args *args);
