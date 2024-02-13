@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/06 11:06:41 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/13 13:31:18 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->meals_complete = 0;
 	args->deaths = 0;
-//	printf("get_time(SECOND)      = %ld\n", get_time(SECOND));
-//	printf("get_time(MILLISECOND) = %ld\n", get_time(MILLISECOND));
-//	printf("get_time(MICROSECOND) = %ld\n", get_time(MICROSECOND));
 	args->time_to_die = ft_atoi(argv[2]); // Arguments saisis millisecondes et convertis en microsecondes
-//	printf("time_to_die = %ld\n", args->time_to_die);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
 	args->time_start_diner = get_time(MILLISECOND);
@@ -33,18 +29,18 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 		args->target_nb_meals = ft_atoi(argv[5]);
 	else
 		args->target_nb_meals = 0;
-	args->t = malloc(sizeof(pthread_t) * args->number_of_philosophers);
+	args->t = malloc(sizeof(pthread_t) * args->number_of_philosophers); // malloc *********************************
 	if (!args->t)
 	{
 		printf("\033[1;31mErreur allocation dynamique args\033[0m\n");
 		free(args);
 		exit(1);
 	}
-	args->philo_ptr = malloc(sizeof(t_philo) * args->number_of_philosophers);
+	args->philo_ptr = malloc(sizeof(t_philo) * args->number_of_philosophers); // malloc ******************************
 	if (!args->philo_ptr)
 	{
-		free(args);
 		free(args->t);
+		free(args);
 		exit(1);
 	}
 	pthread_mutex_init(&args->mtx_check, NULL);
@@ -63,14 +59,8 @@ t_philo	*init_philo(t_args *args, t_philo *philo, int index)
 	philo->meal_complete = 0;
 	philo->meal_number = 0;
 	philo->death_time = philo->start_time + args->time_to_die; // death_time a mettre a jour a chaque repas
-//	printf("philo[%d]->death_time  = %ld\n", philo->id, philo->death_time);
 	pthread_mutex_init(&philo->mtx, NULL);
-	philo->right_fork = malloc(sizeof(pthread_mutex_t *));
-	if (!philo->right_fork)
-		exit(1);
-	philo->left_fork = malloc(sizeof(pthread_mutex_t *));
-	if (!philo->left_fork)
-		exit(1);
+	philo->right_fork = malloc(sizeof(pthread_mutex_t *)); // malloc **************************************
 	return (philo);
 }
 
@@ -79,7 +69,7 @@ t_philo	*set_philos(t_args *args, t_philo *philo)
 	int		i;
 
 	i = 0;
-	philo = malloc(sizeof(t_philo) * args->number_of_philosophers);
+	philo = malloc(sizeof(t_philo) * args->number_of_philosophers); // malloc *************************************
 	if (!philo)
 	{
 		printf("Erreur allocation dynamique philo\n");
@@ -104,7 +94,7 @@ void	init_forks(t_args *args, t_philo *philo)
 	int		i;
 
 	i = 0;
-	args->forks = malloc(sizeof(pthread_mutex_t) * args->number_of_philosophers);
+	args->forks = malloc(sizeof(pthread_mutex_t) * args->number_of_philosophers); // malloc ****************************
 	if (!args->forks)
 		exit(1); // ***********************Liberer la memoire !
 	while (i < args->number_of_philosophers)
@@ -116,19 +106,16 @@ void	init_forks(t_args *args, t_philo *philo)
 	while (i < args->number_of_philosophers)
 	{
 		args->philo_ptr[i].right_fork = &args->forks[i];
-//		printf("*	args->philo_ptr[%d].right_fork = &args->forks[%d]\n", i, i);
 		philo[i].right_fork = &args->forks[i];
 		philo->args_ptr->forks[i] = args->forks[i];
 		if (i > 0)
 		{
 			args->philo_ptr[i - 1].left_fork = &args->forks[i];
-//			printf("args->philo_ptr[%d].left_fork = &args->forks[%d]\n", i - 1, i);
 			philo[i - 1].left_fork = &args->forks[i];
 		}
 		if ((i + 1) == args->number_of_philosophers)
 		{
 			args->philo_ptr[i].left_fork = &args->forks[0];
-//			printf("	args->philo_ptr[%d].left_fork = &args->forks[%d]\n", i, 0);
 			philo[i].left_fork = &args->forks[0];
 		}
 		i++;

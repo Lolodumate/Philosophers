@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 07:34:19 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/02 11:00:17 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/13 12:32:43 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,6 @@ int	main(int argc, char **argv)
 /* Liberation de la memoire (free & destroy mutex).
  */
 	ft_clean(args, philo);
+	printf("***********************END************************\n");
 	return (0);
 }

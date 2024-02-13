@@ -6,17 +6,11 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/05 15:36:48 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/13 10:11:21 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	exit_error(const char *error)
-{
-	printf("%s\n", error);
-	exit(1);
-}
 
 int	ft_atoi(char *str)
 {

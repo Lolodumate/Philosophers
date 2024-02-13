@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/06 11:02:31 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/13 13:22:31 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,24 +73,32 @@ typedef struct s_args
 	t_philo		*philo_ptr; // malloc
 }               t_args;
 
+// main.c
+void	philosophers(t_args *args);
+
 long				get_time(t_time_code time_code);
 int			ft_atoi(char *str);
+
+// clean.c
 void	exit_error(const char *error);
+void	ft_exit(t_args *args, t_philo *philo, int philo_id);
+void	ft_clean(t_args *args, t_philo *philo);
+
+void	update_death_time(t_philo *philo);
 void	strisdigit(char *str);
 void	compliance_args(int argc, char **argv);
 void	*routine(void *philo);
 void	*check_philos(void *args);
-void	*check_meals(void *args);
+void	*check_ending(void *args);
 void	create_threads(t_args *args);
-void	philosophers(t_args *args);
-void	ft_usleep(long usec, t_args *args);
+void	join_threads(t_args *args, pthread_t t_meal);
+void	ft_usleep(long usec/*, t_args *args*/);
 void	ft_pick_forks(t_philo *philo, int i);
 void	ft_drop_forks(t_philo *philo, int i);
 void	ft_output(t_philo *philo, char *task, int color);
 void	ft_eat(t_philo *philo);
-void	ft_sleep(t_philo *philo);
+//void	ft_sleep(t_philo *philo);
 void	ft_think(t_philo *philo);
-void	ft_clean(t_args *args, t_philo *philo);
 t_args	*init_args(int argc, char **argv, t_args *args);
 t_philo	*init_philo(t_args *args, t_philo *philo, int index);
 t_philo	*set_philos(t_args *args, t_philo *philo);
