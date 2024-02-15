@@ -6,7 +6,7 @@
 #    By: laroges <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/18 16:16:20 by laroges           #+#    #+#              #
-#    Updated: 2024/01/28 11:51:05 by laroges          ###   ########.fr        #
+#    Updated: 2024/02/15 12:33:30 by laroges          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,9 @@ SRC =	main.c \
 	utils.c \
 	tasks.c \
 	time.c \
+	ft_args.c \
+	mem_alloc.c \
+	ft_utils.c \
 
 CC = gcc
 

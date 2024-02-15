@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/13 13:31:18 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/15 20:57:43 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,74 +14,43 @@
 
 t_args	*init_args(int argc, char **argv, t_args *args)
 {
-	args = malloc(sizeof(t_args));
-	if (!args)
-		exit(1);
-	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->meals_complete = 0;
 	args->deaths = 0;
-	args->time_to_die = ft_atoi(argv[2]); // Arguments saisis millisecondes et convertis en microsecondes
+	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
-	args->time_start_diner = get_time(MILLISECOND);
+	args->time_start_diner = get_time(args, MS);
 	args->end_of_diner = 0;
+	args->target_nb_meals = 0;
 	if (argc == 6)
 		args->target_nb_meals = ft_atoi(argv[5]);
-	else
-		args->target_nb_meals = 0;
-	args->t = malloc(sizeof(pthread_t) * args->number_of_philosophers); // malloc *********************************
-	if (!args->t)
-	{
-		printf("\033[1;31mErreur allocation dynamique args\033[0m\n");
-		free(args);
-		exit(1);
-	}
-	args->philo_ptr = malloc(sizeof(t_philo) * args->number_of_philosophers); // malloc ******************************
-	if (!args->philo_ptr)
-	{
-		free(args->t);
-		free(args);
-		exit(1);
-	}
-	pthread_mutex_init(&args->mtx_check, NULL);
-	pthread_mutex_init(&args->mtx, NULL);
-	pthread_mutex_init(&args->mtx_printf, NULL);
+	ft_mutex(args, &args->mtx_check_ending, INIT);
+	ft_mutex(args, &args->mtx, INIT);
+	ft_mutex(args, &args->mtx_write, INIT);
 	return (args);
 }
 
-t_philo	*init_philo(t_args *args, t_philo *philo, int index)
+t_philo	init_philo(t_args *args, t_philo philo, int index)
 {
-	philo->id = index;
-	philo->args_ptr = args;
-	philo->start_time = get_time(MILLISECOND);
-	philo->is_eating = 0;
-	philo->is_dead = 0;
-	philo->meal_complete = 0;
-	philo->meal_number = 0;
-	philo->death_time = philo->start_time + args->time_to_die; // death_time a mettre a jour a chaque repas
-	pthread_mutex_init(&philo->mtx, NULL);
-	philo->right_fork = malloc(sizeof(pthread_mutex_t *)); // malloc **************************************
+	philo.id = index;
+	philo.args_ptr = args;
+	philo.is_eating = FALSE;
+	philo.is_dead = FALSE;
+	philo.meal_complete = FALSE;
+	philo.meal_number = 0;
+	philo.start_time = get_time(args, MS);
+	philo.death_time = philo.start_time + args->time_to_die;
+	ft_mutex(args, &philo.mtx, INIT);
 	return (philo);
 }
 
 t_philo	*set_philos(t_args *args, t_philo *philo)
 {
-	int		i;
+	int             i;
 
-	i = 0;
-	philo = malloc(sizeof(t_philo) * args->number_of_philosophers); // malloc *************************************
-	if (!philo)
-	{
-		printf("Erreur allocation dynamique philo\n");
-		exit(1); // ************************Liberer la memoire !
-	}
-	while (i < args->number_of_philosophers)
-	{
-		init_philo(args, &philo[i], i);
-		args->philo_ptr[i] = philo[i];
-		pthread_mutex_init(&philo[i].mtx, NULL);
-		i++;
-	}
+	i = -1;
+	while (++i < args->number_of_philosophers)
+		philo[i] = init_philo(args, philo[i], i + 1);
 	return (philo);
 }
 
@@ -92,32 +61,25 @@ t_philo	*set_philos(t_args *args, t_philo *philo)
 void	init_forks(t_args *args, t_philo *philo)
 {
 	int		i;
+	int		n;
 
-	i = 0;
-	args->forks = malloc(sizeof(pthread_mutex_t) * args->number_of_philosophers); // malloc ****************************
-	if (!args->forks)
-		exit(1); // ***********************Liberer la memoire !
-	while (i < args->number_of_philosophers)
+	i = -1;
+	n = args->number_of_philosophers;
+	while (++i < args->number_of_philosophers)
 	{
-		pthread_mutex_init(&philo[i].args_ptr->forks[i], NULL);
-		i++;
-	}
-	i = 0;
-	while (i < args->number_of_philosophers)
-	{
-		args->philo_ptr[i].right_fork = &args->forks[i];
-		philo[i].right_fork = &args->forks[i];
-		philo->args_ptr->forks[i] = args->forks[i];
-		if (i > 0)
+		printf("%d\n", philo[i].id);
+		printf("TRUE FALSE %d\n", philo[i].is_eating);
+		printf("TRUE FALSE %d\n", philo[i].is_dead);
+		printf("TRUE FALSE %d\n", philo[i].meal_complete);
+		if (philo[i].id % 2 == 0)
 		{
-			args->philo_ptr[i - 1].left_fork = &args->forks[i];
-			philo[i - 1].left_fork = &args->forks[i];
+			philo->main_fork = &args->forks[(philo->id + 1) % n];
+			philo->aux_fork = &args->forks[(philo->id) % n];
 		}
-		if ((i + 1) == args->number_of_philosophers)
+		else
 		{
-			args->philo_ptr[i].left_fork = &args->forks[0];
-			philo[i].left_fork = &args->forks[0];
+			philo->main_fork = &args->forks[(philo->id) % n];
+			philo->aux_fork = &args->forks[(philo->id + 1) % n];
 		}
-		i++;
 	}
 }

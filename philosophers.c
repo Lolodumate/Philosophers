@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/13 14:01:50 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/15 17:53:28 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,26 +32,17 @@
 void	create_threads(t_args *args) // philosophers(&mtx, args)
 {
 	int		i;
-	pthread_t		t_meal;
 
 	i = -1;
-	if (pthread_create(&t_meal, NULL, &check_ending, args) != 0)
-	{
-		printf("Failure thread creation\n");
-		exit(1); // Liberer la memoire
-	}
+	if (pthread_create(&args->t_end, NULL, &check_ending, args) != 0)
+		exit_error(args, "Failure thread creation");
 	while (++i < args->number_of_philosophers)
 	{
-		if (pthread_create(&args->t[i], NULL, &routine, &args->philo_ptr[i]) != 0)
-			exit_error("Failure thread creation");
+		if (pthread_create(&args->t[i], NULL, &diner_routine, &args->philo_ptr[i]) != 0)
+			exit_error(args, "Failure thread creation");
 	}
-	args->time_start_diner = get_time(MILLISECOND);
-	i = -1;
-	while (++i < args->number_of_philosophers)
-	{
-		args->philo_ptr[i].death_time = args->time_start_diner + args->time_to_die;
-	}
-	join_threads(args, t_meal);
+	args->time_start_diner = get_time(args, MS);
+	join_threads(args, args->t_end);
 }
 
 void	join_threads(t_args *args, pthread_t t_meal)
@@ -60,37 +51,29 @@ void	join_threads(t_args *args, pthread_t t_meal)
 
 	i = -1;
 	if (args->target_nb_meals > 0)
-	{
 		if (pthread_join(t_meal, NULL) != 0)
-			exit(1); // Liberer la memoire
-	}
+			exit_error(args, "Error pthread_join");
 	while (++i < args->number_of_philosophers)
-	{
 		if (pthread_join(args->t[i], NULL) != 0)
-			exit(1); // Liberer la memoire
-	}
+			exit_error(args, "Error pthread_join");
 }
 
 // Thread routine avec boucle !dead
-void	*routine(void *philo)
+void	*diner_routine(void *philo)
 {
 	t_philo		*p;
 
 	p = (t_philo *)philo;
-	p->death_time = get_time(MILLISECOND) + p->args_ptr->time_to_die;
+	p->death_time = get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
-	{
-		printf("Failure thread creation (routine)\n");
-		ft_clean(p->args_ptr, philo);
-		exit(1);
-	}
-	while (p->is_dead == 0 && p->args_ptr->end_of_diner == 0)
+		exit_error(p->args_ptr, "Error pthread_create");
+	while (p->is_dead == FALSE && p->args_ptr->end_of_diner == FALSE)
 	{
 		ft_eat(p);
 		ft_think(p);
 	}
 	if (pthread_join(p->thread, NULL) != 0)
-		exit(1);
+		ft_clean(p->args_ptr);
 	return (NULL);
 }
 
@@ -100,15 +83,15 @@ void	*check_philos(void *philo)
 	t_philo	*p;
 
 	p = (t_philo *)philo;
-	while (p->args_ptr->end_of_diner == 0 && p->is_dead == 0)
+	while (p->args_ptr->end_of_diner == FALSE && p->is_dead == FALSE)
 	{
 		pthread_mutex_lock(&p->mtx);
-		if (p->is_eating == 0 && (get_time(MILLISECOND) >= p->death_time))
+		if (p->is_eating == FALSE && (get_time(p->args_ptr, MS) >= p->death_time))
 		{
-			p->is_dead = 1;
-			p->args_ptr->end_of_diner = 1;
+			p->is_dead = FALSE;
+			p->args_ptr->end_of_diner = TRUE;
 			p->args_ptr->deaths++;
-			ft_output(philo, " died", 1);
+			ft_write_task(p, DEAD);
 		}
 		pthread_mutex_unlock(&p->mtx);
 	}
@@ -120,17 +103,14 @@ void	*check_ending(void *args)
 	t_args	*a;
 
 	a = (t_args *)args;
-	while (a->end_of_diner == 0)
+	while (!ft_end_of_diner(a))
 	{
-		pthread_mutex_lock(&a->mtx_check);
+		pthread_mutex_lock(&a->mtx_check_ending);
 		if (a->deaths > 0)
-			a->end_of_diner = 1;
+			a->end_of_diner = TRUE;
 		if (a->meals_complete >= a->number_of_philosophers)
-		{
-//			printf("meals complete - args->end_of_diner = 1\n");
-			a->end_of_diner = 1;
-		}
-		pthread_mutex_unlock(&a->mtx_check);
+			a->end_of_diner = TRUE;
+		pthread_mutex_unlock(&a->mtx_check_ending);
 	}
 	return (NULL);
 }

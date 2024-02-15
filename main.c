@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 07:34:19 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/13 12:32:43 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/15 20:29:14 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
  *      - Le contenu des arguments (ils ne doivent comporter que les caracteres numeriques).
 */
 
-void	philosophers(t_args *args)
+void	diner(t_args *args)
 {
 	create_threads(args);
 }
@@ -44,17 +44,22 @@ int	main(int argc, char **argv)
  *
  * Note : initialisation = malloc, <donnee> = 0, et pthread_mutex_init.
  */
+	args = ft_mem_alloc_args(argv, args);
+/*	args = malloc(sizeof(t_args));
+	if (!args)
+		exit_error(args, "Error malloc args\n");*/
+	philo = ft_mem_alloc_philo(args, philo);
 	args = init_args(argc, argv, args);
 	philo = set_philos(args, philo);
 	init_forks(args, philo);
 		
 /* Creation des threads.
  */
-	philosophers(args);
+	diner(args);
 
 /* Liberation de la memoire (free & destroy mutex).
  */
-	ft_clean(args, philo);
+	ft_clean(args);
 	printf("***********************END************************\n");
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/13 14:01:03 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/15 18:05:22 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,65 +26,67 @@
 
 void	ft_pick_forks(t_philo *philo, int i)
 {
-	if (i % 2 == 0)
-		usleep(1);
-	pthread_mutex_lock(&philo->args_ptr->forks[i]); //****************MUTEX LOCK
-	ft_output(philo, " \033[0mhas taken a fork", 5);
-	if (philo[i].is_dead == 0)
-	{
-		if (i == (philo->args_ptr->number_of_philosophers - 1))
-			pthread_mutex_lock(&philo->args_ptr->forks[0]); //***************MUTEX LOCK
-		else
-			pthread_mutex_lock(&philo->args_ptr->forks[i + 1]); //*************MUTEX LOCK
-		ft_output(philo, " \033[0mhas taken a fork", 5);
-	}
+	if (i % 2 != 0)
+		usleep(10);
+	ft_mutex(philo->args_ptr, philo->main_fork, LOCK);
+	ft_write_task(philo, FORK);
+	ft_mutex(philo->args_ptr, philo->aux_fork, LOCK);
+	ft_write_task(philo, FORK);
 }
 
 void	ft_drop_forks(t_philo *philo, int i)
 {
-	pthread_mutex_unlock(&philo->args_ptr->forks[i]); //****************MUTEX UNLOCK
+	ft_mutex(philo->args_ptr, &philo->args_ptr->forks[i], UNLOCK); //****************MUTEX UNLOCK
 	if (i == (philo->args_ptr->number_of_philosophers - 1))
-		pthread_mutex_unlock(&philo->args_ptr->forks[0]); //******************MUTEX UNLOCK
+		ft_mutex(philo->args_ptr, &philo->args_ptr->forks[0], UNLOCK); //******************MUTEX UNLOCK
 	else
-		pthread_mutex_unlock(&philo->args_ptr->forks[i + 1]); //*******************MUTEX UNLOCK
+		ft_mutex(philo->args_ptr, &philo->args_ptr->forks[i + 1], UNLOCK); //*******************MUTEX UNLOCK
 }
 
 void	ft_sleep(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->mtx); //*****************MUTEX LOCK
-	ft_output(philo, " is sleeping", 4);
-	pthread_mutex_unlock(&philo->mtx); //*****************MUTEX UNLOCK
-	ft_usleep(philo->args_ptr->time_to_sleep * 1000/*, philo->args_ptr*/);
+	long		i;
+
+	i = 0;
+	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
+	ft_write_task(philo, SLEEPING);
+	if (philo->is_dead == FALSE)
+	{
+		while (i < philo->args_ptr->time_to_sleep)
+		{
+			ft_usleep(5, philo->args_ptr);
+			if (philo->args_ptr->end_of_diner == TRUE)
+			{
+				ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK); //*****************MUTEX UNLOCK
+				break ;
+			}
+			i += 1;
+		}
+//		ft_clean(philo->args_ptr, philo);
+	}
+	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK); //*****************MUTEX UNLOCK
 }
 
 void	ft_eat(t_philo *philo)
 {
-	if (philo->is_dead == 1 || philo->args_ptr->end_of_diner == 1)
+	if (philo->is_dead == 1)
 		return ;
 	ft_pick_forks(philo, philo->id);
-	if (philo->is_dead == 1 || philo->args_ptr->end_of_diner == 1)
-		return ;
-	pthread_mutex_lock(&philo->mtx);
-	ft_output(philo, " is eating", 2);
-	philo->is_eating = 1; // So the monitor knows that this philosopher is eating.
+	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
+	ft_write_task(philo, EATING);
+//	philo->is_eating = TRUE; // So the monitor knows that this philosopher is eating.
 	update_death_time(philo);
-	ft_usleep(philo->args_ptr->time_to_eat * 1000/*, philo->args_ptr*/);
+	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr);
 	ft_drop_forks(philo, philo->id);
-	philo->is_eating = 0; // So the monitor knows that this philosopher is not eating any more.
+//	philo->is_eating = FALSE; // So the monitor knows that this philosopher is not eating any more.
 	philo->meal_number++;
-	if (philo->meal_number >= philo->args_ptr->target_nb_meals && philo->args_ptr->target_nb_meals != 0)
-	{
-		philo->meal_complete = 1;
-		philo->args_ptr->meals_complete++;
-//		printf("ft_eat : philo[%d].meal_complete = 1\n", philo->id);
-//		printf("ft_eat : philo->args_ptr->meals_complete = %d\n", philo->args_ptr->meals_complete);
-	}
-	pthread_mutex_unlock(&philo->mtx);
-	ft_sleep(philo); // After eating, philosopher is sleeping.
+	update_meals_complete(philo);
+	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
+	ft_sleep(philo);
 }
 
 void	ft_think(t_philo *philo)
 { 
-	if (philo->is_dead == 0 && philo->args_ptr->end_of_diner == 0)
-		ft_output(philo, " is thinking", 3);
+	if (philo->is_dead == FALSE && philo->args_ptr->end_of_diner == FALSE)
+		ft_write_task(philo, THINKING);
 }

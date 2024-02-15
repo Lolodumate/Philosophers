@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/13 10:11:21 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/15 16:17:45 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ int	ft_atoi(char *str)
 		i++;
 	}
 	if (res > INT_MAX)
-		exit_error("Arguments must be < INT_MAX");
+	{
+		printf("Arguments must be < INT_MAX");
+		exit(0);
+	}
 	return ((int)res);
 }
 
@@ -39,7 +42,10 @@ void	strisdigit(char *str)
 	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
 		i++;
 	if (str[i])
-		exit_error("Only digits are allowed");
+	{
+		printf("Only digits are allowed");
+		exit(0);
+	}
 }
 
 void	compliance_args(int argc, char **argv)
@@ -48,22 +54,28 @@ void	compliance_args(int argc, char **argv)
 
 	j = 1;
 	if (argc < 5 || argc > 6)
-		exit_error("Number of arguments must be 5 or 6");
+	{
+		printf("Number of arguments must be 5 or 6");
+		exit(0);
+	}
 	while (argv[j] && j <= argc)
 	{
 		strisdigit(argv[j]);
 		j++;
 	}
 	if (ft_atoi(argv[1]) < 1 || ft_atoi(argv[1]) > 200)
-		exit_error("Philosophers number must be > 0 and <= 200");
+	{
+		printf("Philosophers number must be >0 and <= 200");
+		exit(0);
+	}
 }
 
-void	ft_output(t_philo *philo, char *task, int color)
+void	ft_output(t_philo *philo, const char *task, int color)
 {
 	long	time;
 
-//	printf("\nget_time(MILLISECOND) = %ld", get_time(MILLISECOND));
+//	printf("\nget_time(MS) = %ld", get_time(MS));
 //	printf("\nphilo->start_time     = %ld\n\n", philo->start_time);
-	time = get_time(MILLISECOND) - philo->start_time;
+	time = get_time(philo->args_ptr, MS) - philo->start_time;
 	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", time, color, philo->id, task);
 }
