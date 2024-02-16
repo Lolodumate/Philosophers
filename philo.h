@@ -105,16 +105,16 @@ void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m);
 void	ft_write_task(t_philo *philo, int task);
 
 // mem_alloc.c
-void	*ft_malloc_protect(t_args *args, size_t size);
-t_args	*ft_mem_alloc_args(char **argv, t_args *args);
+pthread_mutex_t	*ft_mem_alloc_forks(t_args *args, pthread_mutex_t *forks);
+t_philo	*ft_mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb);
+pthread_t	*ft_mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb);
 t_philo *ft_mem_alloc_philo(t_args *args, t_philo *philo);
 
 // init.c
 void	ft_mem_alloc(char **argv, t_args *args, t_philo *philo);
 t_args	*init_args(int argc, char **argv, t_args *args);
 t_philo	init_philo(t_args *args, t_philo philo, int index);
-t_philo	*set_philos(t_args *args, t_philo *philo);
-void	init_forks(t_args *args, t_philo *philo);
+t_philo	*set_philos_and_forks(t_args *args, t_philo *philo);
 
 // ft_args.c
 int			ft_end_of_diner(t_args *args);

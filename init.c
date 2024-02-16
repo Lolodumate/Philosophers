@@ -16,6 +16,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 {
 	args->meals_complete = 0;
 	args->deaths = 0;
+	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
@@ -24,6 +25,8 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->target_nb_meals = 0;
 	if (argc == 6)
 		args->target_nb_meals = ft_atoi(argv[5]);
+	args->forks = ft_mem_alloc_forks(args, args->forks);
+	args->t = ft_mem_alloc_threads(args, args->t, args->number_of_philosophers);
 	ft_mutex(args, &args->mtx_check_ending, INIT);
 	ft_mutex(args, &args->mtx, INIT);
 	ft_mutex(args, &args->mtx_write, INIT);
@@ -44,42 +47,32 @@ t_philo	init_philo(t_args *args, t_philo philo, int index)
 	return (philo);
 }
 
-t_philo	*set_philos(t_args *args, t_philo *philo)
-{
-	int             i;
-
-	i = -1;
-	while (++i < args->number_of_philosophers)
-		philo[i] = init_philo(args, philo[i], i + 1);
-	return (philo);
-}
-
 /* Si le philo[i] a un voisin a sa droite philo[i - 1] alors :
  * - La fourchette droite de philo[i] correspond a la fourchette gauche de philo[i - 1].
  * - Donc la fourchette gauche de philo[i - 1] est un pointeur vers la fourchette droite de philo[i].
  */
-void	init_forks(t_args *args, t_philo *philo)
+
+t_philo	*set_philos_and_forks(t_args *args, t_philo *philo)
 {
-	int		i;
+	int             i;
 	int		n;
 
 	i = -1;
+	args->philo_ptr = philo;
 	n = args->number_of_philosophers;
 	while (++i < args->number_of_philosophers)
 	{
-		printf("%d\n", philo[i].id);
-		printf("TRUE FALSE %d\n", philo[i].is_eating);
-		printf("TRUE FALSE %d\n", philo[i].is_dead);
-		printf("TRUE FALSE %d\n", philo[i].meal_complete);
+		philo[i] = init_philo(args, philo[i], i + 1);
 		if (philo[i].id % 2 == 0)
 		{
-			philo->main_fork = &args->forks[(philo->id + 1) % n];
-			philo->aux_fork = &args->forks[(philo->id) % n];
+			philo[i].main_fork = &args->forks[(philo->id + 1) % n];
+			philo[i].aux_fork = &args->forks[(philo->id) % n];
 		}
 		else
 		{
-			philo->main_fork = &args->forks[(philo->id) % n];
-			philo->aux_fork = &args->forks[(philo->id + 1) % n];
+			philo[i].main_fork = &args->forks[(philo->id) % n];
+			philo[i].aux_fork = &args->forks[(philo->id + 1) % n];
 		}
 	}
+	return (philo);
 }

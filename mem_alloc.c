@@ -12,38 +12,28 @@
 
 #include "philo.h"
 
-void	*ft_malloc_protect(t_args *args, size_t size)
+pthread_t	*ft_mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb)
 {
-	void	*p;
-
-	p = malloc(sizeof(size));
-	if (!p)
-		exit_error(args, "Error malloc");
-	else
-		printf("Malloc OK\n");
-	return (p);
+	t = malloc(sizeof(t) * philo_nb);
+	if (!t)
+		exit_error(args, "Error malloc args->t");
+	return (t);
 }
 
-t_args	*ft_mem_alloc_args(char **argv, t_args *args)
+t_philo	*ft_mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb)
 {
-//	args = ft_malloc_protect(args, sizeof(t_args));
-	args = malloc(sizeof(t_args));
-	if (!args)
-		exit_error(args, "Error malloc args");
-	args->number_of_philosophers = ft_atoi(argv[1]);
-//	args->t = ft_malloc_protect(args, sizeof(pthread_t) * args->number_of_philosophers);
-	args->t = malloc(sizeof(args->t) * args->number_of_philosophers);
-	if (!args->t)
-		exit_error(args, "Error malloc args->t");
-//	args->philo_ptr = ft_malloc_protect(args, sizeof(t_philo) * args->number_of_philosophers);
-	args->philo_ptr = malloc(sizeof(args->philo_ptr) * args->number_of_philosophers);
-	if (!args->philo_ptr)
+	philo = malloc(sizeof(philo) * philo_nb);
+	if (!philo)
 		exit_error(args, "Error malloc args->philo_ptr");
-//	args->forks = ft_malloc_protect(args, sizeof(pthread_mutex_t) * args->number_of_philosophers);
-	args->forks = malloc(sizeof(args->forks) * args->number_of_philosophers);
-	if (!args->forks)
+	return (philo);
+}
+
+pthread_mutex_t	*ft_mem_alloc_forks(t_args *args, pthread_mutex_t *forks)
+{
+	forks = malloc(sizeof(pthread_mutex_t) * args->number_of_philosophers);
+	if (!forks)
 		exit_error(args, "Error malloc args->forks");
-	return (args);
+	return (forks);
 }
 
 t_philo	*ft_mem_alloc_philo(t_args *args, t_philo *philo)

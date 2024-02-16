@@ -64,7 +64,7 @@ void	*diner_routine(void *philo)
 	t_philo		*p;
 
 	p = (t_philo *)philo;
-	p->death_time = get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
+	p->death_time =  get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 		exit_error(p->args_ptr, "Error pthread_create");
 	while (p->is_dead == FALSE && p->args_ptr->end_of_diner == FALSE)

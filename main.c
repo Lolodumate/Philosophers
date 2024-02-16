@@ -31,11 +31,11 @@ void	diner(t_args *args)
 
 int	main(int argc, char **argv)
 {
-	t_args		*args;
 	t_philo		*philo;
+	t_args		*args;
 
-	args = NULL;
 	philo = NULL;
+	args = NULL;
 	compliance_args(argc, argv);
 /* 1. Initialisation des donnees de la structure args :
  *	- Structure args
@@ -44,14 +44,12 @@ int	main(int argc, char **argv)
  *
  * Note : initialisation = malloc, <donnee> = 0, et pthread_mutex_init.
  */
-	args = ft_mem_alloc_args(argv, args);
-/*	args = malloc(sizeof(t_args));
+	args = malloc(sizeof(t_args));
 	if (!args)
-		exit_error(args, "Error malloc args\n");*/
-	philo = ft_mem_alloc_philo(args, philo);
+		exit_error(args, "Error malloc args");
 	args = init_args(argc, argv, args);
-	philo = set_philos(args, philo);
-	init_forks(args, philo);
+	philo = ft_mem_alloc_philo(args, philo);
+	philo = set_philos_and_forks(args, philo);
 		
 /* Creation des threads.
  */
