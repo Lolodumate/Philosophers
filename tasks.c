@@ -32,13 +32,10 @@ void	ft_pick_forks(t_args *args, t_philo *philo)
 	ft_write_task(philo, FORK);
 }
 
-void	ft_drop_forks(t_args *args, t_philo *philo, int i)
+void	ft_drop_forks(t_args *args, t_philo *philo)
 {
-	ft_mutex(args, &philo->args_ptr->forks[i], UNLOCK); //****************MUTEX UNLOCK
-	if (i == (args->number_of_philosophers - 1))
-		ft_mutex(args, &args->forks[0], UNLOCK); //******************MUTEX UNLOCK
-	else
-		ft_mutex(args, &args->forks[i + 1], UNLOCK); //*******************MUTEX UNLOCK
+	ft_mutex(args, philo->main_fork, UNLOCK);
+	ft_mutex(args, philo->aux_fork, UNLOCK);
 	ft_mutex(args, &philo->mtx, LOCK);
 	philo->is_eating = FALSE;
 	ft_mutex(args, &philo->mtx, UNLOCK);
@@ -46,26 +43,18 @@ void	ft_drop_forks(t_args *args, t_philo *philo, int i)
 
 void	ft_sleep(t_philo *philo)
 {
-	long		i;
-
-	i = 0;
-	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 	ft_write_task(philo, SLEEPING);
 	if (philo->is_dead == FALSE)
 	{
-		while (i < philo->args_ptr->time_to_sleep)
+		ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
+		while (philo->death_time > get_time(philo->args_ptr, MS) + 10)
 		{
-			ft_usleep(5, philo->args_ptr);
+			usleep(2);
 			if (philo->args_ptr->end_of_diner == TRUE)
-			{
-				ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK); //*****************MUTEX UNLOCK
 				break ;
-			}
-			i += 1;
 		}
-//		ft_clean(philo->args_ptr, philo);
+		ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK); //*****************MUTEX UNLOCK
 	}
-	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK); //*****************MUTEX UNLOCK
 }
 
 void	ft_eat(t_philo *philo)
@@ -74,13 +63,9 @@ void	ft_eat(t_philo *philo)
 		return ;
 	ft_pick_forks(philo->args_ptr, philo);
 	ft_mutex_write(&philo->args_ptr->mtx_write, philo->args_ptr, philo,  EATING);
-//	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
-//	ft_write_task(philo, EATING);
-//	philo->is_eating = TRUE; // So the monitor knows that this philosopher is eating.
 	update_death_time(philo->args_ptr, philo);
 	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr);
-	ft_drop_forks(philo->args_ptr, philo, philo->id);
-//	philo->is_eating = FALSE; // So the monitor knows that this philosopher is not eating any more.
+	ft_drop_forks(philo->args_ptr, philo);
 	philo->meal_number++;
 	update_meals_complete(philo);
 	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
@@ -89,6 +74,9 @@ void	ft_eat(t_philo *philo)
 
 void	ft_think(t_philo *philo)
 { 
+	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
+	printf("philo->args_ptr->end_of_diner = %d\n", philo->args_ptr->end_of_diner);
+	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
 	if (philo->is_dead == FALSE && philo->args_ptr->end_of_diner == FALSE)
 		ft_write_task(philo, THINKING);
 }

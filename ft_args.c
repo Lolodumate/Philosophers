@@ -18,8 +18,8 @@ int	ft_end_of_diner(t_args *args)
 		return (TRUE);
 	if (args->meals_complete >= args->number_of_philosophers)
 		return (TRUE);
-	if (args->end_of_diner > 0)
-		return (TRUE);
+//	if (args->end_of_diner > 0)
+//		return (TRUE);
 	return (FALSE);
 }
 

@@ -40,9 +40,7 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 	{
 		if (pthread_create(&args->t[i], NULL, &diner_routine, &args->philo_ptr[i]) != 0)
 			exit_error(args, "Failure thread creation");
-		usleep(10);
 	}
-	args->time_start_diner = get_time(args, MS);
 	join_threads(args, args->t_end);
 }
 
@@ -54,8 +52,12 @@ void	join_threads(t_args *args, pthread_t t_end)
 	if (pthread_join(t_end, NULL) != 0)
 		exit_error(args, "Error pthread_join");
 	while (++i < args->number_of_philosophers)
+	{
 		if (pthread_join(args->t[i], NULL) != 0)
-			exit_error(args, "Error pthread_join");
+			exit_error(args, "Error pthread join");
+		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
+			exit_error(args, "Error pthread join");
+	}
 }
 
 // Thread routine avec boucle !dead
@@ -72,8 +74,6 @@ void	*diner_routine(void *philo)
 		ft_eat(p);
 		ft_think(p);
 	}
-	if (pthread_join(p->thread, NULL) != 0)
-		ft_clean(p->args_ptr);
 	return (NULL);
 }
 
@@ -88,7 +88,7 @@ void	*check_philos(void *philo)
 		pthread_mutex_lock(&p->mtx);
 		if (p->is_eating == FALSE && (get_time(p->args_ptr, MS) >= p->death_time))
 		{
-			p->is_dead = FALSE;
+	//		p->is_dead = FALSE;
 			p->args_ptr->end_of_diner = TRUE;
 			p->args_ptr->deaths++;
 			ft_write_task(p, DEAD);

@@ -147,6 +147,6 @@ void	ft_output(t_philo *philo, const char *task, int color);
 void	ft_eat(t_philo *philo);
 void	ft_think(t_philo *philo);
 void	ft_pick_forks(t_args *args, t_philo *philo);
-void	ft_drop_forks(t_args *args, t_philo *philo, int i);
+void	ft_drop_forks(t_args *args, t_philo *philo);
 
 #endif
