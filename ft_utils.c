@@ -50,3 +50,22 @@ void	ft_write_task(t_philo *philo, int task)
 	else
 		exit_error(philo->args_ptr, "Error task");
 }
+
+void	ft_mutex_write(pthread_mutex_t *mtx, t_args *args, t_philo *philo, int task)
+{
+	ft_mutex(args, mtx, LOCK);
+	ft_write_task(philo, task);
+	if (task == EATING)
+		philo->is_eating = TRUE;
+	ft_mutex(args, mtx, UNLOCK);
+}
+
+int	ft_mutex_increment_int(pthread_mutex_t *mtx, t_args *args, int data)
+{
+	int	res;
+
+	ft_mutex(args, mtx, LOCK);
+	res = data + 1;
+	ft_mutex(args, mtx, UNLOCK);
+	return (res);
+}

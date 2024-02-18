@@ -40,19 +40,19 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 	{
 		if (pthread_create(&args->t[i], NULL, &diner_routine, &args->philo_ptr[i]) != 0)
 			exit_error(args, "Failure thread creation");
+		usleep(10);
 	}
 	args->time_start_diner = get_time(args, MS);
 	join_threads(args, args->t_end);
 }
 
-void	join_threads(t_args *args, pthread_t t_meal)
+void	join_threads(t_args *args, pthread_t t_end)
 {
 	int		i;
 
 	i = -1;
-	if (args->target_nb_meals > 0)
-		if (pthread_join(t_meal, NULL) != 0)
-			exit_error(args, "Error pthread_join");
+	if (pthread_join(t_end, NULL) != 0)
+		exit_error(args, "Error pthread_join");
 	while (++i < args->number_of_philosophers)
 		if (pthread_join(args->t[i], NULL) != 0)
 			exit_error(args, "Error pthread_join");

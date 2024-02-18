@@ -53,7 +53,9 @@ void	ft_usleep(long usec, t_args *args)
 	}
 }
 
-void	update_death_time(t_philo *philo)
+void	update_death_time(t_args *args, t_philo *philo)
 {
-	philo->death_time = get_time(philo->args_ptr, US) + philo->args_ptr->time_to_die;
+	ft_mutex(args, &philo->mtx, LOCK);
+	philo->death_time = get_time(args, US) + args->time_to_die;
+	ft_mutex(args, &philo->mtx, UNLOCK);
 }

@@ -22,7 +22,7 @@ pthread_t	*ft_mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb)
 
 t_philo	*ft_mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb)
 {
-	philo = malloc(sizeof(philo) * philo_nb);
+	philo = malloc(sizeof(t_philo) * philo_nb);
 	if (!philo)
 		exit_error(args, "Error malloc args->philo_ptr");
 	return (philo);
@@ -34,12 +34,4 @@ pthread_mutex_t	*ft_mem_alloc_forks(t_args *args, pthread_mutex_t *forks)
 	if (!forks)
 		exit_error(args, "Error malloc args->forks");
 	return (forks);
-}
-
-t_philo	*ft_mem_alloc_philo(t_args *args, t_philo *philo)
-{
-	philo = malloc(sizeof(t_philo) * args->number_of_philosophers);
-	if (!philo)
-		exit_error(args, "Error malloc philo");
-	return (philo);
 }
