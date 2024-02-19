@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 11:15:14 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 15:06:03 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_args	*init_args(int argc, char **argv, t_args *args)
 {
-	args->meals_complete = 0;
+	args->meals_complete = FALSE;
 	args->deaths = 0;
 	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->time_to_die = ft_atoi(argv[2]);
@@ -22,7 +22,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->time_to_sleep = ft_atoi(argv[4]);
 	args->time_start_diner = get_time(args, MS);
 	args->end_of_diner = 0;
-	args->target_nb_meals = 0;
+	args->target_nb_meals = -1;
 	if (argc == 6)
 		args->target_nb_meals = ft_atoi(argv[5]);
 	args->forks = ft_mem_alloc_forks(args, args->forks);

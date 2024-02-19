@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 12:18:12 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 11:03:36 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 15:15:02 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,27 +37,28 @@ void	ft_write_task(t_philo *philo, int task)
 {
 	if (!philo)
 		return ;
-	else if (task == DEAD)
-		ft_output(philo, " died", 1);
-	else if (task == FORK)
-		ft_output(philo, " has taken a fork", 5);
-	else if (task == EATING)
-		ft_output(philo, " is eating", 2);
-	else if (task == SLEEPING)
-		ft_output(philo, " is sleeping", 4);
-	else if (task == THINKING)
-		ft_output(philo, " is thinking", 3);
-	else
-		exit_error(philo->args_ptr, "Error task");
+	if (philo->args_ptr->end_of_diner == FALSE)
+	{
+		if (task == DEAD)
+			ft_output(philo, " died", 1);
+		else if (task == FORK)
+			ft_output(philo, " has taken a fork", 5);
+		else if (task == EATING)
+			ft_output(philo, " is eating", 2);
+		else if (task == SLEEPING)
+			ft_output(philo, " is sleeping", 4);
+		else if (task == THINKING)
+			ft_output(philo, " is thinking", 3);
+		else
+			exit_error(philo->args_ptr, "Error task");
+	}
 }
 
 void	ft_mutex_write(pthread_mutex_t *mtx, t_args *args, t_philo *philo, int task)
 {
 	ft_write_task(philo, task);
+	ft_mutex(args, mtx, LOCK);
 	if (task == EATING)
-	{
-		ft_mutex(args, mtx, LOCK);
 		philo->is_eating = TRUE;
-		ft_mutex(args, mtx, UNLOCK);
-	}
+	ft_mutex(args, mtx, UNLOCK);
 }

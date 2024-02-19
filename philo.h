@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 10:55:05 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 13:51:56 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,24 +104,24 @@ void	ft_mutex_write(pthread_mutex_t *mtx, t_args *args, t_philo *philo, int task
 void	ft_mutex_protect(t_args *args, int mtx_return);
 void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m);
 void	ft_write_task(t_philo *philo, int task);
-//long	ft_mutex_increment(t_args *args, pthread_mutex_t *mtx, long data, long increment);
+void	ft_output(t_philo *philo, const char *task, int color);
 
 // mem_alloc.c
-t_args	*ft_mem_alloc_args(t_args *args);
+t_args		*ft_mem_alloc_args(t_args *args);
 pthread_mutex_t	*ft_mem_alloc_forks(t_args *args, pthread_mutex_t *forks);
-t_philo	*ft_mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb);
+t_philo		*ft_mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb);
 pthread_t	*ft_mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb);
-t_philo *ft_mem_alloc_philo(t_args *args, t_philo *philo);
+t_philo 	*ft_mem_alloc_philo(t_args *args, t_philo *philo);
 
 // init.c
-void	ft_mem_alloc(char **argv, t_args *args, t_philo *philo);
-t_args	*init_args(int argc, char **argv, t_args *args);
-void	init_philo(t_args *args, t_philo *philo, int index);
-t_philo	*set_philos_and_forks(t_args *args);
+void		ft_mem_alloc(char **argv, t_args *args, t_philo *philo);
+t_args		*init_args(int argc, char **argv, t_args *args);
+void		init_philo(t_args *args, t_philo *philo, int index);
+t_philo		*set_philos_and_forks(t_args *args);
 
 // ft_args.c
-int			ft_end_of_diner(t_args *args);
 void	update_meals_complete(t_philo *philo);
+int	check_all_meals_complete(t_args *args, t_philo *philo);
 
 // time.c
 long				get_time(t_args *args, t_time_code time_code);
@@ -130,19 +130,15 @@ void	update_death_time(t_args *args, t_philo *philo);
 
 // clean.c
 void	exit_error(t_args *args, const char *error);
-//void	ft_exit(t_args *args);
 void	ft_clean(t_args *args);
 void	ft_destroy_mutex(t_args *args, t_philo *philo);
 
 // philosophers.c
-void	*diner_routine(void *philo);
-void	*check_philos(void *args);
-void	*check_ending(void *args);
-void	create_threads(t_args *args);
-void	join_threads(t_args *args, pthread_t t_meal);
-
-
-void	ft_output(t_philo *philo, const char *task, int color);
+void		*diner_routine(void *philo);
+void		*check_philos(void *args);
+void		*check_ending(void *args);
+void		create_threads(t_args *args);
+void		join_threads(t_args *args, pthread_t t_meal);
 
 // tasks.c
 void	ft_eat(t_philo *philo);

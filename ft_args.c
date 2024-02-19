@@ -6,28 +6,39 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 16:43:17 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/13 16:49:02 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 14:00:01 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_end_of_diner(t_args *args)
-{
-	if (args->deaths > 0)
-		return (TRUE);
-	if (args->meals_complete >= args->number_of_philosophers)
-		return (TRUE);
-//	if (args->end_of_diner > 0)
-//		return (TRUE);
-	return (FALSE);
-}
-
 void	update_meals_complete(t_philo *philo)
 {
-	if (philo->meal_number >= philo->args_ptr->target_nb_meals/* && philo->args_ptr->target_nb_meals != 0*/)
+	if (philo->meal_complete == TRUE || philo->args_ptr->target_nb_meals < 0)
+		return ;
+	if (philo->meal_number >= philo->args_ptr->target_nb_meals)
 	{
-		philo->meal_complete = 1;
+		philo->meal_complete = TRUE;
 		philo->args_ptr->meals_complete++;
 	}
+}
+
+int	check_all_meals_complete(t_args *args, t_philo *philo)
+{
+	int		i;
+
+	i = 0;
+	if (!args)
+		return (-1);
+	if (args->end_of_diner == TRUE)
+		return (TRUE);
+	while (philo[i].meal_complete == TRUE)
+	{
+		if (args->end_of_diner == TRUE)
+			return (TRUE);
+		i++;
+	}
+	if (i == (args->number_of_philosophers - 1))
+		return (TRUE);
+	return (FALSE);
 }

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 11:15:44 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 15:20:23 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,10 @@ void	join_threads(t_args *args, pthread_t t_end)
 	{
 		if (pthread_join(args->t[i], NULL) != 0)
 			exit_error(args, "Error pthread join");
+	}
+	i = -1;
+	while (++i < args->number_of_philosophers)
+	{
 		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
 			exit_error(args, "Error pthread join");
 	}
@@ -89,11 +93,16 @@ void	*check_philos(void *philo)
 	{
 		if (p->is_eating == FALSE && (get_time(p->args_ptr, MS) >= p->death_time))
 		{
+			ft_write_task(p, DEAD);
 			ft_mutex(p->args_ptr, &p->mtx, LOCK);
-			p->is_dead = TRUE;
 			p->args_ptr->end_of_diner = TRUE;
 			ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
-			ft_write_task(p, DEAD);
+			ft_mutex(p->args_ptr, &p->mtx, LOCK);
+			p->is_dead = TRUE;
+			ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
+			ft_mutex(p->args_ptr, &p->mtx, LOCK);
+			p->args_ptr->deaths++;
+			ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 		}
 	}
 //	printf("Check ****** %ld philo->id[%d] is dead [%d]\n", get_time(p->args_ptr, MS), p->id, p->is_dead);
@@ -105,14 +114,20 @@ void	*check_ending(void *args)
 	t_args	*a;
 
 	a = (t_args *)args;
-	while (!ft_end_of_diner(a))
+	while (a->end_of_diner == FALSE)
 	{
-		pthread_mutex_lock(&a->mtx_check_ending);
 		if (a->deaths > 0)
+		{
+			ft_mutex(a, &a->mtx_check_ending, LOCK);
 			a->end_of_diner = TRUE;
-		if (a->meals_complete >= a->number_of_philosophers)
-			a->end_of_diner = TRUE;
-		pthread_mutex_unlock(&a->mtx_check_ending);
+			ft_mutex(a, &a->mtx_check_ending, UNLOCK);
+		}
+		if (a->target_nb_meals > 0)
+		{
+			ft_mutex(a, &a->mtx_check_ending, LOCK);
+			a->end_of_diner = check_all_meals_complete(a, a->philo_ptr);
+			ft_mutex(a, &a->mtx_check_ending, UNLOCK);
+		}
 	}
 	return (NULL);
 }
