@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 12:18:12 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/15 20:55:48 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 11:03:36 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,11 @@ void	ft_write_task(t_philo *philo, int task)
 
 void	ft_mutex_write(pthread_mutex_t *mtx, t_args *args, t_philo *philo, int task)
 {
-	ft_mutex(args, mtx, LOCK);
 	ft_write_task(philo, task);
 	if (task == EATING)
+	{
+		ft_mutex(args, mtx, LOCK);
 		philo->is_eating = TRUE;
-	ft_mutex(args, mtx, UNLOCK);
-}
-
-int	ft_mutex_increment_int(pthread_mutex_t *mtx, t_args *args, int data)
-{
-	int	res;
-
-	ft_mutex(args, mtx, LOCK);
-	res = data + 1;
-	ft_mutex(args, mtx, UNLOCK);
-	return (res);
+		ft_mutex(args, mtx, UNLOCK);
+	}
 }

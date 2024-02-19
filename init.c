@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/15 20:57:43 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 11:15:14 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ void	init_philo(t_args *args, t_philo *philo, int index)
 	philo->death_time = args->philo_ptr->start_time + args->time_to_die;
 	philo->main_fork = &args->forks[philo->id - 1];
 	philo->aux_fork = &args->forks[philo->id % args->number_of_philosophers];
-	ft_mutex(args, &philo->mtx, INIT);
 	ft_mutex(args, philo->main_fork, INIT);
 	ft_mutex(args, philo->aux_fork, INIT);
+	ft_mutex(args, &philo->mtx, INIT);
 }
 
 /* Si le philo[i] a un voisin a sa droite philo[i - 1] alors :
@@ -62,13 +62,6 @@ t_philo	*set_philos_and_forks(t_args *args)
 
 	i = -1;
 	while (++i < args->number_of_philosophers)
-	{
 		init_philo(args, &args->philo_ptr[i], i + 1);
-		args->philo_ptr[i].main_fork = &args->forks[i];
-/*		if (args->philo_ptr[i].id != args->number_of_philosophers)
-			args->philo_ptr[i].aux_fork = &args->forks[i + 1];
-		else
-			args->philo_ptr[i].aux_fork = &args->forks[0];
-*/	}
 	return (args->philo_ptr);
 }

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/15 17:53:28 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 11:15:44 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ void	join_threads(t_args *args, pthread_t t_end)
 	int		i;
 
 	i = -1;
-	if (pthread_join(t_end, NULL) != 0)
-		exit_error(args, "Error pthread_join");
 	while (++i < args->number_of_philosophers)
 	{
 		if (pthread_join(args->t[i], NULL) != 0)
@@ -58,6 +56,8 @@ void	join_threads(t_args *args, pthread_t t_end)
 		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
 			exit_error(args, "Error pthread join");
 	}
+	if (pthread_join(t_end, NULL) != 0)
+		exit_error(args, "Error pthread_join");
 }
 
 // Thread routine avec boucle !dead
@@ -66,7 +66,9 @@ void	*diner_routine(void *philo)
 	t_philo		*p;
 
 	p = (t_philo *)philo;
+	ft_mutex(p->args_ptr, &p->mtx, LOCK);
 	p->death_time =  get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
+	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 		exit_error(p->args_ptr, "Error pthread_create");
 	while (p->is_dead == FALSE && p->args_ptr->end_of_diner == FALSE)
@@ -85,16 +87,16 @@ void	*check_philos(void *philo)
 	p = (t_philo *)philo;
 	while (p->args_ptr->end_of_diner == FALSE && p->is_dead == FALSE)
 	{
-		pthread_mutex_lock(&p->mtx);
 		if (p->is_eating == FALSE && (get_time(p->args_ptr, MS) >= p->death_time))
 		{
-	//		p->is_dead = FALSE;
+			ft_mutex(p->args_ptr, &p->mtx, LOCK);
+			p->is_dead = TRUE;
 			p->args_ptr->end_of_diner = TRUE;
-			p->args_ptr->deaths++;
+			ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 			ft_write_task(p, DEAD);
 		}
-		pthread_mutex_unlock(&p->mtx);
 	}
+//	printf("Check ****** %ld philo->id[%d] is dead [%d]\n", get_time(p->args_ptr, MS), p->id, p->is_dead);
 	return (NULL);
 }
 

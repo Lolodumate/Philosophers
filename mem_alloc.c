@@ -6,11 +6,22 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 17:57:22 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/15 20:36:06 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 09:00:39 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+t_args	*ft_mem_alloc_args(t_args *args)
+{
+	args = malloc(sizeof(t_args));
+	if (!args)
+	{
+		printf("Error malloc args");
+		exit(EXIT_FAILURE);
+	}
+	return (args);
+}
 
 pthread_t	*ft_mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb)
 {

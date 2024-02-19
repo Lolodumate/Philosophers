@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/15 20:46:37 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 10:55:05 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,10 @@ void	ft_mutex_write(pthread_mutex_t *mtx, t_args *args, t_philo *philo, int task
 void	ft_mutex_protect(t_args *args, int mtx_return);
 void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m);
 void	ft_write_task(t_philo *philo, int task);
-int	ft_mutex_increment_int(pthread_mutex_t *mtx, t_args *args, int data);
+//long	ft_mutex_increment(t_args *args, pthread_mutex_t *mtx, long data, long increment);
 
 // mem_alloc.c
+t_args	*ft_mem_alloc_args(t_args *args);
 pthread_mutex_t	*ft_mem_alloc_forks(t_args *args, pthread_mutex_t *forks);
 t_philo	*ft_mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb);
 pthread_t	*ft_mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb);

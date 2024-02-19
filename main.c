@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 07:34:19 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/15 20:29:14 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 09:02:29 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,7 @@ int	main(int argc, char **argv)
  *
  * Note : initialisation = malloc, <donnee> = 0, et pthread_mutex_init.
  */
-	args = malloc(sizeof(t_args));
-	if (!args)
-		exit_error(args, "Error malloc args");
+	args = ft_mem_alloc_args(args);
 	args = init_args(argc, argv, args);
 	args->philo_ptr = ft_mem_alloc_philo_ptr(args, args->philo_ptr, args->number_of_philosophers);
 	args->philo_ptr = set_philos_and_forks(args);

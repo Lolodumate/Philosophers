@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/15 18:05:22 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/19 10:45:39 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 
 void	ft_pick_forks(t_args *args, t_philo *philo)
 {
+	if (philo->id % 2 == 0)
+		usleep(10);
 	ft_mutex(args, philo->main_fork, LOCK);
 	ft_write_task(philo, FORK);
 	ft_mutex(args, philo->aux_fork, LOCK);
@@ -44,25 +46,13 @@ void	ft_drop_forks(t_args *args, t_philo *philo)
 void	ft_sleep(t_philo *philo)
 {
 	ft_write_task(philo, SLEEPING);
-	if (philo->is_dead == FALSE)
-	{
-		ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
-		while (philo->death_time > get_time(philo->args_ptr, MS) + 10)
-		{
-			usleep(2);
-			if (philo->args_ptr->end_of_diner == TRUE)
-				break ;
-		}
-		ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK); //*****************MUTEX UNLOCK
-	}
+	ft_usleep(philo->args_ptr->time_to_sleep * 1000, philo->args_ptr);
 }
 
 void	ft_eat(t_philo *philo)
 {
-	if (philo->is_dead == 1)
-		return ;
 	ft_pick_forks(philo->args_ptr, philo);
-	ft_mutex_write(&philo->args_ptr->mtx_write, philo->args_ptr, philo,  EATING);
+	ft_mutex_write(&philo->args_ptr->mtx_write, philo->args_ptr, philo, EATING);
 	update_death_time(philo->args_ptr, philo);
 	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr);
 	ft_drop_forks(philo->args_ptr, philo);
@@ -74,9 +64,5 @@ void	ft_eat(t_philo *philo)
 
 void	ft_think(t_philo *philo)
 { 
-	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
-	printf("philo->args_ptr->end_of_diner = %d\n", philo->args_ptr->end_of_diner);
-	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
-	if (philo->is_dead == FALSE && philo->args_ptr->end_of_diner == FALSE)
-		ft_write_task(philo, THINKING);
+	ft_write_task(philo, THINKING);
 }
