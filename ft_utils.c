@@ -54,11 +54,11 @@ void	ft_write_task(t_philo *philo, int task)
 	}
 }
 
-void	ft_mutex_write(pthread_mutex_t *mtx, t_args *args, t_philo *philo, int task)
+void	ft_mutex_write(t_args *args, t_philo *philo, int task)
 {
 	ft_write_task(philo, task);
-	ft_mutex(args, mtx, LOCK);
+	ft_mutex(args, &philo->mtx, LOCK);
 	if (task == EATING)
 		philo->is_eating = TRUE;
-	ft_mutex(args, mtx, UNLOCK);
+	ft_mutex(args, &philo->mtx, UNLOCK);
 }

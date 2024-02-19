@@ -23,22 +23,18 @@ void	update_meals_complete(t_philo *philo)
 	}
 }
 
-int	check_all_meals_complete(t_args *args, t_philo *philo)
+int	check_all_meals_complete(t_args *args)
 {
 	int		i;
+	int		n;
 
-	i = 0;
+	i = -1;
+	n = 0;
 	if (!args)
-		return (-1);
-	if (args->end_of_diner == TRUE)
-		return (TRUE);
-	while (philo[i].meal_complete == TRUE)
-	{
-		if (args->end_of_diner == TRUE)
-			return (TRUE);
-		i++;
-	}
-	if (i == (args->number_of_philosophers - 1))
+		exit(EXIT_FAILURE);
+	while (++i < args->number_of_philosophers)
+		n += args->meals[i];
+	if (n == args->number_of_philosophers * args->time_to_eat)
 		return (TRUE);
 	return (FALSE);
 }

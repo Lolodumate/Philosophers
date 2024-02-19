@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-t_args	*ft_mem_alloc_args(t_args *args)
+t_args	*mem_alloc_args(t_args *args)
 {
 	args = malloc(sizeof(t_args));
 	if (!args)
@@ -23,7 +23,7 @@ t_args	*ft_mem_alloc_args(t_args *args)
 	return (args);
 }
 
-pthread_t	*ft_mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb)
+pthread_t	*mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb)
 {
 	t = malloc(sizeof(t) * philo_nb);
 	if (!t)
@@ -31,7 +31,7 @@ pthread_t	*ft_mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb)
 	return (t);
 }
 
-t_philo	*ft_mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb)
+t_philo	*mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb)
 {
 	philo = malloc(sizeof(t_philo) * philo_nb);
 	if (!philo)
@@ -39,10 +39,27 @@ t_philo	*ft_mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb)
 	return (philo);
 }
 
-pthread_mutex_t	*ft_mem_alloc_forks(t_args *args, pthread_mutex_t *forks)
+pthread_mutex_t	*mem_alloc_forks(t_args *args, pthread_mutex_t *forks)
 {
 	forks = malloc(sizeof(pthread_mutex_t) * args->number_of_philosophers);
 	if (!forks)
 		exit_error(args, "Error malloc args->forks");
 	return (forks);
+}
+
+// int array to record the number of meals eaten by each philosophers
+int	*mem_alloc_meals(t_args *args)
+{
+	int		*meals;
+	int		i;
+
+	meals = malloc(sizeof(int) * args->number_of_philosophers);
+	if (!meals)
+		exit_error(args, "Error malloc meals");
+	i = -1;
+	while (++i < args->number_of_philosophers)
+	{
+		meals[i] = 0;
+	}
+	return (meals);
 }

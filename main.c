@@ -42,9 +42,9 @@ int	main(int argc, char **argv)
  *
  * Note : initialisation = malloc, <donnee> = 0, et pthread_mutex_init.
  */
-	args = ft_mem_alloc_args(args);
+	args = mem_alloc_args(args);
 	args = init_args(argc, argv, args);
-	args->philo_ptr = ft_mem_alloc_philo_ptr(args, args->philo_ptr, args->number_of_philosophers);
+	args->philo_ptr = mem_alloc_philo_ptr(args, args->philo_ptr, args->number_of_philosophers);
 	args->philo_ptr = set_philos_and_forks(args);
 /*	int		i;
 

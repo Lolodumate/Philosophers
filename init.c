@@ -22,11 +22,12 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->time_to_sleep = ft_atoi(argv[4]);
 	args->time_start_diner = get_time(args, MS);
 	args->end_of_diner = 0;
+	args->meals = mem_alloc_meals(args);
 	args->target_nb_meals = -1;
 	if (argc == 6)
 		args->target_nb_meals = ft_atoi(argv[5]);
-	args->forks = ft_mem_alloc_forks(args, args->forks);
-	args->t = ft_mem_alloc_threads(args, args->t, args->number_of_philosophers);
+	args->forks = mem_alloc_forks(args, args->forks);
+	args->t = mem_alloc_threads(args, args->t, args->number_of_philosophers);
 	ft_mutex(args, &args->mtx_check_ending, INIT);
 	ft_mutex(args, &args->mtx, INIT);
 	ft_mutex(args, &args->mtx_write, INIT);

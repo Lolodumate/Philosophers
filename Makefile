@@ -20,6 +20,7 @@ SRC =	main.c \
 	ft_args.c \
 	mem_alloc.c \
 	ft_utils.c \
+	meals.c \
 
 CC = gcc
 

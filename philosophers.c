@@ -41,26 +41,32 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 		if (pthread_create(&args->t[i], NULL, &diner_routine, &args->philo_ptr[i]) != 0)
 			exit_error(args, "Failure thread creation");
 	}
-	join_threads(args, args->t_end);
+	join_threads(args);
 }
 
-void	join_threads(t_args *args, pthread_t t_end)
+void	join_threads(t_args *args)
 {
 	int		i;
 
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
-		if (pthread_join(args->t[i], NULL) != 0)
+		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
 			exit_error(args, "Error pthread join");
 	}
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
+		if (pthread_join(args->t[i], NULL) != 0)
+			exit_error(args, "Error pthread join");
+	}
+/*	i = -1;
+	while (++i < args->number_of_philosophers)
+	{
 		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
 			exit_error(args, "Error pthread join");
 	}
-	if (pthread_join(t_end, NULL) != 0)
+*/	if (pthread_join(args->t_end, NULL) != 0)
 		exit_error(args, "Error pthread_join");
 }
 
@@ -75,9 +81,11 @@ void	*diner_routine(void *philo)
 	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 		exit_error(p->args_ptr, "Error pthread_create");
-	while (p->is_dead == FALSE && p->args_ptr->end_of_diner == FALSE)
+	while (stop_routine(philo) == FALSE)
 	{
 		ft_eat(p);
+		if (stop_routine(philo) == TRUE)
+			break ;
 		ft_think(p);
 	}
 	return (NULL);
@@ -96,11 +104,7 @@ void	*check_philos(void *philo)
 			ft_write_task(p, DEAD);
 			ft_mutex(p->args_ptr, &p->mtx, LOCK);
 			p->args_ptr->end_of_diner = TRUE;
-			ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
-			ft_mutex(p->args_ptr, &p->mtx, LOCK);
 			p->is_dead = TRUE;
-			ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
-			ft_mutex(p->args_ptr, &p->mtx, LOCK);
 			p->args_ptr->deaths++;
 			ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 		}
@@ -116,18 +120,12 @@ void	*check_ending(void *args)
 	a = (t_args *)args;
 	while (a->end_of_diner == FALSE)
 	{
+		ft_mutex(a, &a->mtx_check_ending, LOCK);
 		if (a->deaths > 0)
-		{
-			ft_mutex(a, &a->mtx_check_ending, LOCK);
 			a->end_of_diner = TRUE;
-			ft_mutex(a, &a->mtx_check_ending, UNLOCK);
-		}
-		if (a->target_nb_meals > 0)
-		{
-			ft_mutex(a, &a->mtx_check_ending, LOCK);
-			a->end_of_diner = check_all_meals_complete(a, a->philo_ptr);
-			ft_mutex(a, &a->mtx_check_ending, UNLOCK);
-		}
+		else if (all_meals_complete(a))
+			a->end_of_diner = TRUE;
+		ft_mutex(a, &a->mtx_check_ending, UNLOCK);
 	}
 	return (NULL);
 }

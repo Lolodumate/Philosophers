@@ -80,6 +80,7 @@ typedef struct s_args
 	pthread_mutex_t		*forks;
 	int				number_of_philosophers;
 	int				meals_complete;
+	int				*meals;
 	int				deaths;
 	long				time_to_die;
 	long				time_to_eat;
@@ -98,7 +99,7 @@ int			ft_atoi(char *str);
 void	strisdigit(char *str);
 void	compliance_args(int argc, char **argv);
 void	ft_output(t_philo *philo, const char *task, int color);
-void	ft_mutex_write(pthread_mutex_t *mtx, t_args *args, t_philo *philo, int task);
+void	ft_mutex_write(t_args *args, t_philo *philo, int task);
 
 // ft_utils.c
 void	ft_mutex_protect(t_args *args, int mtx_return);
@@ -107,11 +108,11 @@ void	ft_write_task(t_philo *philo, int task);
 void	ft_output(t_philo *philo, const char *task, int color);
 
 // mem_alloc.c
-t_args		*ft_mem_alloc_args(t_args *args);
-pthread_mutex_t	*ft_mem_alloc_forks(t_args *args, pthread_mutex_t *forks);
-t_philo		*ft_mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb);
-pthread_t	*ft_mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb);
-t_philo 	*ft_mem_alloc_philo(t_args *args, t_philo *philo);
+t_args		*mem_alloc_args(t_args *args);
+pthread_mutex_t	*mem_alloc_forks(t_args *args, pthread_mutex_t *forks);
+t_philo		*mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb);
+pthread_t	*mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb);
+int	*mem_alloc_meals(t_args *args);
 
 // init.c
 void		ft_mem_alloc(char **argv, t_args *args, t_philo *philo);
@@ -119,9 +120,14 @@ t_args		*init_args(int argc, char **argv, t_args *args);
 void		init_philo(t_args *args, t_philo *philo, int index);
 t_philo		*set_philos_and_forks(t_args *args);
 
+// meals.c
+int	philo_ends_meals(t_args *args, t_philo *philo);
+int	all_meals_complete(t_args *args);
+int	stop_routine(t_philo *philo);
+
 // ft_args.c
 void	update_meals_complete(t_philo *philo);
-int	check_all_meals_complete(t_args *args, t_philo *philo);
+//int	check_all_meals_complete(t_args *args, t_philo *philo);
 
 // time.c
 long				get_time(t_args *args, t_time_code time_code);
@@ -138,7 +144,7 @@ void		*diner_routine(void *philo);
 void		*check_philos(void *args);
 void		*check_ending(void *args);
 void		create_threads(t_args *args);
-void		join_threads(t_args *args, pthread_t t_meal);
+void		join_threads(t_args *args);
 
 // tasks.c
 void	ft_eat(t_philo *philo);

@@ -74,12 +74,9 @@ void	ft_output(t_philo *philo, const char *task, int color)
 {
 	long	time;
 
-//	printf("\nget_time(MS) = %ld", get_time(MS));
-//	printf("\nphilo->start_time     = %ld\n\n", philo->start_time);
-	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
-	time = get_time(philo->args_ptr, MS) - philo->start_time;
-	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
+	time = 0;
 	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_write, LOCK);
+	time = get_time(philo->args_ptr, MS) - philo->start_time;
 	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", time, color, philo->id, task);
 	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_write, UNLOCK);
 }

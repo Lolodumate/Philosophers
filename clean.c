@@ -16,6 +16,8 @@ void	ft_clean(t_args *args)
 {
 	if (!args)
 		return ;
+	if (args->meals)
+		free(args->meals);
 	if (args->t)
 		free(args->t);
 	if (args->philo_ptr)
