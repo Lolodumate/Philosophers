@@ -27,7 +27,7 @@
 void	ft_pick_forks(t_args *args, t_philo *philo)
 {
 	if (philo->id % 2 == 0)
-		ft_usleep(10000, philo->args_ptr);
+		ft_usleep(1000, philo->args_ptr);
 	ft_mutex(args, philo->main_fork, LOCK);
 	ft_write_task(philo, FORK);
 	ft_mutex(args, philo->aux_fork, LOCK);
@@ -72,6 +72,4 @@ void	ft_eat(t_philo *philo)
 void	ft_think(t_philo *philo)
 { 
 	ft_write_task(philo, THINKING);
-	if (stop_routine(philo) == TRUE)
-		return ;
 }

@@ -51,22 +51,16 @@ void	join_threads(t_args *args)
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
-		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
+		if (pthread_join(args->t[i], NULL) != 0)
 			exit_error(args, "Error pthread join");
 	}
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
-		if (pthread_join(args->t[i], NULL) != 0)
-			exit_error(args, "Error pthread join");
-	}
-/*	i = -1;
-	while (++i < args->number_of_philosophers)
-	{
 		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
 			exit_error(args, "Error pthread join");
 	}
-*/	if (pthread_join(args->t_end, NULL) != 0)
+	if (pthread_join(args->t_end, NULL) != 0)
 		exit_error(args, "Error pthread_join");
 }
 
@@ -83,6 +77,9 @@ void	*diner_routine(void *philo)
 		exit_error(p->args_ptr, "Error pthread_create");
 	while (stop_routine(philo) == FALSE)
 	{
+		/*	1. Chaque fonction eat, sleep et think doit renvoyer un booleen et mettre a jour args->end_of_diner.
+		 *	2. Ajouter la condition fct == TRUE dans la boucle.
+		 */
 		ft_eat(p);
 		if (stop_routine(philo) == TRUE)
 			break ;

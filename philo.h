@@ -137,7 +137,7 @@ void	update_death_time(t_args *args, t_philo *philo);
 // clean.c
 void	exit_error(t_args *args, const char *error);
 void	ft_clean(t_args *args);
-void	ft_destroy_mutex(t_args *args, t_philo *philo);
+void	ft_destroy_mutex(t_args *args);
 
 // philosophers.c
 void		*diner_routine(void *philo);

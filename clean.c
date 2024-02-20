@@ -22,7 +22,7 @@ void	ft_clean(t_args *args)
 		free(args->t);
 	if (args->philo_ptr)
 	{
-		ft_destroy_mutex(args, args->philo_ptr);
+		ft_destroy_mutex(args);
 		free(args->philo_ptr);
 	}
 	if (args->forks)
@@ -30,7 +30,7 @@ void	ft_clean(t_args *args)
 	free(args);
 }
 
-void	ft_destroy_mutex(t_args *args, t_philo *philo)
+void	ft_destroy_mutex(t_args *args)
 {
 	int		i;
 
@@ -39,9 +39,9 @@ void	ft_destroy_mutex(t_args *args, t_philo *philo)
 	{
 		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
 		ft_mutex(args, &args->forks[i], DESTROY);
-		ft_mutex(args, philo->main_fork, DESTROY);
-		ft_mutex(args, philo->aux_fork, DESTROY);
-		ft_mutex(args, &philo->mtx, DESTROY);
+		ft_mutex(args, args->philo_ptr[i].main_fork, DESTROY);
+		ft_mutex(args, args->philo_ptr[i].aux_fork, DESTROY);
+		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
 	}
 	ft_mutex(args, &args->mtx_check_ending, DESTROY);
 	ft_mutex(args, &args->mtx, DESTROY);

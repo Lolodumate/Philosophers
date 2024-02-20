@@ -35,23 +35,20 @@ void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 
 void	ft_write_task(t_philo *philo, int task)
 {
-	if (!philo)
+	if (!philo || philo->args_ptr->end_of_diner == TRUE)
 		return ;
-	if (philo->args_ptr->end_of_diner == FALSE)
-	{
-		if (task == DEAD)
-			ft_output(philo, " died", 1);
-		else if (task == FORK)
-			ft_output(philo, " has taken a fork", 5);
-		else if (task == EATING)
-			ft_output(philo, " is eating", 2);
-		else if (task == SLEEPING)
-			ft_output(philo, " is sleeping", 4);
-		else if (task == THINKING)
-			ft_output(philo, " is thinking", 3);
-		else
-			exit_error(philo->args_ptr, "Error task");
-	}
+	if (task == DEAD)
+		ft_output(philo, " died", 1);
+	else if (task == FORK)
+		ft_output(philo, " has taken a fork", 5);
+	else if (task == EATING)
+		ft_output(philo, " is eating", 2);
+	else if (task == SLEEPING)
+		ft_output(philo, " is sleeping", 4);
+	else if (task == THINKING)
+		ft_output(philo, " is thinking", 3);
+	else
+		exit_error(philo->args_ptr, "Error task");
 }
 
 void	ft_mutex_write(t_args *args, t_philo *philo, int task)

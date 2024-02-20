@@ -31,7 +31,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	ft_mutex(args, &args->mtx_check_ending, INIT);
 	ft_mutex(args, &args->mtx, INIT);
 	ft_mutex(args, &args->mtx_write, INIT);
-	ft_mutex(args, args->forks, INIT);
+//	ft_mutex(args, args->forks, INIT);
 	return (args);
 }
 
@@ -63,6 +63,9 @@ t_philo	*set_philos_and_forks(t_args *args)
 
 	i = -1;
 	while (++i < args->number_of_philosophers)
+	{
 		init_philo(args, &args->philo_ptr[i], i + 1);
+		ft_mutex(args, &args->forks[i], INIT);
+	}
 	return (args->philo_ptr);
 }
