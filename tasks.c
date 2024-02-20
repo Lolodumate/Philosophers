@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 15:21:55 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 16:33:28 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 void	ft_pick_forks(t_args *args, t_philo *philo)
 {
 	if (philo->id % 2 == 0)
-		ft_usleep(1000, philo->args_ptr);
+		usleep(10000);
 	ft_mutex(args, philo->main_fork, LOCK);
 	ft_write_task(philo, FORK);
 	ft_mutex(args, philo->aux_fork, LOCK);
@@ -39,21 +39,21 @@ void	ft_drop_forks(t_args *args, t_philo *philo)
 	ft_mutex(args, philo->main_fork, UNLOCK);
 	ft_mutex(args, philo->aux_fork, UNLOCK);
 	ft_mutex(args, &philo->mtx, LOCK);
-	philo->is_eating = FALSE;
 	philo->meal_complete = philo_ends_meals(args, philo);
 	ft_mutex(args, &philo->mtx, UNLOCK);
 }
 
-void	ft_sleep(t_philo *philo)
+int	ft_sleep(t_philo *philo)
 {
 	ft_write_task(philo, SLEEPING);
 	ft_usleep(philo->args_ptr->time_to_sleep * 1000, philo->args_ptr);
+	return (philo_has_enough_time_to_eat(philo->args_ptr, philo));
 }
 
-void	ft_eat(t_philo *philo)
+int	ft_eat(t_philo *philo)
 {
 	ft_pick_forks(philo->args_ptr, philo);
-	ft_mutex_write(philo->args_ptr, philo, EATING);
+	ft_write_task(philo, EATING);
 	update_death_time(philo->args_ptr, philo);
 	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr);
 	ft_drop_forks(philo->args_ptr, philo);
@@ -64,12 +64,11 @@ void	ft_eat(t_philo *philo)
 		update_meals_complete(philo);
 		ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
 	}
-	if (stop_routine(philo) == TRUE)
-		return ;
-	ft_sleep(philo);
+	return (philo_has_enough_time_to_eat(philo->args_ptr, philo));
 }
 
-void	ft_think(t_philo *philo)
+int	ft_think(t_philo *philo)
 { 
 	ft_write_task(philo, THINKING);
+	return (philo_has_enough_time_to_eat(philo->args_ptr, philo));
 }

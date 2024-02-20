@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 15:06:03 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 16:04:49 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 t_args	*init_args(int argc, char **argv, t_args *args)
 {
 	args->meals_complete = FALSE;
-	args->deaths = 0;
 	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
@@ -31,7 +30,6 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	ft_mutex(args, &args->mtx_check_ending, INIT);
 	ft_mutex(args, &args->mtx, INIT);
 	ft_mutex(args, &args->mtx_write, INIT);
-//	ft_mutex(args, args->forks, INIT);
 	return (args);
 }
 
@@ -39,7 +37,6 @@ void	init_philo(t_args *args, t_philo *philo, int index)
 {
 	philo->id = index;
 	philo->args_ptr = args;
-	philo->is_eating = FALSE;
 	philo->is_dead = FALSE;
 	philo->meal_complete = FALSE;
 	philo->meal_number = 0;
@@ -47,8 +44,8 @@ void	init_philo(t_args *args, t_philo *philo, int index)
 	philo->death_time = args->philo_ptr->start_time + args->time_to_die;
 	philo->main_fork = &args->forks[philo->id - 1];
 	philo->aux_fork = &args->forks[philo->id % args->number_of_philosophers];
-	ft_mutex(args, philo->main_fork, INIT);
-	ft_mutex(args, philo->aux_fork, INIT);
+//	ft_mutex(args, philo->main_fork, INIT);
+//	ft_mutex(args, philo->aux_fork, INIT);
 	ft_mutex(args, &philo->mtx, INIT);
 }
 
@@ -64,8 +61,8 @@ t_philo	*set_philos_and_forks(t_args *args)
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
-		init_philo(args, &args->philo_ptr[i], i + 1);
 		ft_mutex(args, &args->forks[i], INIT);
+		init_philo(args, &args->philo_ptr[i], i + 1);
 	}
 	return (args->philo_ptr);
 }

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:28:04 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/15 20:06:30 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 16:14:19 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,14 @@ void	ft_clean(t_args *args)
 {
 	if (!args)
 		return ;
+	ft_destroy_mutex(args);
 	if (args->meals)
 		free(args->meals);
 	if (args->t)
 		free(args->t);
 	if (args->philo_ptr)
 	{
-		ft_destroy_mutex(args);
+	//	ft_destroy_mutex(args);
 		free(args->philo_ptr);
 	}
 	if (args->forks)
@@ -39,8 +40,8 @@ void	ft_destroy_mutex(t_args *args)
 	{
 		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
 		ft_mutex(args, &args->forks[i], DESTROY);
-		ft_mutex(args, args->philo_ptr[i].main_fork, DESTROY);
-		ft_mutex(args, args->philo_ptr[i].aux_fork, DESTROY);
+//		ft_mutex(args, args->philo_ptr[i].main_fork, DESTROY);
+//		ft_mutex(args, args->philo_ptr[i].aux_fork, DESTROY);
 		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
 	}
 	ft_mutex(args, &args->mtx_check_ending, DESTROY);

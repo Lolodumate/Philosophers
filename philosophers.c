@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 15:20:23 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 17:24:18 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	join_threads(t_args *args)
 	}
 	if (pthread_join(args->t_end, NULL) != 0)
 		exit_error(args, "Error pthread_join");
+	printf("END JOIN\n");
 }
 
 // Thread routine avec boucle !dead
@@ -75,15 +76,14 @@ void	*diner_routine(void *philo)
 	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 		exit_error(p->args_ptr, "Error pthread_create");
-	while (stop_routine(philo) == FALSE)
+	while (p->is_dead == FALSE)
 	{
-		/*	1. Chaque fonction eat, sleep et think doit renvoyer un booleen et mettre a jour args->end_of_diner.
-		 *	2. Ajouter la condition fct == TRUE dans la boucle.
-		 */
-		ft_eat(p);
-		if (stop_routine(philo) == TRUE)
-			break ;
-		ft_think(p);
+		if (ft_eat(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
+			return (NULL);
+		if (ft_sleep(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
+			return (NULL);
+		if (ft_think(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
+			return (NULL);
 	}
 	return (NULL);
 }
@@ -94,19 +94,18 @@ void	*check_philos(void *philo)
 	t_philo	*p;
 
 	p = (t_philo *)philo;
-	while (p->args_ptr->end_of_diner == FALSE && p->is_dead == FALSE)
+	while (p->is_dead == FALSE && p->args_ptr->end_of_diner == FALSE)
 	{
-		if (p->is_eating == FALSE && (get_time(p->args_ptr, MS) >= p->death_time))
+		ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
+		if (philo_is_dead(p->args_ptr, p) == TRUE && p->args_ptr->end_of_diner == FALSE)
 		{
-			ft_write_task(p, DEAD);
-			ft_mutex(p->args_ptr, &p->mtx, LOCK);
 			p->args_ptr->end_of_diner = TRUE;
-			p->is_dead = TRUE;
-			p->args_ptr->deaths++;
-			ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
+			ft_write_task(p, DEAD);
+			ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
+			return (NULL);
 		}
+		ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 	}
-//	printf("Check ****** %ld philo->id[%d] is dead [%d]\n", get_time(p->args_ptr, MS), p->id, p->is_dead);
 	return (NULL);
 }
 
@@ -118,11 +117,10 @@ void	*check_ending(void *args)
 	while (a->end_of_diner == FALSE)
 	{
 		ft_mutex(a, &a->mtx_check_ending, LOCK);
-		if (a->deaths > 0)
-			a->end_of_diner = TRUE;
-		else if (all_meals_complete(a))
+		if (all_meals_complete(a))
 			a->end_of_diner = TRUE;
 		ft_mutex(a, &a->mtx_check_ending, UNLOCK);
 	}
+	printf("END CHECK ENDING\n");
 	return (NULL);
 }

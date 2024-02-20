@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 09:39:48 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 17:20:29 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,8 @@ void	ft_output(t_philo *philo, const char *task, int color)
 	long	time;
 
 	time = 0;
-	if (philo->args_ptr->end_of_diner == FALSE)
-	{
-		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_write, LOCK);
-		time = get_time(philo->args_ptr, MS) - philo->start_time;
-		printf("%-6ld \033[1;3%dm%d %s\033[0m\n", time, color, philo->id, task);
-		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_write, UNLOCK);
-	}
+	//ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_write, LOCK);
+	time = get_time(philo->args_ptr, MS) - philo->start_time;
+	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", time, color, philo->id, task);
+	//ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_write, UNLOCK);
 }

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 13:51:56 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 15:34:31 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ typedef struct s_philo
 	t_args		*args_ptr;
 	pthread_t		thread;
 	int					id;
-	int					is_eating;
 	int					is_dead;
 	int					meal_complete;
 	int					meal_number;
@@ -81,7 +80,6 @@ typedef struct s_args
 	int				number_of_philosophers;
 	int				meals_complete;
 	int				*meals;
-	int				deaths;
 	long				time_to_die;
 	long				time_to_eat;
 	long				time_to_sleep;
@@ -99,7 +97,6 @@ int			ft_atoi(char *str);
 void	strisdigit(char *str);
 void	compliance_args(int argc, char **argv);
 void	ft_output(t_philo *philo, const char *task, int color);
-void	ft_mutex_write(t_args *args, t_philo *philo, int task);
 
 // ft_utils.c
 void	ft_mutex_protect(t_args *args, int mtx_return);
@@ -120,14 +117,15 @@ t_args		*init_args(int argc, char **argv, t_args *args);
 void		init_philo(t_args *args, t_philo *philo, int index);
 t_philo		*set_philos_and_forks(t_args *args);
 
-// meals.c
+// bool.c
+int	philo_is_dead(t_args *args, t_philo *philo);
 int	philo_ends_meals(t_args *args, t_philo *philo);
 int	all_meals_complete(t_args *args);
 int	stop_routine(t_philo *philo);
+int	philo_has_enough_time_to_eat(t_args *args, t_philo *philo);
 
 // ft_args.c
 void	update_meals_complete(t_philo *philo);
-//int	check_all_meals_complete(t_args *args, t_philo *philo);
 
 // time.c
 long				get_time(t_args *args, t_time_code time_code);
@@ -147,8 +145,9 @@ void		create_threads(t_args *args);
 void		join_threads(t_args *args);
 
 // tasks.c
-void	ft_eat(t_philo *philo);
-void	ft_think(t_philo *philo);
+int	ft_eat(t_philo *philo);
+int	ft_sleep(t_philo *philo);
+int	ft_think(t_philo *philo);
 void	ft_pick_forks(t_args *args, t_philo *philo);
 void	ft_drop_forks(t_args *args, t_philo *philo);
 

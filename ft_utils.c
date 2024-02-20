@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 12:18:12 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 15:15:02 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 13:59:04 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 
 void	ft_write_task(t_philo *philo, int task)
 {
-	if (!philo || philo->args_ptr->end_of_diner == TRUE)
+	if (!philo)
 		return ;
 	if (task == DEAD)
 		ft_output(philo, " died", 1);
@@ -49,13 +49,4 @@ void	ft_write_task(t_philo *philo, int task)
 		ft_output(philo, " is thinking", 3);
 	else
 		exit_error(philo->args_ptr, "Error task");
-}
-
-void	ft_mutex_write(t_args *args, t_philo *philo, int task)
-{
-	ft_write_task(philo, task);
-	ft_mutex(args, &philo->mtx, LOCK);
-	if (task == EATING)
-		philo->is_eating = TRUE;
-	ft_mutex(args, &philo->mtx, UNLOCK);
 }
