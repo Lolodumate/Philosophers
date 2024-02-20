@@ -6,25 +6,27 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 13:14:12 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 17:19:07 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 18:23:08 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+int	philo_is_alive(t_args *args, t_philo *philo)
+{
+	if (philo->death_time < get_time(args, MS))
+		return (FALSE);
+	return (TRUE);
+}
+
 int	philo_is_dead(t_args *args, t_philo *philo)
 {
-	if ((philo_has_enough_time_to_eat(args, philo) == FALSE)
-		|| (get_time(philo->args_ptr, MS) >= philo->death_time))
+	if(philo_is_alive(args, philo) == FALSE)
 	{
 		ft_mutex(args, &philo->mtx, LOCK);
 		philo->is_dead = TRUE;
 		ft_mutex(args, &philo->mtx, UNLOCK);
-/*		ft_mutex(args, &args->mtx, LOCK);
-		args->end_of_diner = TRUE;
-		printf("fct philo_is_dead : philo->is_dead== TRUE\n");
-		ft_mutex(args, &args->mtx, UNLOCK);
-*/		return (TRUE);
+		return (TRUE);
 	}
 	return (FALSE);
 }
@@ -72,11 +74,4 @@ int	stop_routine(t_philo *philo)
 	if (philo->args_ptr->end_of_diner == TRUE)
 		return (TRUE);
 	return (FALSE);
-}
-
-int	philo_has_enough_time_to_eat(t_args *args, t_philo *philo)
-{
-	if (philo->death_time - get_time(args, MS) > args->time_to_die)
-		return (FALSE);
-	return (TRUE);
 }

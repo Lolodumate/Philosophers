@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 15:34:31 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 19:21:07 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,12 @@ typedef enum e_bool
 	FALSE,
 	TRUE
 }		t_bool;
+
+typedef enum	e_oddeven
+{
+	EVEN,
+	ODD
+}		t_oddeven;
 
 typedef enum e_mtx
 {
@@ -77,7 +83,9 @@ typedef struct s_args
 	pthread_mutex_t		mtx;
 	pthread_mutex_t		mtx_write;
 	pthread_mutex_t		*forks;
+	int				*forks_to_drop;
 	int				number_of_philosophers;
+	int				number_of_philo_is_;
 	int				meals_complete;
 	int				*meals;
 	long				time_to_die;
@@ -97,6 +105,7 @@ int			ft_atoi(char *str);
 void	strisdigit(char *str);
 void	compliance_args(int argc, char **argv);
 void	ft_output(t_philo *philo, const char *task, int color);
+int	odd_or_even(int n);
 
 // ft_utils.c
 void	ft_mutex_protect(t_args *args, int mtx_return);
@@ -122,7 +131,7 @@ int	philo_is_dead(t_args *args, t_philo *philo);
 int	philo_ends_meals(t_args *args, t_philo *philo);
 int	all_meals_complete(t_args *args);
 int	stop_routine(t_philo *philo);
-int	philo_has_enough_time_to_eat(t_args *args, t_philo *philo);
+int	philo_is_alive(t_args *args, t_philo *philo);
 
 // ft_args.c
 void	update_meals_complete(t_philo *philo);
@@ -143,6 +152,10 @@ void		*check_philos(void *args);
 void		*check_ending(void *args);
 void		create_threads(t_args *args);
 void		join_threads(t_args *args);
+
+// handle_mutex.c
+int	*mem_alloc_forks_to_drop(t_args *args);
+void	unlock_mutex_forks(t_args *args, int *forks);
 
 // tasks.c
 int	ft_eat(t_philo *philo);

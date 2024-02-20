@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 17:24:18 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 20:38:17 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,16 @@ void	join_threads(t_args *args)
 {
 	int		i;
 
+	if (pthread_join(args->t_end, NULL) != 0)
+			exit_error(args, "Error pthread join");
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
 		if (pthread_join(args->t[i], NULL) != 0)
 			exit_error(args, "Error pthread join");
-	}
-	i = -1;
-	while (++i < args->number_of_philosophers)
-	{
 		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
 			exit_error(args, "Error pthread join");
 	}
-	if (pthread_join(args->t_end, NULL) != 0)
-		exit_error(args, "Error pthread_join");
 	printf("END JOIN\n");
 }
 
@@ -99,6 +95,11 @@ void	*check_philos(void *philo)
 		ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
 		if (philo_is_dead(p->args_ptr, p) == TRUE && p->args_ptr->end_of_diner == FALSE)
 		{
+/*	Lorsque args->number_of_philosophers est impair, les threads ne sont pas joints. Il semble que des fourchettes ne sont pas rendues par les philosophes. 
+ *		-> Mettre en place un indicateur qui permettra de voir s'il y a des fourchettes a rendre.
+ *
+ *	Lorsque args->number_of_philosophers est pair, les threads sont PARFOIS correctement joints mais pas systematiquement.
+ */
 			p->args_ptr->end_of_diner = TRUE;
 			ft_write_task(p, DEAD);
 			ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
@@ -114,13 +115,21 @@ void	*check_ending(void *args)
 	t_args	*a;
 
 	a = (t_args *)args;
+	ft_mutex(a, &a->mtx_check_ending, LOCK);
 	while (a->end_of_diner == FALSE)
 	{
-		ft_mutex(a, &a->mtx_check_ending, LOCK);
+		ft_mutex(a, &a->mtx, LOCK);
 		if (all_meals_complete(a))
+		{
 			a->end_of_diner = TRUE;
-		ft_mutex(a, &a->mtx_check_ending, UNLOCK);
+			ft_mutex(a, &a->mtx_write, UNLOCK);
+		}
+		ft_mutex(a, &a->mtx, UNLOCK);
 	}
+	// Rangement des fourchettes qui ont ete prises
+	unlock_mutex_forks(a, a->forks_to_drop);
+	ft_mutex(a, &a->mtx_check_ending, UNLOCK);
+	//unlock_mutex_forks(a, a->forks_to_drop);
 	printf("END CHECK ENDING\n");
 	return (NULL);
 }

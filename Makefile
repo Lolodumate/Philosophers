@@ -6,7 +6,7 @@
 #    By: laroges <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/18 16:16:20 by laroges           #+#    #+#              #
-#    Updated: 2024/02/20 13:44:07 by laroges          ###   ########.fr        #
+#    Updated: 2024/02/20 19:07:21 by laroges          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRC =	main.c \
 	mem_alloc.c \
 	ft_utils.c \
 	ft_bool.c \
+	handle_mutex.c \
 
 CC = gcc
 

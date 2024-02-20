@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 14:34:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 16:33:28 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 20:28:56 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,24 @@ void	ft_pick_forks(t_args *args, t_philo *philo)
 		usleep(10000);
 	ft_mutex(args, philo->main_fork, LOCK);
 	ft_write_task(philo, FORK);
+	args->forks_to_drop[philo->id - 1] = LOCK;
+
 	ft_mutex(args, philo->aux_fork, LOCK);
 	ft_write_task(philo, FORK);
+	args->forks_to_drop[philo->id] = LOCK;
 }
 
 void	ft_drop_forks(t_args *args, t_philo *philo)
 {
 	ft_mutex(args, philo->main_fork, UNLOCK);
+	args->forks_to_drop[philo->id - 1] = UNLOCK;
+
 	ft_mutex(args, philo->aux_fork, UNLOCK);
+	args->forks_to_drop[philo->id] = UNLOCK;
+
 	ft_mutex(args, &philo->mtx, LOCK);
-	philo->meal_complete = philo_ends_meals(args, philo);
+	if (philo->is_dead == FALSE)
+		philo->meal_complete = philo_ends_meals(args, philo);
 	ft_mutex(args, &philo->mtx, UNLOCK);
 }
 
@@ -47,7 +55,7 @@ int	ft_sleep(t_philo *philo)
 {
 	ft_write_task(philo, SLEEPING);
 	ft_usleep(philo->args_ptr->time_to_sleep * 1000, philo->args_ptr);
-	return (philo_has_enough_time_to_eat(philo->args_ptr, philo));
+	return (philo_is_alive(philo->args_ptr, philo));
 }
 
 int	ft_eat(t_philo *philo)
@@ -64,11 +72,11 @@ int	ft_eat(t_philo *philo)
 		update_meals_complete(philo);
 		ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
 	}
-	return (philo_has_enough_time_to_eat(philo->args_ptr, philo));
+	return (philo_is_alive(philo->args_ptr, philo));
 }
 
 int	ft_think(t_philo *philo)
 { 
 	ft_write_task(philo, THINKING);
-	return (philo_has_enough_time_to_eat(philo->args_ptr, philo));
+	return (philo_is_alive(philo->args_ptr, philo));
 }

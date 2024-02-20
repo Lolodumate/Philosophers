@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:28:04 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 16:14:19 by laroges          ###   ########.fr       */
+/*   Updated: 2024/02/20 20:46:38 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	ft_clean(t_args *args)
 	}
 	if (args->forks)
 		free(args->forks);
+	if (args->forks_to_drop)
+		free(args->forks_to_drop);
 	free(args);
 }
 
@@ -40,8 +42,8 @@ void	ft_destroy_mutex(t_args *args)
 	{
 		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
 		ft_mutex(args, &args->forks[i], DESTROY);
-//		ft_mutex(args, args->philo_ptr[i].main_fork, DESTROY);
-//		ft_mutex(args, args->philo_ptr[i].aux_fork, DESTROY);
+		ft_mutex(args, args->philo_ptr[i].main_fork, DESTROY);
+		ft_mutex(args, args->philo_ptr[i].aux_fork, DESTROY);
 		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
 	}
 	ft_mutex(args, &args->mtx_check_ending, DESTROY);
@@ -58,6 +60,7 @@ void	ft_exit(t_args *args)
 
 void	exit_error(t_args *args, const char *error)
 {
+	join_threads(args);
 	ft_clean(args);
 	printf("%s\n", error);
 	exit(1);
