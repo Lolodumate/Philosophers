@@ -22,14 +22,15 @@ void	ft_clean(t_args *args)
 	if (args->t)
 		free(args->t);
 	if (args->philo_ptr)
-	{
-	//	ft_destroy_mutex(args);
 		free(args->philo_ptr);
-	}
 	if (args->forks)
 		free(args->forks);
 	if (args->forks_to_drop)
 		free(args->forks_to_drop);
+	if (args->mtx_philo)
+		free(args->mtx_philo);
+	if (args->mtx_args)
+		free(args->mtx_args);
 	free(args);
 }
 
@@ -42,8 +43,8 @@ void	ft_destroy_mutex(t_args *args)
 	{
 		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
 		ft_mutex(args, &args->forks[i], DESTROY);
-		ft_mutex(args, args->philo_ptr[i].main_fork, DESTROY);
-		ft_mutex(args, args->philo_ptr[i].aux_fork, DESTROY);
+//		ft_mutex(args, args->philo_ptr[i].main_fork, DESTROY);
+//		ft_mutex(args, args->philo_ptr[i].aux_fork, DESTROY);
 		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
 	}
 	ft_mutex(args, &args->mtx_check_ending, DESTROY);

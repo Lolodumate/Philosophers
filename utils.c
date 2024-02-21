@@ -70,14 +70,6 @@ void	compliance_args(int argc, char **argv)
 	}
 }
 
-long	get_timestamp(t_philo *philo)
-{
-	int		timestamp;
-
-	timestamp = get_time(philo->args_ptr, MS) - philo->start_time;
-	return (timestamp);
-}
-
 void	ft_output(t_philo *philo, const char *task, int color)
 {
 	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", get_timestamp(philo), color, philo->id, task);

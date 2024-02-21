@@ -50,6 +50,14 @@ void	ft_usleep(long usec, t_args *args)
 	}
 }
 
+long	get_timestamp(t_philo *philo)
+{
+	int             timestamp;
+
+	timestamp = get_time(philo->args_ptr, MS) - philo->start_time;
+	return (timestamp);
+}
+
 void	update_death_time(t_args *args, t_philo *philo)
 {
 	ft_mutex(args, &philo->mtx, LOCK);

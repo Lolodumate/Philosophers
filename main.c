@@ -63,7 +63,7 @@ int	main(int argc, char **argv)
 
 /* Liberation de la memoire (free & destroy mutex).
  */
-//	ft_clean(args);
+	ft_clean(args);
 	printf("***********************END************************\n");
 	return (0);
 }

@@ -42,7 +42,10 @@ typedef enum e_mtx
 	INIT,
 	LOCK,
 	UNLOCK,
-	DESTROY
+	DESTROY,
+	MTX,
+	MTX_CHECK_ENDING,
+	MTX_WRITE
 }		t_mtx;
 
 typedef enum e_tasks
@@ -84,6 +87,8 @@ typedef struct s_args
 	pthread_mutex_t		mtx_write;
 	pthread_mutex_t		*forks;
 	int				*forks_to_drop;
+	int				*mtx_philo;
+	int				*mtx_args;
 	int				number_of_philosophers;
 	int				number_of_philo_is_;
 	int				meals_complete;
@@ -106,13 +111,14 @@ void	strisdigit(char *str);
 void	compliance_args(int argc, char **argv);
 void	ft_output(t_philo *philo, const char *task, int color);
 int	odd_or_even(int n);
-long	get_timestamp(t_philo *philo);
 
 // ft_utils.c
 void	ft_mutex_protect(t_args *args, int mtx_return);
 void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m);
-void	ft_write_task(t_philo *philo, int task);
+void	ft_write_task(t_args *args, t_philo *philo, int task);
 void	ft_output(t_philo *philo, const char *task, int color);
+void	fill_mtx_forks_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m);
+int	*fill_mtx_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m);
 
 // mem_alloc.c
 t_args		*mem_alloc_args(t_args *args);
@@ -140,6 +146,7 @@ void	update_meals_complete(t_philo *philo);
 // time.c
 long				get_time(t_args *args, t_time_code time_code);
 void	ft_usleep(long usec, t_args *args);
+long	get_timestamp(t_philo *philo);
 void	update_death_time(t_args *args, t_philo *philo);
 
 // clean.c
@@ -156,7 +163,9 @@ void		join_threads(t_args *args);
 
 // handle_mutex.c
 int	*mem_alloc_forks_to_drop(t_args *args);
-void	unlock_mutex_forks(t_args *args, int *forks);
+int	*mem_alloc_mtx(t_args *args, int n);
+int	unlock_mutex_forks(t_args *args);
+int	unlock_mutex_philo(t_args *args, t_philo *philo);
 
 // tasks.c
 int	ft_eat(t_philo *philo);

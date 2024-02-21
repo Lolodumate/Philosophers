@@ -28,6 +28,8 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 		args->target_nb_meals = ft_atoi(argv[5]);
 	args->forks = mem_alloc_forks(args, args->forks);
 	args->forks_to_drop = mem_alloc_forks_to_drop(args);
+	args->mtx_philo = mem_alloc_mtx(args, ft_atoi(argv[1]));
+	args->mtx_args = mem_alloc_mtx(args, 3);
 	args->t = mem_alloc_threads(args, args->t, args->number_of_philosophers);
 	ft_mutex(args, &args->mtx_check_ending, INIT);
 	ft_mutex(args, &args->mtx, INIT);
@@ -54,8 +56,8 @@ void	init_philo(t_args *args, t_philo *philo, int index)
 		philo->main_fork = &args->forks[(philo->id - 1) % args->number_of_philosophers];
 		philo->aux_fork = &args->forks[philo->id % args->number_of_philosophers];
 	}
-	ft_mutex(args, philo->main_fork, INIT);
-	ft_mutex(args, philo->aux_fork, INIT);
+//	ft_mutex(args, philo->main_fork, INIT);
+//	ft_mutex(args, philo->aux_fork, INIT);
 	ft_mutex(args, &philo->mtx, INIT);
 }
 
@@ -71,8 +73,9 @@ t_philo	*set_philos_and_forks(t_args *args)
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
-		ft_mutex(args, &args->forks[i], INIT);
+		//ft_mutex(args, &args->forks[i], INIT);
 		init_philo(args, &args->philo_ptr[i], i + 1);
+		ft_mutex(args, &args->forks[i], INIT);
 	}
 	return (args->philo_ptr);
 }
