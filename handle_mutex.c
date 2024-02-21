@@ -32,6 +32,7 @@ void	unlock_mutex_forks(t_args *args, int *forks)
 
 	i = -1;
 	printf("Check unlock_mutex_forks\n");
+	ft_mutex(args, &args->mtx, LOCK);
 	while (++i < args->number_of_philosophers)
 	{
 		if (forks[i] == LOCK)
@@ -40,4 +41,5 @@ void	unlock_mutex_forks(t_args *args, int *forks)
 			ft_mutex(args, &args->forks[i], UNLOCK);
 		}
 	}
+	ft_mutex(args, &args->mtx, UNLOCK);
 }

@@ -46,15 +46,17 @@ int	main(int argc, char **argv)
 	args = init_args(argc, argv, args);
 	args->philo_ptr = mem_alloc_philo_ptr(args, args->philo_ptr, args->number_of_philosophers);
 	args->philo_ptr = set_philos_and_forks(args);
-/*	int		i;
+/*
+	int		i;
 
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
-		printf("&philo[%d].main_fork = %p\n", i, philo[i].main_fork);
-		printf("&philo[%d].aux_fork  = %p\n", i, philo[i].aux_fork);
+		printf("&philo[%d].main_fork = %p\n", i, args->philo_ptr[i].main_fork);
+		printf("&philo[%d].aux_fork  = %p\n", i, args->philo_ptr[i].aux_fork);
 	}
-	exit_error(args, "END");*/
+	exit_error(args, "END");
+*/
 /* Creation des threads.
  */
 	diner(args);

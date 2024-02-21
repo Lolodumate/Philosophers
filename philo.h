@@ -106,6 +106,7 @@ void	strisdigit(char *str);
 void	compliance_args(int argc, char **argv);
 void	ft_output(t_philo *philo, const char *task, int color);
 int	odd_or_even(int n);
+long	get_timestamp(t_philo *philo);
 
 // ft_utils.c
 void	ft_mutex_protect(t_args *args, int mtx_return);

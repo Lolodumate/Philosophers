@@ -60,7 +60,6 @@ void	ft_exit(t_args *args)
 
 void	exit_error(t_args *args, const char *error)
 {
-	join_threads(args);
 	ft_clean(args);
 	printf("%s\n", error);
 	exit(1);

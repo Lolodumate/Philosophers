@@ -26,8 +26,8 @@
 
 void	ft_pick_forks(t_args *args, t_philo *philo)
 {
-	if (philo->id % 2 == 0)
-		usleep(10000);
+//	if (philo->id % 2 == 0)
+//		usleep(10000);
 	ft_mutex(args, philo->main_fork, LOCK);
 	ft_write_task(philo, FORK);
 	args->forks_to_drop[philo->id - 1] = LOCK;
@@ -46,8 +46,7 @@ void	ft_drop_forks(t_args *args, t_philo *philo)
 	args->forks_to_drop[philo->id] = UNLOCK;
 
 	ft_mutex(args, &philo->mtx, LOCK);
-	if (philo->is_dead == FALSE)
-		philo->meal_complete = philo_ends_meals(args, philo);
+	philo->meal_complete = philo_ends_meals(args, philo);
 	ft_mutex(args, &philo->mtx, UNLOCK);
 }
 

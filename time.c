@@ -41,7 +41,7 @@ void	ft_usleep(long usec, t_args *args)
 		elapsed = get_time(args, US) - start;
 		rem = usec - elapsed;
 		if (rem > 1000)
-			usleep(usec / 2);
+			usleep(rem / 2);
 		else
 		{
 			while (get_time(args, US) - start < usec)

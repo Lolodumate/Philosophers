@@ -44,29 +44,16 @@ void	init_philo(t_args *args, t_philo *philo, int index)
 	philo->meal_number = 0;
 	philo->start_time = get_time(args, MS);
 	philo->death_time = args->philo_ptr->start_time + args->time_to_die;
-
-	// Attribution des fourchettes pour un nombre de philosophes pair :
-/*	if (args->number_of_philo_is_ == EVEN)
+	if (odd_or_even(philo->id) == ODD)
 	{
-*/
-		philo->main_fork = &args->forks[philo->id - 1];
-		philo->aux_fork = &args->forks[philo->id % args->number_of_philosophers];
-/*	}
-	else // Attribution des fourchettes pour un nombre de philosophes impair :
-	{
-		if (odd_or_even(philo->id) == ODD)
-		{
-			philo->main_fork = &args->forks[philo->id % args->number_of_philosophers];
-			philo->aux_fork = &args->forks[(philo->id - 1) % args->number_of_philosophers];
-		}
-		else
-		{
-			philo->main_fork = &args->forks[(philo->id - 1) % args->number_of_philosophers];
-			philo->aux_fork = &args->forks[philo->id % args->number_of_philosophers];
-		}
-		
+		philo->main_fork = &args->forks[philo->id % args->number_of_philosophers];
+		philo->aux_fork = &args->forks[(philo->id - 1) % args->number_of_philosophers];
 	}
-*/
+	else if (odd_or_even(philo->id) == EVEN)
+	{
+		philo->main_fork = &args->forks[(philo->id - 1) % args->number_of_philosophers];
+		philo->aux_fork = &args->forks[philo->id % args->number_of_philosophers];
+	}
 	ft_mutex(args, philo->main_fork, INIT);
 	ft_mutex(args, philo->aux_fork, INIT);
 	ft_mutex(args, &philo->mtx, INIT);

@@ -50,13 +50,19 @@ void	join_threads(t_args *args)
 
 	if (pthread_join(args->t_end, NULL) != 0)
 			exit_error(args, "Error pthread join");
+	else
+		printf("join_threads args->t_end OK\n");
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
 		if (pthread_join(args->t[i], NULL) != 0)
 			exit_error(args, "Error pthread join");
+		else
+			printf("join_threads args->t[%d] OK\n", i);
 		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
 			exit_error(args, "Error pthread join");
+		else
+			printf("join_threads args->philo_ptr[%d].thread OK\n", i);
 	}
 	printf("END JOIN\n");
 }
@@ -95,13 +101,8 @@ void	*check_philos(void *philo)
 		ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
 		if (philo_is_dead(p->args_ptr, p) == TRUE && p->args_ptr->end_of_diner == FALSE)
 		{
-/*	Lorsque args->number_of_philosophers est impair, les threads ne sont pas joints. Il semble que des fourchettes ne sont pas rendues par les philosophes. 
- *		-> Mettre en place un indicateur qui permettra de voir s'il y a des fourchettes a rendre.
- *
- *	Lorsque args->number_of_philosophers est pair, les threads sont PARFOIS correctement joints mais pas systematiquement.
- */
-			p->args_ptr->end_of_diner = TRUE;
 			ft_write_task(p, DEAD);
+			p->args_ptr->end_of_diner = TRUE;
 			ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 			return (NULL);
 		}
@@ -128,8 +129,8 @@ void	*check_ending(void *args)
 	}
 	// Rangement des fourchettes qui ont ete prises
 	unlock_mutex_forks(a, a->forks_to_drop);
+//	printf("END CHECK ENDING before mutex_check_ending\n");
 	ft_mutex(a, &a->mtx_check_ending, UNLOCK);
-	//unlock_mutex_forks(a, a->forks_to_drop);
-	printf("END CHECK ENDING\n");
+//	printf("END CHECK ENDING after mutex_check_ending\n");
 	return (NULL);
 }

@@ -70,17 +70,17 @@ void	compliance_args(int argc, char **argv)
 	}
 }
 
+long	get_timestamp(t_philo *philo)
+{
+	int		timestamp;
+
+	timestamp = get_time(philo->args_ptr, MS) - philo->start_time;
+	return (timestamp);
+}
+
 void	ft_output(t_philo *philo, const char *task, int color)
 {
-	long	time;
-
-	time = 0;
-	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_write, LOCK);
-	time = get_time(philo->args_ptr, MS) - philo->start_time;
-	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_write, UNLOCK);
-	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_write, LOCK);
-	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", time, color, philo->id, task);
-	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_write, UNLOCK);
+	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", get_timestamp(philo), color, philo->id, task);
 }
 
 int	odd_or_even(int n)
