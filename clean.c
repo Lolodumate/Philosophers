@@ -45,7 +45,6 @@ void	ft_destroy_mutex(t_args *args)
 		ft_mutex(args, &args->forks[i], DESTROY);
 //		ft_mutex(args, args->philo_ptr[i].main_fork, DESTROY);
 //		ft_mutex(args, args->philo_ptr[i].aux_fork, DESTROY);
-		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
 	}
 	ft_mutex(args, &args->mtx_check_ending, DESTROY);
 	ft_mutex(args, &args->mtx, DESTROY);

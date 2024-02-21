@@ -26,22 +26,16 @@
 
 void	ft_pick_forks(t_args *args, t_philo *philo)
 {
-//	if (philo->id % 2 == 0)
-//		usleep(10000);
 	ft_mutex(args, philo->main_fork, LOCK);
 	ft_write_task(args, philo, FORK);
-//	fill_mtx_forks_tab(args, philo, philo->main_fork, LOCK);
 	ft_mutex(args, philo->aux_fork, LOCK);
 	ft_write_task(args, philo, FORK);
-//	fill_mtx_forks_tab(args, philo, philo->aux_fork, LOCK);
 }
 
 void	ft_drop_forks(t_args *args, t_philo *philo)
 {
 	ft_mutex(args, philo->main_fork, UNLOCK);
-//	fill_mtx_forks_tab(args, philo, philo->main_fork, UNLOCK);
 	ft_mutex(args, philo->aux_fork, UNLOCK);
-//	fill_mtx_forks_tab(args, philo, philo->aux_fork, UNLOCK);
 
 	ft_mutex(args, &philo->mtx, LOCK);
 	philo->meal_complete = philo_ends_meals(args, philo);
@@ -59,7 +53,11 @@ int	ft_eat(t_philo *philo)
 {
 	ft_pick_forks(philo->args_ptr, philo);
 	ft_write_task(philo->args_ptr, philo, EATING);
+
+	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 	update_death_time(philo->args_ptr, philo);
+	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
+	
 	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr);
 	ft_drop_forks(philo->args_ptr, philo);
 	if (philo->args_ptr->target_nb_meals >= 0)

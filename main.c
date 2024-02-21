@@ -35,13 +35,6 @@ int	main(int argc, char **argv)
 
 	args = NULL;
 	compliance_args(argc, argv);
-/* 1. Initialisation des donnees de la structure args :
- *	- Structure args
- *	- Pointeurs args->philos
- * 2. Initialisation des forks et philos (en liant les philos aux pointeurs args->philos).
- *
- * Note : initialisation = malloc, <donnee> = 0, et pthread_mutex_init.
- */
 	args = mem_alloc_args(args);
 	args = init_args(argc, argv, args);
 	args->philo_ptr = mem_alloc_philo_ptr(args, args->philo_ptr, args->number_of_philosophers);
@@ -57,12 +50,7 @@ int	main(int argc, char **argv)
 	}
 	exit_error(args, "END");
 */
-/* Creation des threads.
- */
 	diner(args);
-
-/* Liberation de la memoire (free & destroy mutex).
- */
 	ft_clean(args);
 	printf("***********************END************************\n");
 	return (0);

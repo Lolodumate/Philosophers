@@ -60,7 +60,5 @@ long	get_timestamp(t_philo *philo)
 
 void	update_death_time(t_args *args, t_philo *philo)
 {
-	ft_mutex(args, &philo->mtx, LOCK);
 	philo->death_time = get_time(args, MS) + args->time_to_die;
-	ft_mutex(args, &philo->mtx, UNLOCK);
 }

@@ -50,19 +50,19 @@ void	join_threads(t_args *args)
 
 	if (pthread_join(args->t_end, NULL) != 0)
 			exit_error(args, "Error pthread join");
-	else
-		printf("join_threads args->t_end OK\n");
+//	else
+//		printf("join_threads args->t_end OK\n");
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
 		if (pthread_join(args->t[i], NULL) != 0)
 			exit_error(args, "Error pthread join");
-		else
-			printf("join_threads args->t[%d] OK\n", i);
+//		else
+//			printf("join_threads args->t[%d] OK\n", i);
 		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
 			exit_error(args, "Error pthread join");
-		else
-			printf("join_threads args->philo_ptr[%d].thread OK\n", i);
+//		else
+//			printf("join_threads args->philo_ptr[%d].thread OK\n", i);
 	}
 	printf("END JOIN\n");
 }
@@ -76,7 +76,6 @@ void	*diner_routine(void *philo)
 	ft_mutex(p->args_ptr, &p->mtx, LOCK);
 	p->death_time =  get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
 	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
-	//if (pthread_create(&p[p->id - 1].thread, NULL, &check_philos, p) != 0)
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 		exit_error(p->args_ptr, "Error pthread_create");
 	while (p->is_dead == FALSE)
@@ -100,7 +99,6 @@ void	*check_philos(void *philo)
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
 	while (p->is_dead == FALSE && p->args_ptr->end_of_diner == FALSE)
 	{
-//		ft_mutex(p->args_ptr, p, &p->args_ptr->mtx, LOCK);
 		if (philo_is_dead(p->args_ptr, p) == TRUE && p->args_ptr->end_of_diner == FALSE)
 		{
 			ft_write_task(p->args_ptr, p, DEAD);
@@ -108,7 +106,6 @@ void	*check_philos(void *philo)
 			ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 			return (NULL);
 		}
-//		ft_mutex(p->args_ptr, p, &p->args_ptr->mtx, UNLOCK);
 	}
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 	return (NULL);
@@ -126,13 +123,5 @@ void	*check_ending(void *args)
 			a->end_of_diner = TRUE;
 	}
 	ft_mutex(a, &a->mtx_check_ending, UNLOCK);
-	// Rangement des fourchettes qui ont ete prises
-//	while (unlock_mutex_forks(a, a->philo_ptr) != TRUE)
-//		usleep(10000);
-//	while (unlock_mutex_philo(a, a->philo_ptr) != TRUE)
-//		usleep(10000);
-//	printf("END CHECK ENDING before mutex_check_ending\n");
-	//ft_mutex(a, a->philo_ptr, &a->mtx_check_ending, UNLOCK);
-//	printf("END CHECK ENDING after mutex_check_ending\n");
 	return (NULL);
 }
