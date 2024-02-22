@@ -26,20 +26,20 @@
 
 void	ft_pick_forks(t_args *args, t_philo *philo)
 {
-	ft_mutex(args, philo->main_fork, LOCK);
+	args->mtx_forks[philo->id - 1] += ft_mutex(args, philo->main_fork, LOCK);
 	ft_write_task(args, philo, FORK);
-	ft_mutex(args, philo->aux_fork, LOCK);
+	args->mtx_forks[philo->id - 1] += ft_mutex(args, philo->aux_fork, LOCK);
 	ft_write_task(args, philo, FORK);
 }
 
 void	ft_drop_forks(t_args *args, t_philo *philo)
 {
-	ft_mutex(args, philo->main_fork, UNLOCK);
-	ft_mutex(args, philo->aux_fork, UNLOCK);
+	args->mtx_forks[philo->id - 1] += ft_mutex(args, philo->main_fork, UNLOCK);
+	args->mtx_forks[philo->id - 1] += ft_mutex(args, philo->aux_fork, UNLOCK);
 
-	ft_mutex(args, &philo->mtx, LOCK);
+	args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, LOCK);
 	philo->meal_complete = philo_ends_meals(args, philo);
-	ft_mutex(args, &philo->mtx, UNLOCK);
+	args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, UNLOCK);
 }
 
 int	ft_sleep(t_philo *philo)
@@ -54,18 +54,18 @@ int	ft_eat(t_philo *philo)
 	ft_pick_forks(philo->args_ptr, philo);
 	ft_write_task(philo->args_ptr, philo, EATING);
 
-	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
+	philo->args_ptr->mtx_philo[philo->id - 1] += ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 	update_death_time(philo->args_ptr, philo);
-	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
+	philo->args_ptr->mtx_philo[philo->id - 1] += ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
 	
 	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr);
 	ft_drop_forks(philo->args_ptr, philo);
 	if (philo->args_ptr->target_nb_meals >= 0)
 	{
-		ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
+		philo->args_ptr->mtx_philo[philo->id - 1] += ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 		philo->meal_number++;
 		update_meals_complete(philo);
-		ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
+		philo->args_ptr->mtx_philo[philo->id - 1] += ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
 	}
 	return (philo_is_alive(philo->args_ptr, philo));
 }

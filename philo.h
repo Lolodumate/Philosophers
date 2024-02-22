@@ -39,13 +39,13 @@ typedef enum	e_oddeven
 
 typedef enum e_mtx
 {
+	MTX,
+	MTX_CHECK_ENDING,
+	MTX_WRITE,
 	INIT,
 	LOCK,
 	UNLOCK,
-	DESTROY,
-	MTX,
-	MTX_CHECK_ENDING,
-	MTX_WRITE
+	DESTROY
 }		t_mtx;
 
 typedef enum e_tasks
@@ -86,7 +86,7 @@ typedef struct s_args
 	pthread_mutex_t		mtx;
 	pthread_mutex_t		mtx_write;
 	pthread_mutex_t		*forks;
-	int				*forks_to_drop;
+	int				*mtx_forks;
 	int				*mtx_philo;
 	int				*mtx_args;
 	int				number_of_philosophers;
@@ -114,7 +114,7 @@ int	odd_or_even(int n);
 
 // ft_utils.c
 void	ft_mutex_protect(t_args *args, int mtx_return);
-void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m);
+int	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m);
 void	ft_write_task(t_args *args, t_philo *philo, int task);
 void	ft_output(t_philo *philo, const char *task, int color);
 void	fill_mtx_forks_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m);
@@ -164,8 +164,8 @@ void		join_threads(t_args *args);
 // handle_mutex.c
 int	*mem_alloc_forks_to_drop(t_args *args);
 int	*mem_alloc_mtx(t_args *args, int n);
-int	unlock_mutex_forks(t_args *args);
-int	unlock_mutex_philo(t_args *args, t_philo *philo);
+int	check_mutex_forks(t_args *args);
+int	check_mutex_philo(t_args *args);
 
 // tasks.c
 int	ft_eat(t_philo *philo);

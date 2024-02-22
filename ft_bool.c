@@ -21,14 +21,14 @@ int	philo_is_alive(t_args *args, t_philo *philo)
 
 int	philo_is_dead(t_args *args, t_philo *philo)
 {
-	ft_mutex(args, &philo->mtx, LOCK);
+	args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, LOCK);
 	if(philo_is_alive(args, philo) == FALSE)
 	{
 		philo->is_dead = TRUE;
-		ft_mutex(args, &philo->mtx, UNLOCK);
+		args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, UNLOCK);
 		return (TRUE);
 	}
-	ft_mutex(args, &philo->mtx, UNLOCK);
+	args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, UNLOCK);
 	return (FALSE);
 }
 

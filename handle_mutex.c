@@ -40,50 +40,48 @@ int	*mem_alloc_mtx(t_args *args, int n)
 	return (tab);
 }
 
-int	unlock_mutex_forks(t_args *args)
+int	check_mutex_forks(t_args *args)
 {
 	int		i;
+	int		res;
 	int		*tab;
 
 	i = -1;
-	tab = args->forks_to_drop;
-	printf("Check unlock_mtx_forks\n");
-//	ft_mutex(args, philo, &args->mtx, LOCK);
+	res = 0;
+	tab = args->mtx_forks;
+//	printf("Check check_mtx_forks\n");
 	while (++i < args->number_of_philosophers)
 	{
-		printf("tab[%d] = %d\n", i, tab[i]);
-		if (tab[i] == LOCK)
-		{
-			printf("unlocking mtx_forks[%d]\n", i);
-			ft_mutex(args, &args->forks[i], UNLOCK);
-			tab[i] = UNLOCK;
-		}
-		printf("unlock_mtx_fork[%d] = %d\n", i, tab[i]);
+//		printf("check_mtx_forks[%d] = %d\n", i, tab[i]);
+		res += tab[i];
 	}
-//	ft_mutex(args, philo, &args->mtx, UNLOCK);
-	return (TRUE);
+	if (res == 0)
+	{
+		printf("check_mutex_forks res == 0 OK\n");
+		return (TRUE);
+	}
+	return (FALSE);
 }
 
-int	unlock_mutex_philo(t_args *args, t_philo *philo)
+int	check_mutex_philo(t_args *args)
 {
 	int		i;
+	int		res;
 	int		*tab;
 
 	i = -1;
+	res = 0;
 	tab = args->mtx_philo;
-	printf("Check unlock_mtx_philo\n");
-//	ft_mutex(args, philo, &args->mtx, LOCK);
+//	printf("Check check_mtx_philo\n");
 	while (++i < args->number_of_philosophers)
 	{
-		printf("unlock_mtx_philo[%d] = %d\n", i, tab[i]);
-		if (tab[i] == LOCK)
-		{
-			printf("unlocking mtx_philo[%d]\n", i);
-			ft_mutex(args, &philo[i].mtx, UNLOCK);
-			tab[i] = UNLOCK;
-		}
-		printf("unlock_mtx_philo[%d] = %d\n", i, tab[i]);
+//		printf("check_mtx_philo[%d] = %d\n", i, tab[i]);
+		res += tab[i];
 	}
-//	ft_mutex(args, philo, &args->mtx, UNLOCK);
-	return (TRUE);
+	if (res == 0)
+	{
+		printf("check_mutex_forks res == 0 OK\n");
+		return (TRUE);
+	}
+	return (FALSE);
 }

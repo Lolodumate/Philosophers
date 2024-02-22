@@ -45,7 +45,7 @@ void	ft_usleep(long usec, t_args *args)
 		else
 		{
 			while (get_time(args, US) - start < usec)
-				;
+				usleep(100);
 		}
 	}
 }

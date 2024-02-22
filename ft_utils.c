@@ -19,25 +19,38 @@ void	ft_mutex_protect(t_args *args, int mtx_return)
 	exit_error(args, "Error mutex");
 }
 
-void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
+int	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 {
 	if (m == LOCK)
+	{
 		ft_mutex_protect(args, pthread_mutex_lock(mtx));
+		return (1);
+	}
 	else if (m == UNLOCK)
+	{
 		ft_mutex_protect(args, pthread_mutex_unlock(mtx));
+		return (-1);
+	}
 	else if (m == DESTROY)
+	{
 		ft_mutex_protect(args, pthread_mutex_destroy(mtx));
+		return (0);
+	}
 	else if (m == INIT)
-		ft_mutex_protect(args, pthread_mutex_init(mtx, NULL));	
+	{
+		ft_mutex_protect(args, pthread_mutex_init(mtx, NULL));
+		return (0);
+	}
 	else
 		exit_error(args, "Wrong mutex input");
+	return (0);
 }
 
 void	ft_write_task(t_args *args, t_philo *philo, int task)
 {
 	if (!philo)
 		return ;
-	ft_mutex(philo->args_ptr, &args->mtx_write, LOCK);
+	args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, LOCK);
 	if (philo->args_ptr->end_of_diner == FALSE)
 	{
 		if (task == DEAD)
@@ -51,9 +64,12 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 		else if (task == THINKING)
 			ft_output(philo, " is thinking", 3);
 		else
+		{
+			args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, UNLOCK);
 			exit_error(philo->args_ptr, "Error task");
+		}
 	}
-	ft_mutex(philo->args_ptr, &args->mtx_write, UNLOCK);
+	args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, UNLOCK);
 }
 
 void	fill_mtx_forks_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m)

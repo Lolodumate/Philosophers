@@ -41,6 +41,12 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 		if (pthread_create(&args->t[i], NULL, &diner_routine, &args->philo_ptr[i]) != 0)
 			exit_error(args, "Failure thread creation");
 	}
+	while (check_mutex_forks(args) == FALSE)
+		usleep(100);
+	printf("CHECK 1\n");
+	while (check_mutex_philo(args) == FALSE)
+		usleep(100);
+	printf("CHECK 2\n");
 	join_threads(args);
 }
 
@@ -73,9 +79,9 @@ void	*diner_routine(void *philo)
 	t_philo		*p;
 
 	p = (t_philo *)philo;
-	ft_mutex(p->args_ptr, &p->mtx, LOCK);
+	p->args_ptr->mtx_philo[p->id - 1] += ft_mutex(p->args_ptr, &p->mtx, LOCK);
 	p->death_time =  get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
-	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
+	p->args_ptr->mtx_philo[p->id - 1] += ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 		exit_error(p->args_ptr, "Error pthread_create");
 	while (p->is_dead == FALSE)
@@ -96,18 +102,18 @@ void	*check_philos(void *philo)
 	t_philo	*p;
 
 	p = (t_philo *)philo;
-	ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
+	p->args_ptr->mtx_args[MTX] += ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
 	while (p->is_dead == FALSE && p->args_ptr->end_of_diner == FALSE)
 	{
 		if (philo_is_dead(p->args_ptr, p) == TRUE && p->args_ptr->end_of_diner == FALSE)
 		{
 			ft_write_task(p->args_ptr, p, DEAD);
 			p->args_ptr->end_of_diner = TRUE;
-			ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
+			p->args_ptr->mtx_args[MTX] += ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 			return (NULL);
 		}
 	}
-	ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
+	p->args_ptr->mtx_args[MTX] += ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 	return (NULL);
 }
 
@@ -116,12 +122,12 @@ void	*check_ending(void *args)
 	t_args	*a;
 
 	a = (t_args *)args;
-	ft_mutex(a, &a->mtx_check_ending, LOCK);
+	a->mtx_args[MTX_CHECK_ENDING] += ft_mutex(a, &a->mtx_check_ending, LOCK);
 	while (a->end_of_diner == FALSE)
 	{
 		if (all_meals_complete(a))
 			a->end_of_diner = TRUE;
 	}
-	ft_mutex(a, &a->mtx_check_ending, UNLOCK);
+	a->mtx_args[MTX_CHECK_ENDING] += ft_mutex(a, &a->mtx_check_ending, UNLOCK);
 	return (NULL);
 }
