@@ -28,6 +28,14 @@
  * Vizualizer : https://nafuka11.github.io/philosophers-visualizer/
  */
 // pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;
+// *************************************************************
+// *************************************************************
+
+// CFLAGS = -Wall -Werror -Wextra -g -pthread -fsanitize=thread
+
+// *************************************************************
+// *************************************************************
+//
 
 void	create_threads(t_args *args) // philosophers(&mtx, args)
 {
@@ -41,35 +49,29 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 		if (pthread_create(&args->t[i], NULL, &diner_routine, &args->philo_ptr[i]) != 0)
 			exit_error(args, "Failure thread creation");
 	}
-	while (check_mutex_forks(args) == FALSE)
+//	if (pthread_join(args->t_end, NULL) != 0)
+//			exit_error(args, "Error pthread join");
+/*	while (check_mutex_forks(args) == FALSE)
 		usleep(100);
-	printf("CHECK 1\n");
 	while (check_mutex_philo(args) == FALSE)
 		usleep(100);
-	printf("CHECK 2\n");
-	join_threads(args);
+*/	join_threads(args);
 }
 
 void	join_threads(t_args *args)
 {
 	int		i;
 
-	if (pthread_join(args->t_end, NULL) != 0)
-			exit_error(args, "Error pthread join");
-//	else
-//		printf("join_threads args->t_end OK\n");
 	i = -1;
 	while (++i < args->number_of_philosophers)
 	{
 		if (pthread_join(args->t[i], NULL) != 0)
 			exit_error(args, "Error pthread join");
-//		else
-//			printf("join_threads args->t[%d] OK\n", i);
 		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
 			exit_error(args, "Error pthread join");
-//		else
-//			printf("join_threads args->philo_ptr[%d].thread OK\n", i);
 	}
+	if (pthread_join(args->t_end, NULL) != 0)
+			exit_error(args, "Error pthread join");
 	printf("END JOIN\n");
 }
 
@@ -84,7 +86,7 @@ void	*diner_routine(void *philo)
 	p->args_ptr->mtx_philo[p->id - 1] += ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 		exit_error(p->args_ptr, "Error pthread_create");
-	while (p->is_dead == FALSE)
+	while (p->args_ptr->end_of_diner == FALSE)
 	{
 		if (ft_eat(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
 			return (NULL);
@@ -102,18 +104,19 @@ void	*check_philos(void *philo)
 	t_philo	*p;
 
 	p = (t_philo *)philo;
-	p->args_ptr->mtx_args[MTX] += ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
-	while (p->is_dead == FALSE && p->args_ptr->end_of_diner == FALSE)
+	while (p->args_ptr->end_of_diner == FALSE)
 	{
+		ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
 		if (philo_is_dead(p->args_ptr, p) == TRUE && p->args_ptr->end_of_diner == FALSE)
 		{
 			ft_write_task(p->args_ptr, p, DEAD);
 			p->args_ptr->end_of_diner = TRUE;
-			p->args_ptr->mtx_args[MTX] += ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
+			p->is_dead = TRUE;
+			ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 			return (NULL);
 		}
+		ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 	}
-	p->args_ptr->mtx_args[MTX] += ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 	return (NULL);
 }
 
@@ -122,12 +125,15 @@ void	*check_ending(void *args)
 	t_args	*a;
 
 	a = (t_args *)args;
-	a->mtx_args[MTX_CHECK_ENDING] += ft_mutex(a, &a->mtx_check_ending, LOCK);
+	//a->mtx_args[MTX_CHECK_ENDING] += ft_mutex(a, &a->mtx_check_ending, LOCK);
+	ft_mutex(a, &a->mtx_check_ending, LOCK);
 	while (a->end_of_diner == FALSE)
 	{
-		if (all_meals_complete(a))
+		if (all_meals_complete(a) == TRUE)
 			a->end_of_diner = TRUE;
 	}
-	a->mtx_args[MTX_CHECK_ENDING] += ft_mutex(a, &a->mtx_check_ending, UNLOCK);
+//	printf("*********************************check_ending a->end_of_diner = %d\n", a->end_of_diner);
+	//a->mtx_args[MTX_CHECK_ENDING] += ft_mutex(a, &a->mtx_check_ending, UNLOCK);
+	ft_mutex(a, &a->mtx_check_ending, UNLOCK);
 	return (NULL);
 }

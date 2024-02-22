@@ -22,7 +22,7 @@ void	update_meals_complete(t_philo *philo)
 		philo->args_ptr->meals_complete++;
 	}
 }
-
+/*
 int	check_all_meals_complete(t_args *args)
 {
 	int		i;
@@ -37,4 +37,4 @@ int	check_all_meals_complete(t_args *args)
 	if (n == args->number_of_philosophers * args->time_to_eat)
 		return (TRUE);
 	return (FALSE);
-}
+}*/

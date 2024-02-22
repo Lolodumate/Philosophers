@@ -123,7 +123,7 @@ int	*fill_mtx_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m);
 // mem_alloc.c
 t_args		*mem_alloc_args(t_args *args);
 pthread_mutex_t	*mem_alloc_forks(t_args *args, pthread_mutex_t *forks);
-t_philo		*mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb);
+t_philo		*mem_alloc_philo_ptr(t_args *args, int n);
 pthread_t	*mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb);
 int	*mem_alloc_meals(t_args *args);
 
@@ -131,7 +131,8 @@ int	*mem_alloc_meals(t_args *args);
 void		ft_mem_alloc(char **argv, t_args *args, t_philo *philo);
 t_args		*init_args(int argc, char **argv, t_args *args);
 void		init_philo(t_args *args, t_philo *philo, int index);
-t_philo		*set_philos_and_forks(t_args *args);
+t_philo		*set_philos(t_args *args, int n);
+t_args		*set_forks(t_args *args, pthread_mutex_t *forks,  int n);
 
 // bool.c
 int	philo_is_dead(t_args *args, t_philo *philo);
@@ -152,7 +153,7 @@ void	update_death_time(t_args *args, t_philo *philo);
 // clean.c
 void	exit_error(t_args *args, const char *error);
 void	ft_clean(t_args *args);
-void	ft_destroy_mutex(t_args *args);
+void	destroy_mutex(t_args *args, int n);
 
 // philosophers.c
 void		*diner_routine(void *philo);
@@ -162,7 +163,7 @@ void		create_threads(t_args *args);
 void		join_threads(t_args *args);
 
 // handle_mutex.c
-int	*mem_alloc_forks_to_drop(t_args *args);
+int	*mem_alloc_mtx_forks(t_args *args);
 int	*mem_alloc_mtx(t_args *args, int n);
 int	check_mutex_forks(t_args *args);
 int	check_mutex_philo(t_args *args);

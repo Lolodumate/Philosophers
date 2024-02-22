@@ -16,7 +16,6 @@ void	ft_clean(t_args *args)
 {
 	if (!args)
 		return ;
-	ft_destroy_mutex(args);
 	if (args->meals)
 		free(args->meals);
 	if (args->t)
@@ -34,21 +33,25 @@ void	ft_clean(t_args *args)
 	free(args);
 }
 
-void	ft_destroy_mutex(t_args *args)
+void	destroy_mutex(t_args *args, int n)
 {
 	int		i;
 
 	i = -1;
-	while (++i < args->number_of_philosophers)
+	if (!args)
+		return ;
+	while (++i < n)
 	{
 		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
-		ft_mutex(args, &args->forks[i], DESTROY);
-//		ft_mutex(args, args->philo_ptr[i].main_fork, DESTROY);
-//		ft_mutex(args, args->philo_ptr[i].aux_fork, DESTROY);
 	}
-	ft_mutex(args, &args->mtx_check_ending, DESTROY);
+	i = -1;
+	while (++i < n)
+	{
+		ft_mutex(args, &args->forks[i], DESTROY);
+	}
 	ft_mutex(args, &args->mtx, DESTROY);
 	ft_mutex(args, &args->mtx_write, DESTROY);
+	ft_mutex(args, &args->mtx_check_ending, DESTROY);
 }
 
 void	ft_exit(t_args *args)
@@ -60,6 +63,8 @@ void	ft_exit(t_args *args)
 
 void	exit_error(t_args *args, const char *error)
 {
+	join_threads(args);
+	destroy_mutex(args, args->number_of_philosophers);
 	ft_clean(args);
 	printf("%s\n", error);
 	exit(1);

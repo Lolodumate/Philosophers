@@ -21,14 +21,17 @@ int	philo_is_alive(t_args *args, t_philo *philo)
 
 int	philo_is_dead(t_args *args, t_philo *philo)
 {
-	args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, LOCK);
+	//args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, LOCK);
+	ft_mutex(args, &philo->mtx, LOCK);
 	if(philo_is_alive(args, philo) == FALSE)
 	{
 		philo->is_dead = TRUE;
-		args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, UNLOCK);
+		//args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, UNLOCK);
+		ft_mutex(args, &philo->mtx, UNLOCK);
 		return (TRUE);
 	}
-	args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, UNLOCK);
+	//args->mtx_philo[philo->id - 1] += ft_mutex(args, &philo->mtx, UNLOCK);
+	ft_mutex(args, &philo->mtx, UNLOCK);
 	return (FALSE);
 }
 
@@ -41,7 +44,6 @@ int	philo_ends_meals(t_args *args, t_philo *philo)
 		{
 			args->meals[philo->id - 1] = args->target_nb_meals;
 			args->philo_ptr[philo->id - 1].meal_complete = TRUE;
-			ft_mutex(args, &philo->mtx, UNLOCK);
 			return (TRUE);
 		}
 	}
@@ -61,7 +63,10 @@ int	all_meals_complete(t_args *args)
 			n++;
 	}
 	if (n == args->number_of_philosophers)
+	{
+//		printf("n == %d\n", n);
 		return (TRUE);
+	}
 	return (FALSE);
 }
 

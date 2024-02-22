@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-int	*mem_alloc_forks_to_drop(t_args *args)
+int	*mem_alloc_mtx_forks(t_args *args)
 {
 	int		i;
 	int		*forks;

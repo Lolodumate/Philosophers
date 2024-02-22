@@ -31,9 +31,11 @@ pthread_t	*mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb)
 	return (t);
 }
 
-t_philo	*mem_alloc_philo_ptr(t_args *args, t_philo *philo, int philo_nb)
+t_philo	*mem_alloc_philo_ptr(t_args *args, int n)
 {
-	philo = malloc(sizeof(t_philo) * philo_nb);
+	t_philo	*philo;
+	
+	philo = malloc(sizeof(t_philo) * n);
 	if (!philo)
 		exit_error(args, "Error malloc args->philo_ptr");
 	return (philo);

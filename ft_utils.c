@@ -48,11 +48,13 @@ int	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 
 void	ft_write_task(t_args *args, t_philo *philo, int task)
 {
-	if (!philo)
+	if (args->end_of_diner == TRUE)
 		return ;
-	args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, LOCK);
-	if (philo->args_ptr->end_of_diner == FALSE)
+	//args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, LOCK);
+//	ft_mutex(args, &args->mtx_write, LOCK);
+	if (philo->args_ptr->end_of_diner == FALSE || philo->is_dead == FALSE)
 	{
+		ft_mutex(args, &args->mtx_write, LOCK);
 		if (task == DEAD)
 			ft_output(philo, " died", 1);
 		else if (task == FORK)
@@ -65,28 +67,31 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 			ft_output(philo, " is thinking", 3);
 		else
 		{
-			args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, UNLOCK);
+			//args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, UNLOCK);
+			ft_mutex(args, &args->mtx_write, UNLOCK);
 			exit_error(philo->args_ptr, "Error task");
 		}
+		ft_mutex(args, &args->mtx_write, UNLOCK);
 	}
-	args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, UNLOCK);
+	//args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, UNLOCK);
+//	ft_mutex(args, &args->mtx_write, UNLOCK);
 }
-
+/*
 void	fill_mtx_forks_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m)
 {
 	if (mtx == philo->main_fork)
 	{
 		if (odd_or_even(philo->id) == ODD)
-			args->forks_to_drop[philo->id % args->number_of_philosophers] = m;
+			args->mtx_forks[philo->id % args->number_of_philosophers] = m;
 		else if (odd_or_even(philo->id) == EVEN)
-			args->forks_to_drop[(philo->id - 1) % args->number_of_philosophers] = m;
+			args->mtx_forks[(philo->id - 1) % args->number_of_philosophers] = m;
 	}
 	if (mtx == philo->aux_fork)
 	{
 		if (odd_or_even(philo->id) == ODD)
-			args->forks_to_drop[(philo->id - 1) % args->number_of_philosophers] = m;
+			args->mtx_forks[(philo->id - 1) % args->number_of_philosophers] = m;
 		else if (odd_or_even(philo->id) == EVEN)
-			args->forks_to_drop[philo->id % args->number_of_philosophers] = m;
+			args->mtx_forks[philo->id % args->number_of_philosophers] = m;
 	}
 }
 
@@ -118,4 +123,4 @@ int	*fill_mtx_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m)
 		tab[philo->id - 1] = m;
 	}
 	return (tab);
-}
+}*/
