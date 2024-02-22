@@ -26,9 +26,9 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->target_nb_meals = -1;
 	if (argc == 6)
 		args->target_nb_meals = ft_atoi(argv[5]);
-	args->mtx_forks = mem_alloc_mtx_forks(args);
-	args->mtx_philo = mem_alloc_mtx(args, ft_atoi(argv[1]));
-	args->mtx_args = mem_alloc_mtx(args, 3);
+//	args->mtx_forks = mem_alloc_mtx_forks(args);
+//	args->mtx_philo = mem_alloc_mtx(args, ft_atoi(argv[1]));
+//	args->mtx_args = mem_alloc_mtx(args, 3);
 	args->t = mem_alloc_threads(args, args->t, args->number_of_philosophers);
 	ft_mutex(args, &args->mtx_check_ending, INIT);
 	ft_mutex(args, &args->mtx, INIT);

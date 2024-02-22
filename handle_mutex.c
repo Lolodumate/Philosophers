@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-
+/*
 int	*mem_alloc_mtx_forks(t_args *args)
 {
 	int		i;
@@ -84,4 +84,4 @@ int	check_mutex_philo(t_args *args)
 		return (TRUE);
 	}
 	return (FALSE);
-}
+}*/

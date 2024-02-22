@@ -24,12 +24,6 @@ void	ft_clean(t_args *args)
 		free(args->philo_ptr);
 	if (args->forks)
 		free(args->forks);
-	if (args->mtx_forks)
-		free(args->mtx_forks);
-	if (args->mtx_philo)
-		free(args->mtx_philo);
-	if (args->mtx_args)
-		free(args->mtx_args);
 	free(args);
 }
 

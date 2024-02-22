@@ -48,33 +48,28 @@ int	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 
 void	ft_write_task(t_args *args, t_philo *philo, int task)
 {
-	if (args->end_of_diner == TRUE)
+	if (args->end_of_diner == TRUE || philo->meal_complete == TRUE)
 		return ;
-	//args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, LOCK);
-//	ft_mutex(args, &args->mtx_write, LOCK);
-	if (philo->args_ptr->end_of_diner == FALSE || philo->is_dead == FALSE)
+	ft_mutex(args, &args->mtx_write, LOCK);
+	if (args->end_of_diner == FALSE || philo->is_dead == FALSE)
 	{
-		ft_mutex(args, &args->mtx_write, LOCK);
 		if (task == DEAD)
 			ft_output(philo, " died", 1);
-		else if (task == FORK)
+		else if (task == FORK && args->end_of_diner == FALSE)
 			ft_output(philo, " has taken a fork", 5);
-		else if (task == EATING)
+		else if (task == EAT && args->end_of_diner == FALSE)
 			ft_output(philo, " is eating", 2);
-		else if (task == SLEEPING)
+		else if (task == SLEEP && args->end_of_diner == FALSE)
 			ft_output(philo, " is sleeping", 4);
-		else if (task == THINKING)
+		else if (task == THINK && args->end_of_diner == FALSE)
 			ft_output(philo, " is thinking", 3);
 		else
 		{
-			//args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, UNLOCK);
 			ft_mutex(args, &args->mtx_write, UNLOCK);
 			exit_error(philo->args_ptr, "Error task");
 		}
-		ft_mutex(args, &args->mtx_write, UNLOCK);
 	}
-	//args->mtx_args[MTX_WRITE] += ft_mutex(philo->args_ptr, &args->mtx_write, UNLOCK);
-//	ft_mutex(args, &args->mtx_write, UNLOCK);
+	ft_mutex(args, &args->mtx_write, UNLOCK);
 }
 /*
 void	fill_mtx_forks_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m)

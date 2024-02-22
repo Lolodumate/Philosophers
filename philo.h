@@ -52,9 +52,9 @@ typedef enum e_tasks
 {
 	DEAD,
 	FORK,
-	EATING,
-	SLEEPING,
-	THINKING
+	EAT,
+	SLEEP,
+	THINK
 }		t_tasks;
 
 typedef enum e_time_code
@@ -86,9 +86,9 @@ typedef struct s_args
 	pthread_mutex_t		mtx;
 	pthread_mutex_t		mtx_write;
 	pthread_mutex_t		*forks;
-	int				*mtx_forks;
-	int				*mtx_philo;
-	int				*mtx_args;
+//	int				*mtx_forks;
+//	int				*mtx_philo;
+//	int				*mtx_args;
 	int				number_of_philosophers;
 	int				number_of_philo_is_;
 	int				meals_complete;

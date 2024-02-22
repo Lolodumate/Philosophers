@@ -81,9 +81,9 @@ void	*diner_routine(void *philo)
 	t_philo		*p;
 
 	p = (t_philo *)philo;
-	p->args_ptr->mtx_philo[p->id - 1] += ft_mutex(p->args_ptr, &p->mtx, LOCK);
+	ft_mutex(p->args_ptr, &p->mtx, LOCK);
 	p->death_time =  get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
-	p->args_ptr->mtx_philo[p->id - 1] += ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
+	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 		exit_error(p->args_ptr, "Error pthread_create");
 	while (p->args_ptr->end_of_diner == FALSE)
@@ -95,7 +95,7 @@ void	*diner_routine(void *philo)
 		if (ft_think(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
 			return (NULL);
 	}
-	return (NULL);
+	return (p);
 }
 
 // Verifier l'etat si les philosophes sont toujours en vie
@@ -117,7 +117,7 @@ void	*check_philos(void *philo)
 		}
 		ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 	}
-	return (NULL);
+	return (p);
 }
 
 void	*check_ending(void *args)
@@ -125,15 +125,12 @@ void	*check_ending(void *args)
 	t_args	*a;
 
 	a = (t_args *)args;
-	//a->mtx_args[MTX_CHECK_ENDING] += ft_mutex(a, &a->mtx_check_ending, LOCK);
 	ft_mutex(a, &a->mtx_check_ending, LOCK);
 	while (a->end_of_diner == FALSE)
 	{
 		if (all_meals_complete(a) == TRUE)
 			a->end_of_diner = TRUE;
 	}
-//	printf("*********************************check_ending a->end_of_diner = %d\n", a->end_of_diner);
-	//a->mtx_args[MTX_CHECK_ENDING] += ft_mutex(a, &a->mtx_check_ending, UNLOCK);
 	ft_mutex(a, &a->mtx_check_ending, UNLOCK);
 	return (NULL);
 }
