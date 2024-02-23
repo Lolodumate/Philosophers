@@ -37,15 +37,11 @@ void	destroy_mutex(t_args *args, int n)
 	while (++i < n)
 	{
 		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
-	}
-	i = -1;
-	while (++i < n)
-	{
 		ft_mutex(args, &args->forks[i], DESTROY);
 	}
 	ft_mutex(args, &args->mtx, DESTROY);
+	ft_mutex(args, &args->mtx_meal, DESTROY);
 	ft_mutex(args, &args->mtx_write, DESTROY);
-	ft_mutex(args, &args->mtx_check, DESTROY);
 }
 
 void	ft_exit(t_args *args)

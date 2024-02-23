@@ -19,34 +19,24 @@ long	get_time(t_args *args, t_time_code time_code)
 	if (gettimeofday(&tv, NULL))
 		exit_error(args, "Gettimeofday failed");
 	if (time_code == MS)
-		return ((tv.tv_sec * 1e3) + (tv.tv_usec / 1e3));
+		return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 	else if (time_code == US)
-		return ((tv.tv_sec * 1e6) + tv.tv_usec);
+		return ((tv.tv_sec * 1000000) + tv.tv_usec);
 	else
-		exit_error(args, "Wrong input to get_time");
+		exit_error(args, "Error get_time");
 	return (0);
 }
 
-void	ft_usleep(long usec, t_args *args)
+void	ft_usleep(long time, t_args *args)
 {
 	long	start;
-	long	elapsed;
-	long	rem;
 
 	start = get_time(args, US);
-	while (get_time(args, US) - start < usec)
+	while (get_time(args, US) - start < time)
 	{
-		if (args->end_of_diner == TRUE)
+		if (philo_is_dead(args, args->philo_ptr) == TRUE)
 			exit(0);
-		elapsed = get_time(args, US) - start;
-		rem = usec - elapsed;
-		if (rem > 1000)
-			usleep(rem / 2);
-		else
-		{
-			while (get_time(args, US) - start < usec)
-				usleep(100);
-		}
+		usleep(100);
 	}
 }
 
@@ -57,8 +47,8 @@ long	get_timestamp(t_philo *philo)
 	timestamp = get_time(philo->args_ptr, MS) - philo->start_time;
 	return (timestamp);
 }
-
+/*
 void	update_death_time(t_args *args, t_philo *philo)
 {
 	philo->death_time = get_time(args, MS) + args->time_to_die;
-}
+}*/

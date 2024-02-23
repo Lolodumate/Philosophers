@@ -48,15 +48,20 @@ int	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 
 void	ft_write_task(t_args *args, t_philo *philo, int task)
 {
-	if (args->end_of_diner == TRUE || philo->meal_complete == TRUE)
-		return ;
 	ft_mutex(args, &args->mtx_write, LOCK);
+	if (/*args->end_of_diner == TRUE ||*/ philo->meal_complete == TRUE)
+	{
+		ft_mutex(args, &args->mtx_write, UNLOCK);
+		return ;
+	}
 	if (philo->is_dead == FALSE || args->end_of_diner == FALSE)
 	{
 		if (task == DEAD)
 		{
 			ft_output(philo, " died", 1);
+		//	ft_mutex(args, &args->mtx, LOCK);
 			philo->is_dead = TRUE;
+		//	ft_mutex(args, &args->mtx, UNLOCK);
 		}
 		else if (task == FORK && args->end_of_diner == FALSE)
 			ft_output(philo, " has taken a fork", 5);

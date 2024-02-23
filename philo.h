@@ -72,6 +72,7 @@ typedef struct s_philo
 	int					meal_complete;
 	int					meal_number;
 	long					start_time;
+	long					last_meal_time;
 	long					death_time;
 	pthread_mutex_t		*main_fork;
 	pthread_mutex_t		*aux_fork;
@@ -82,9 +83,8 @@ typedef struct s_args
 {
 	pthread_t		t_end;
 	pthread_t		*t;
-	pthread_mutex_t		mtx_check;
-	
 	pthread_mutex_t		mtx;
+	pthread_mutex_t		mtx_meal;
 	pthread_mutex_t		mtx_write;
 	pthread_mutex_t		*forks;
 //	int				*mtx_forks;
@@ -162,7 +162,7 @@ void	destroy_mutex(t_args *args, int n);
 void		*diner_routine(void *philo);
 void		*check_philos(void *args);
 void		*check_ending(void *args);
-void		create_threads(t_args *args);
+void		philosophers_dinner(t_args *args);
 void		join_threads(t_args *args);
 
 // handle_mutex.c

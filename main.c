@@ -24,11 +24,6 @@
  *      - Le contenu des arguments (ils ne doivent comporter que les caracteres numeriques).
 */
 
-void	diner(t_args *args)
-{
-	create_threads(args);
-}
-
 int	main(int argc, char **argv)
 {
 	t_args		*args;
@@ -50,7 +45,7 @@ int	main(int argc, char **argv)
 	}
 	exit_error(args, "END");
 */
-	diner(args);
+	philosophers_dinner(args);
 	ft_clean(args);
 	printf("***********************END************************\n");
 	return (0);

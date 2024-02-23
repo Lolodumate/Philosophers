@@ -31,8 +31,8 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 //	args->mtx_philo = mem_alloc_mtx(args, ft_atoi(argv[1]));
 //	args->mtx_args = mem_alloc_mtx(args, 3);
 	args->t = mem_alloc_threads(args, args->t, args->number_of_philosophers);
-	ft_mutex(args, &args->mtx_check, INIT);
 	ft_mutex(args, &args->mtx, INIT);
+	ft_mutex(args, &args->mtx_meal, INIT);
 	ft_mutex(args, &args->mtx_write, INIT);
 	return (args);
 }
@@ -45,6 +45,7 @@ void	init_philo(t_args *args, t_philo *philo, int index)
 	philo->meal_complete = FALSE;
 	philo->meal_number = 0;
 	philo->start_time = get_time(args, MS);
+	philo->last_meal_time = 0;
 	philo->death_time = 0;
 }
 

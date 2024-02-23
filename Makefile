@@ -25,7 +25,7 @@ SRC =	main.c \
 
 CC = gcc
 
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -g -pthread -fsanitize=thread
 
 THREADFLAG = -lpthread
 
