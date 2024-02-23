@@ -64,6 +64,8 @@ int	all_meals_complete(t_args *args)
 		ft_mutex(args, &args->mtx_meal, UNLOCK);
 		return (TRUE);
 	}
+	if (n > 0)
+		printf("ft_bool.c : all_meals_complete n = %d\n", n);
 	ft_mutex(args, &args->mtx_meal, UNLOCK);
 	return (FALSE);
 }

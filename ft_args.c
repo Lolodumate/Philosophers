@@ -18,27 +18,8 @@ void	update_meals_complete(t_philo *philo)
 		return ;
 	if (philo->meal_number >= philo->args_ptr->target_nb_meals)
 	{
-//		ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 		philo->meal_complete = TRUE;
-//		ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
-//		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx, LOCK);
 		philo->args_ptr->meals_complete++;
-//		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx, UNLOCK);
+		printf("update_meals_comple : philo->args_ptr->meals_complete = %d\n", philo->args_ptr->meals_complete);
 	}
 }
-/*
-int	check_all_meals_complete(t_args *args)
-{
-	int		i;
-	int		n;
-
-	i = -1;
-	n = 0;
-	if (!args)
-		exit(EXIT_FAILURE);
-	while (++i < args->number_of_philosophers)
-		n += args->meals[i];
-	if (n == args->number_of_philosophers * args->time_to_eat)
-		return (TRUE);
-	return (FALSE);
-}*/

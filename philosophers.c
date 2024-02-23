@@ -73,14 +73,15 @@ void	*diner_routine(void *philo)
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
 	p->death_time = get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
-	while (1)
+//	while (1)
+	while (stop_routine(p->args_ptr) == FALSE)
 	{
 		if (ft_eat(p) == TRUE || stop_routine(p->args_ptr) == TRUE)
-			break ;
+			return (p);
 		if (ft_sleep(p) == TRUE || stop_routine(p->args_ptr) == TRUE)
-			break ;
+			return (p);
 		if (ft_think(p) == TRUE || stop_routine(p->args_ptr) == TRUE)
-			break ;
+			return (p);
 	}
 	return (p);
 }
