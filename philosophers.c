@@ -61,16 +61,18 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 void	join_threads(t_args *args)
 {
 	int		i;
+	t_philo	*philo;
 
 	i = -1;
+	philo = args->philo_ptr;
 	while (++i < args->number_of_philosophers)
 	{
-		if (pthread_join(args->t[i], NULL) != 0)
+		if (pthread_join(args->t[i], (void **) &philo) != 0)
 			exit_error(args, "Error pthread join");
-		if (pthread_join(args->philo_ptr[i].thread, NULL) != 0)
+		if (pthread_join(args->philo_ptr[i].thread, (void **) &philo) != 0)
 			exit_error(args, "Error pthread join");
 	}
-	if (pthread_join(args->t_end, NULL) != 0)
+	if (pthread_join(args->t_end, (void **) &args) != 0)
 			exit_error(args, "Error pthread join");
 	printf("END JOIN\n");
 }
@@ -89,16 +91,15 @@ void	*diner_routine(void *philo)
 	while (p->args_ptr->end_of_diner == FALSE)
 	{
 		if (ft_eat(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
-			return (NULL);
+			return (p);
 		if (ft_sleep(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
-			return (NULL);
+			return (p);
 		if (ft_think(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
-			return (NULL);
+			return (p);
 	}
 	return (p);
 }
 
-// Verifier l'etat si les philosophes sont toujours en vie
 void	*check_philos(void *philo)
 {
 	t_philo	*p;
@@ -112,8 +113,6 @@ void	*check_philos(void *philo)
 			ft_write_task(p->args_ptr, p, DEAD);
 			p->args_ptr->end_of_diner = TRUE;
 			p->is_dead = TRUE;
-			ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
-			return (NULL);
 		}
 		ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 	}
