@@ -15,6 +15,7 @@
 t_args	*init_args(int argc, char **argv, t_args *args)
 {
 	args->meals_complete = FALSE;
+	args->game_over = FALSE;
 	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->number_of_philo_is_= odd_or_even(ft_atoi(argv[1]));
 	args->time_to_die = ft_atoi(argv[2]);
@@ -30,7 +31,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 //	args->mtx_philo = mem_alloc_mtx(args, ft_atoi(argv[1]));
 //	args->mtx_args = mem_alloc_mtx(args, 3);
 	args->t = mem_alloc_threads(args, args->t, args->number_of_philosophers);
-	ft_mutex(args, &args->mtx_check_ending, INIT);
+	ft_mutex(args, &args->mtx_check, INIT);
 	ft_mutex(args, &args->mtx, INIT);
 	ft_mutex(args, &args->mtx_write, INIT);
 	return (args);
@@ -44,7 +45,7 @@ void	init_philo(t_args *args, t_philo *philo, int index)
 	philo->meal_complete = FALSE;
 	philo->meal_number = 0;
 	philo->start_time = get_time(args, MS);
-	philo->death_time = philo->args_ptr->time_start_diner + args->time_to_die * 1000;
+	philo->death_time = 0;
 }
 
 /* Si le philo[i] a un voisin a sa droite philo[i - 1] alors :

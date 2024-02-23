@@ -18,8 +18,12 @@ void	update_meals_complete(t_philo *philo)
 		return ;
 	if (philo->meal_number >= philo->args_ptr->target_nb_meals)
 	{
+		ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 		philo->meal_complete = TRUE;
+		ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
+		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx, LOCK);
 		philo->args_ptr->meals_complete++;
+		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx, UNLOCK);
 	}
 }
 /*

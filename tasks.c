@@ -61,9 +61,8 @@ int	ft_eat(t_philo *philo)
 	{
 		ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 		philo->meal_number++;
-		update_meals_complete(philo);
-//		printf("philo[%d].meal_complete = %d\n", philo->id, philo->meal_complete);
 		ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
+		update_meals_complete(philo);
 	}
 	return (philo_is_alive(philo->args_ptr, philo));
 }

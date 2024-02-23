@@ -82,7 +82,8 @@ typedef struct s_args
 {
 	pthread_t		t_end;
 	pthread_t		*t;
-	pthread_mutex_t		mtx_check_ending;
+	pthread_mutex_t		mtx_check;
+	
 	pthread_mutex_t		mtx;
 	pthread_mutex_t		mtx_write;
 	pthread_mutex_t		*forks;
@@ -92,6 +93,7 @@ typedef struct s_args
 	int				number_of_philosophers;
 	int				number_of_philo_is_;
 	int				meals_complete;
+	int				game_over;
 	int				*meals;
 	long				time_to_die;
 	long				time_to_eat;
@@ -138,7 +140,8 @@ t_args		*set_forks(t_args *args, pthread_mutex_t *forks,  int n);
 int	philo_is_dead(t_args *args, t_philo *philo);
 int	philo_ends_meals(t_args *args, t_philo *philo);
 int	all_meals_complete(t_args *args);
-int	stop_routine(t_philo *philo);
+int	all_philo_are_alive(t_args *args);
+int	stop_routine(t_args *args);
 int	philo_is_alive(t_args *args, t_philo *philo);
 
 // ft_args.c

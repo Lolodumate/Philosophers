@@ -51,10 +51,13 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 	if (args->end_of_diner == TRUE || philo->meal_complete == TRUE)
 		return ;
 	ft_mutex(args, &args->mtx_write, LOCK);
-	if (args->end_of_diner == FALSE || philo->is_dead == FALSE)
+	if (philo->is_dead == FALSE || args->end_of_diner == FALSE)
 	{
 		if (task == DEAD)
+		{
 			ft_output(philo, " died", 1);
+			philo->is_dead = TRUE;
+		}
 		else if (task == FORK && args->end_of_diner == FALSE)
 			ft_output(philo, " has taken a fork", 5);
 		else if (task == EAT && args->end_of_diner == FALSE)

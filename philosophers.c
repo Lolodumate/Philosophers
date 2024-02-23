@@ -49,13 +49,12 @@ void	create_threads(t_args *args) // philosophers(&mtx, args)
 		if (pthread_create(&args->t[i], NULL, &diner_routine, &args->philo_ptr[i]) != 0)
 			exit_error(args, "Failure thread creation");
 	}
-//	if (pthread_join(args->t_end, NULL) != 0)
-//			exit_error(args, "Error pthread join");
 /*	while (check_mutex_forks(args) == FALSE)
 		usleep(100);
 	while (check_mutex_philo(args) == FALSE)
 		usleep(100);
 */	join_threads(args);
+	destroy_mutex(args, args->number_of_philosophers);
 }
 
 void	join_threads(t_args *args)
@@ -84,17 +83,17 @@ void	*diner_routine(void *philo)
 
 	p = (t_philo *)philo;
 	ft_mutex(p->args_ptr, &p->mtx, LOCK);
-	p->death_time =  get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
+	p->death_time = get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
 	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 	if (pthread_create(&p->thread, NULL, &check_philos, p) != 0)
 		exit_error(p->args_ptr, "Error pthread_create");
-	while (p->args_ptr->end_of_diner == FALSE)
+	while (p->is_dead == FALSE && p->args_ptr->end_of_diner == FALSE)
 	{
-		if (ft_eat(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
+		if (ft_eat(p) == FALSE || p->args_ptr->end_of_diner == TRUE)
 			return (p);
-		if (ft_sleep(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
+		if (ft_sleep(p) == FALSE || p->args_ptr->end_of_diner == TRUE)
 			return (p);
-		if (ft_think(p) == FALSE || p->is_dead == TRUE || p->args_ptr->end_of_diner == TRUE)
+		if (ft_think(p) == FALSE || p->args_ptr->end_of_diner == TRUE)
 			return (p);
 	}
 	return (p);
@@ -105,16 +104,15 @@ void	*check_philos(void *philo)
 	t_philo	*p;
 
 	p = (t_philo *)philo;
-	while (p->args_ptr->end_of_diner == FALSE)
+	while (p->is_dead == FALSE && p->args_ptr->end_of_diner == FALSE)
 	{
-		ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
-		if (philo_is_dead(p->args_ptr, p) == TRUE && p->args_ptr->end_of_diner == FALSE)
+		if (philo_is_dead(p->args_ptr, p) == TRUE)
 		{
+			ft_mutex(p->args_ptr, &p->args_ptr->mtx, LOCK);
 			ft_write_task(p->args_ptr, p, DEAD);
 			p->args_ptr->end_of_diner = TRUE;
-			p->is_dead = TRUE;
+			ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 		}
-		ft_mutex(p->args_ptr, &p->args_ptr->mtx, UNLOCK);
 	}
 	return (p);
 }
@@ -124,12 +122,14 @@ void	*check_ending(void *args)
 	t_args	*a;
 
 	a = (t_args *)args;
-	ft_mutex(a, &a->mtx_check_ending, LOCK);
 	while (a->end_of_diner == FALSE)
 	{
 		if (all_meals_complete(a) == TRUE)
+		{
+			ft_mutex(a, &a->mtx, LOCK);
 			a->end_of_diner = TRUE;
+			ft_mutex(a, &a->mtx, UNLOCK);
+		}
 	}
-	ft_mutex(a, &a->mtx_check_ending, UNLOCK);
-	return (NULL);
+	return (a);
 }

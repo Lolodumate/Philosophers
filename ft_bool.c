@@ -57,18 +57,28 @@ int	all_meals_complete(t_args *args)
 			n++;
 	}
 	if (n == args->number_of_philosophers)
-	{
-//		printf("n == %d\n", n);
 		return (TRUE);
-	}
 	return (FALSE);
 }
 
-int	stop_routine(t_philo *philo)
+int	all_philo_are_alive(t_args *args)
 {
-	if (philo->is_dead == TRUE)
+	int		i;
+
+	i = -1;
+	while (++i < args->number_of_philosophers)
+	{
+		if (args->philo_ptr->is_dead == TRUE)
+			return (FALSE);
+	}
+	return (TRUE);
+}
+
+int	stop_routine(t_args *args)
+{
+	if (all_philo_are_alive(args) == FALSE)
 		return (TRUE);
-	if (philo->args_ptr->end_of_diner == TRUE)
+	if (all_meals_complete(args) == TRUE)
 		return (TRUE);
 	return (FALSE);
 }
