@@ -15,9 +15,7 @@
 t_args	*init_args(int argc, char **argv, t_args *args)
 {
 	args->meals_complete = FALSE;
-	args->game_over = FALSE;
 	args->number_of_philosophers = ft_atoi(argv[1]);
-	args->number_of_philo_is_= odd_or_even(ft_atoi(argv[1]));
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
@@ -80,4 +78,17 @@ t_args	*init_forks(t_args *args, pthread_mutex_t *forks, int n)
 		}
 	}
 	return (args);
+}
+
+void	init_tab(int* tab, int size)
+{
+	int		i;
+
+	i = 0;
+	while (i < size)
+	{
+		tab[i] = 0;
+		printf("tab[%d] = %d\n", i, tab[i]);
+		i++;
+	}
 }

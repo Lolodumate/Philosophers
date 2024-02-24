@@ -48,6 +48,7 @@ int	main(int argc, char **argv)
 
 	// Repas
 	args->meals = mem_alloc_meals(args);
+	init_tab(args->meals, args->number_of_philosophers);
 
 	// Mutex
 	ft_mutex(args, &args->mtx, INIT);

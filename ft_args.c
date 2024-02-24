@@ -34,14 +34,14 @@ void	compliance_args(int argc, char **argv)
 	}
 }
 
-void	update_meals_complete(t_philo *philo)
+/*void	update_meals_complete(t_philo *philo)
 {
 	if (philo->meal_complete == TRUE || philo->args_ptr->target_nb_meals < 0)
 		return ;
-	if (philo->args_ptr->meals[philo->id - 1] >= philo->args_ptr->target_nb_meals)
+	if (philo->meal_number >= philo->args_ptr->target_nb_meals)
 	{
 		philo->meal_complete = TRUE;
-//		printf("update_meals_complete : philo->args_ptr->meals_complete = %d\n", philo->args_ptr->meals_complete);
-//		printf("update_meals_complete : philo->args_ptr->meals[%d] = %d\n", philo->id - 1, philo->args_ptr->meals[philo->id - 1]);
+		printf("update_meals_complete : philo->args_ptr->meals_complete = %d\n", philo->args_ptr->meals_complete);
+		printf("update_meals_complete : philo->args_ptr->meals[%d] = %d\n", philo->id - 1, philo->args_ptr->meals[philo->id - 1]);
 	}
-}
+}*/

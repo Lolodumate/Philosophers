@@ -89,9 +89,7 @@ typedef struct s_args
 //	int				*mtx_philo;
 //	int				*mtx_args;
 	int				number_of_philosophers;
-	int				number_of_philo_is_;
 	int				meals_complete;
-	int				game_over;
 	int				*meals;
 	long				time_to_die;
 	long				time_to_eat;
@@ -130,6 +128,7 @@ int	*mem_alloc_meals(t_args *args);
 t_args		*init_args(int argc, char **argv, t_args *args);
 t_philo		*init_philos(t_args *args, int n);
 t_args		*init_forks(t_args *args, pthread_mutex_t *forks, int n);
+void	init_tab(int *tab, int size);
 
 // threads.c
 int	threads_create(t_args *args);

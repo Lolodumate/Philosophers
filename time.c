@@ -35,7 +35,7 @@ void	ft_usleep(long time, t_args *args)
 	while (get_time(args, US) - start < time)
 	{
 		if (philo_is_dead(args, args->philo_ptr) == TRUE)
-			exit(0);
+			break ;
 		usleep(100);
 	}
 }
@@ -47,8 +47,3 @@ long	get_timestamp(t_philo *philo)
 	timestamp = get_time(philo->args_ptr, MS) - philo->start_time;
 	return (timestamp);
 }
-/*
-void	update_death_time(t_args *args, t_philo *philo)
-{
-	philo->death_time = get_time(args, MS) + args->time_to_die;
-}*/
