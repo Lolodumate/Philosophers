@@ -12,6 +12,8 @@
 
 SRC =	main.c \
 	init.c \
+	threads.c \
+	mutex.c \
 	clean.c \
 	philosophers.c \
 	utils.c \

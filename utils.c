@@ -48,28 +48,6 @@ void	strisdigit(char *str)
 	}
 }
 
-void	compliance_args(int argc, char **argv)
-{
-	int		j;
-
-	j = 1;
-	if (argc < 5 || argc > 6)
-	{
-		printf("Number of arguments must be 5 or 6");
-		exit(0);
-	}
-	while (argv[j] && j <= argc)
-	{
-		strisdigit(argv[j]);
-		j++;
-	}
-	if (ft_atoi(argv[1]) < 1 || ft_atoi(argv[1]) > 200)
-	{
-		printf("Philosophers number must be >0 and <= 200");
-		exit(0);
-	}
-}
-
 void	ft_output(t_philo *philo, const char *task, int color)
 {
 	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", get_timestamp(philo), color, philo->id, task);

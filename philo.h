@@ -66,7 +66,6 @@ typedef enum e_time_code
 typedef struct s_philo
 {
 	t_args		*args_ptr;
-	pthread_t		thread;
 	int					id;
 	int					is_dead;
 	int					meal_complete;
@@ -81,7 +80,6 @@ typedef struct s_philo
 
 typedef struct s_args
 {
-	pthread_t		t_end;
 	pthread_t		*t;
 	pthread_mutex_t		mtx;
 	pthread_mutex_t		mtx_meal;
@@ -110,13 +108,12 @@ void	diner(t_args *args);
 // utils.c
 int			ft_atoi(char *str);
 void	strisdigit(char *str);
-void	compliance_args(int argc, char **argv);
 void	ft_output(t_philo *philo, const char *task, int color);
 int	odd_or_even(int n);
 
 // ft_utils.c
 void	ft_mutex_protect(t_args *args, int mtx_return);
-int	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m);
+void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m);
 void	ft_write_task(t_args *args, t_philo *philo, int task);
 void	ft_output(t_philo *philo, const char *task, int color);
 void	fill_mtx_forks_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m);
@@ -125,16 +122,22 @@ int	*fill_mtx_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m);
 // mem_alloc.c
 t_args		*mem_alloc_args(t_args *args);
 pthread_mutex_t	*mem_alloc_forks(t_args *args, pthread_mutex_t *forks);
-t_philo		*mem_alloc_philo_ptr(t_args *args, int n);
+t_philo		*mem_alloc_philo_ptr(t_args *args, t_philo *philo, int n);
 pthread_t	*mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb);
 int	*mem_alloc_meals(t_args *args);
 
 // init.c
-void		ft_mem_alloc(char **argv, t_args *args, t_philo *philo);
 t_args		*init_args(int argc, char **argv, t_args *args);
-void		init_philo(t_args *args, t_philo *philo, int index);
-t_philo		*set_philos(t_args *args, int n);
-t_args		*set_forks(t_args *args, pthread_mutex_t *forks,  int n);
+t_philo		*init_philos(t_args *args, int n);
+t_args		*init_forks(t_args *args, pthread_mutex_t *forks, int n);
+
+// threads.c
+int	threads_create(t_args *args);
+int	threads_join(t_args *args);
+
+// mutex.c
+int	mutex_init(t_args *args, pthread_mutex_t *mtx);
+int	mutex_destroy(t_args *args, pthread_mutex_t *mtx);
 
 // bool.c
 int	philo_is_dead(t_args *args, t_philo *philo);
@@ -142,9 +145,9 @@ int	philo_ends_meals(t_args *args, t_philo *philo);
 int	all_meals_complete(t_args *args);
 int	all_philo_are_alive(t_args *args);
 int	stop_routine(t_args *args);
-int	philo_is_alive(t_args *args, t_philo *philo);
 
 // ft_args.c
+void	compliance_args(int argc, char **argv);
 void	update_meals_complete(t_philo *philo);
 
 // time.c
@@ -159,11 +162,8 @@ void	ft_clean(t_args *args);
 void	destroy_mutex(t_args *args, int n);
 
 // philosophers.c
-void		*diner_routine(void *philo);
-void		*check_philos(void *args);
-void		*check_ending(void *args);
 void		philosophers_dinner(t_args *args);
-void		join_threads(t_args *args);
+void		*diner_routine(void *philo);
 
 // handle_mutex.c
 int	*mem_alloc_mtx_forks(t_args *args);

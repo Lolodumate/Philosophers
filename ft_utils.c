@@ -19,31 +19,18 @@ void	ft_mutex_protect(t_args *args, int mtx_return)
 	exit_error(args, "Error mutex");
 }
 
-int	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
+void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 {
 	if (m == LOCK)
-	{
 		ft_mutex_protect(args, pthread_mutex_lock(mtx));
-		return (1);
-	}
 	else if (m == UNLOCK)
-	{
 		ft_mutex_protect(args, pthread_mutex_unlock(mtx));
-		return (-1);
-	}
 	else if (m == DESTROY)
-	{
 		ft_mutex_protect(args, pthread_mutex_destroy(mtx));
-		return (0);
-	}
 	else if (m == INIT)
-	{
 		ft_mutex_protect(args, pthread_mutex_init(mtx, NULL));
-		return (0);
-	}
 	else
 		exit_error(args, "Wrong mutex input");
-	return (0);
 }
 
 void	ft_write_task(t_args *args, t_philo *philo, int task)
@@ -59,9 +46,7 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 		if (task == DEAD)
 		{
 			ft_output(philo, " died", 1);
-		//	ft_mutex(args, &args->mtx, LOCK);
 			philo->is_dead = TRUE;
-		//	ft_mutex(args, &args->mtx, UNLOCK);
 		}
 		else if (task == FORK && args->end_of_diner == FALSE)
 			ft_output(philo, " has taken a fork", 5);
