@@ -36,7 +36,7 @@ void	ft_usleep(long time, t_args *args, int i)
 	{
 		if (philo_is_dead(args, args->philo_ptr, i) == TRUE)
 			break ;
-		usleep(100);
+		usleep(10);
 	}
 }
 

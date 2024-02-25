@@ -15,6 +15,7 @@
 t_args	*init_args(int argc, char **argv, t_args *args)
 {
 	args->meals_complete = FALSE;
+	args->is_dead = FALSE;
 	args->number_of_philosophers = ft_atoi(argv[1]);
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
@@ -46,7 +47,6 @@ t_philo	*init_philos(t_args *args, int n)
 	{
 		args->philo_ptr[i].id = i + 1;
 		args->philo_ptr[i].args_ptr = args;
-		args->philo_ptr[i].is_dead = FALSE;
 		args->philo_ptr[i].meal_complete = FALSE;
 		args->philo_ptr[i].meal_number = 0;
 		args->philo_ptr[i].start_time = get_time(args, MS);

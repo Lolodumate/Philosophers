@@ -23,7 +23,7 @@ void	threads_join(t_args *a)
 	i = -1;
 	while (++i < a->number_of_philosophers)
 	{
-		if (pthread_join(a->t[i], (void **) &a->philo_ptr[i]) != 0)
+		if (pthread_join(a->t[i], NULL) != 0)
 			exit_error(a, "Error pthread join");
 	}
 }

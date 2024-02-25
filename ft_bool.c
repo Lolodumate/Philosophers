@@ -18,35 +18,18 @@ int	philo_is_dead(t_args *args, t_philo *philo, int i)
 	if (get_time(args, MS) >= (philo[i].last_meal_time + args->time_to_die))
 	{
 		ft_write_task(args, philo, DEAD);
-		ft_mutex(args, &args->mtx_write, LOCK);
-		philo->is_dead = TRUE;
+//		ft_mutex(args, &args->mtx_write, LOCK);
+//		args->is_dead = TRUE;
+		ft_mutex(args, &args->monitor, LOCK);
 		args->end_of_diner = TRUE;
-		ft_mutex(args, &args->mtx_write, UNLOCK);
+		ft_mutex(args, &args->monitor, UNLOCK);
+//		ft_mutex(args, &args->mtx_write, UNLOCK);
 		ft_mutex(args, &args->mtx, UNLOCK);
 		return (TRUE);
 	}	
 	ft_mutex(args, &args->mtx, UNLOCK);
 	return (FALSE);
 }
-/*
-int	philo_ends_meals(t_args *args, t_philo *philo)
-{
-	ft_mutex(args, &args->mtx_meal, LOCK);
-	if (args->target_nb_meals > 0)
-	{
-		args->meals[philo->id - 1]++;
-		if (args->meals[philo->id - 1] >= args->target_nb_meals)
-		{
-			ft_mutex(args, &philo->mtx, LOCK);
-			args->philo_ptr[philo->id - 1].meal_complete = TRUE;
-			ft_mutex(args, &philo->mtx, UNLOCK);
-			ft_mutex(args, &args->mtx_meal, UNLOCK);
-			return (TRUE);
-		}
-	}
-	ft_mutex(args, &args->mtx_meal, UNLOCK);
-	return (FALSE);
-}*/
 
 int	all_meals_complete(t_args *args)
 {
@@ -75,20 +58,21 @@ int	all_meals_complete(t_args *args)
 	return (FALSE);
 }
 
-int	all_philo_are_alive(t_args *args)
+int	check_all_philos_finished_routine(t_args *args)
 {
 	int		i;
+	int		n;
 
 	i = -1;
+	n = 0;
 	while (++i < args->number_of_philosophers)
 	{
-		if (args->philo_ptr[i].is_dead == TRUE)
-		{
-//			printf("ft_bool.c : fct all_philo_are_alive args->philo_ptr[%d].is_dead = %d\n", i, args->philo_ptr[i].is_dead);
-			return (FALSE);
-		}
+		if (args->stop_routine[i] == TRUE)
+			n++;
 	}
-	return (TRUE);
+	if (n == args->number_of_philosophers)
+		return (TRUE);
+	return (FALSE);
 }
 
 int	stop_routine(t_args *args)
@@ -100,7 +84,7 @@ int	stop_routine(t_args *args)
 		ft_mutex(args, &args->monitor, UNLOCK);
 		return (TRUE);
 	}
-	if (all_philo_are_alive(args) == FALSE)
+	if (args->is_dead == TRUE)
 	{
 //		printf("ft_bool.c : all_philo_are_alive == FALSE\n");
 		ft_mutex(args, &args->monitor, UNLOCK);

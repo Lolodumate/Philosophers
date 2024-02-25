@@ -50,6 +50,11 @@ int	main(int argc, char **argv)
 	args->meals = mem_alloc_tab(args, args->number_of_philosophers);
 	init_tab(args->meals, args->number_of_philosophers);
 
+	// Monitor
+	args->stop_routine = mem_alloc_tab(args, args->number_of_philosophers);
+	init_tab(args->stop_routine, args->number_of_philosophers);
+
+	
 	// Mutex
 	ft_mutex(args, &args->monitor, INIT);
 	ft_mutex(args, &args->mtx, INIT);

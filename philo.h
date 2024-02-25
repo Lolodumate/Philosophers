@@ -69,7 +69,7 @@ typedef struct s_philo
 {
 	t_args		*args_ptr;
 	int					id;
-	int					is_dead;
+//	int					is_dead;
 	int					meal_complete;
 	int					meal_number;
 	int					nb_of_fork_to_drop;
@@ -89,12 +89,14 @@ typedef struct s_args
 	pthread_mutex_t		mtx_meal;
 	pthread_mutex_t		mtx_write;
 	pthread_mutex_t		*forks;
+	int				*stop_routine;
 	int				nb_of_locked_forks;
 //	int				*mtx_forks;
 //	int				*mtx_philo;
 //	int				*mtx_args;
 	int				number_of_philosophers;
 	int				meals_complete;
+	int				is_dead;
 	int				*meals;
 	long				time_to_die;
 	long				time_to_eat;
@@ -120,8 +122,6 @@ int	mtx_tab_update(t_args *args, int i, pthread_mutex_t *mtx, int m);
 void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m);
 void	ft_write_task(t_args *args, t_philo *philo, int task);
 void	ft_output(t_philo *philo, const char *task, int color);
-void	fill_mtx_forks_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m);
-int	*fill_mtx_tab(t_args *args, t_philo *philo, pthread_mutex_t *mtx, int m);
 
 // mem_alloc.c
 t_args		*mem_alloc_args(t_args *args);
@@ -146,9 +146,9 @@ int	mutex_destroy(t_args *args, pthread_mutex_t *mtx);
 
 // bool.c
 int	philo_is_dead(t_args *args, t_philo *philo, int i);
-int	philo_ends_meals(t_args *args, t_philo *philo);
 int	all_meals_complete(t_args *args);
 int	all_philo_are_alive(t_args *args);
+int	check_all_philos_finished_routine(t_args *args);
 int	stop_routine(t_args *args);
 
 // ft_args.c

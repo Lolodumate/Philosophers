@@ -72,13 +72,11 @@ int	ft_eat(t_philo *philo)
 	philo->last_meal_time = get_time(philo->args_ptr, MS);
 	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx, UNLOCK);
 
-
 	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 	if (philo->args_ptr->target_nb_meals > 0)
 	{
 		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_meal, LOCK);
 		philo->args_ptr->meals[philo->id - 1]++;
-//		printf("philo->args_ptr->meals[%d] = %d\n", philo->id - 1, philo->args_ptr->meals[philo->id - 1]);
 		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_meal, UNLOCK);
 	}
 
@@ -90,8 +88,6 @@ int	ft_eat(t_philo *philo)
 
 int	ft_think(t_philo *philo)
 { 
-//	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 	ft_write_task(philo->args_ptr, philo, THINK);
-//	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
 	return (stop_routine(philo->args_ptr));
 }
