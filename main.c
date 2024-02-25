@@ -47,10 +47,11 @@ int	main(int argc, char **argv)
 	args = init_forks(args, args->forks, args->number_of_philosophers);
 
 	// Repas
-	args->meals = mem_alloc_meals(args);
+	args->meals = mem_alloc_tab(args, args->number_of_philosophers);
 	init_tab(args->meals, args->number_of_philosophers);
 
 	// Mutex
+	ft_mutex(args, &args->monitor, INIT);
 	ft_mutex(args, &args->mtx, INIT);
 	ft_mutex(args, &args->mtx_meal, INIT);
 	ft_mutex(args, &args->mtx_write, INIT);
@@ -60,7 +61,7 @@ int	main(int argc, char **argv)
 	// Threads
 	args->t = mem_alloc_threads(args, args->t, args->number_of_philosophers);
 
-/*
+/*	
 	int		i;
 
 	i = -1;

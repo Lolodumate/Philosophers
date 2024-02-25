@@ -20,6 +20,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
 	args->time_start_diner = get_time(args, US);
+	args->nb_of_locked_forks = 0;
 	args->end_of_diner = 0;
 	args->target_nb_meals = -1;
 	if (argc == 6)
@@ -50,11 +51,11 @@ t_philo	*init_philos(t_args *args, int n)
 		args->philo_ptr[i].meal_number = 0;
 		args->philo_ptr[i].start_time = get_time(args, MS);
 		args->philo_ptr[i].last_meal_time = 0;
+		args->philo_ptr[i].nb_of_fork_to_drop = 0;
 		args->philo_ptr[i].death_time = 0;
 		args->philo_ptr[i].main_fork = NULL;
 		args->philo_ptr[i].aux_fork = NULL;
 		ft_mutex(args, &args->philo_ptr[i].mtx, INIT);
-		printf("args->philo_ptr[%d] OK\n", i);
 	}
 	return (args->philo_ptr);
 }
@@ -88,7 +89,6 @@ void	init_tab(int* tab, int size)
 	while (i < size)
 	{
 		tab[i] = 0;
-		printf("tab[%d] = %d\n", i, tab[i]);
 		i++;
 	}
 }

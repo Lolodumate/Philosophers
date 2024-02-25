@@ -27,14 +27,14 @@ long	get_time(t_args *args, t_time_code time_code)
 	return (0);
 }
 
-void	ft_usleep(long time, t_args *args)
+void	ft_usleep(long time, t_args *args, int i)
 {
 	long	start;
 
 	start = get_time(args, US);
 	while (get_time(args, US) - start < time)
 	{
-		if (philo_is_dead(args, args->philo_ptr) == TRUE)
+		if (philo_is_dead(args, args->philo_ptr, i) == TRUE)
 			break ;
 		usleep(100);
 	}

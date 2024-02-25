@@ -1,27 +1,29 @@
 #include "philo.h"
 
-int	threads_create(t_args *args)
+void	*threads_create(void *args)
 {
+	t_args	*a;
 	int		i;
 
+	a = (t_args *)args;
 	i = -1;
-	while (++i < args->number_of_philosophers)
+	while (++i < a->number_of_philosophers)
 	{
-		if (pthread_create(&args->t[i], NULL, &diner_routine, &args->philo_ptr[i]) != 0)
-			exit_error(args, "Failure thread creation");
+		if (pthread_create(&a->t[i], NULL, &diner_routine, &a->philo_ptr[i]) != 0)
+			exit_error(a, "Failure thread creation");
 	}
-	return (1);
+	threads_join(a);
+	return (NULL);
 }
 
-int	threads_join(t_args *args)
+void	threads_join(t_args *a)
 {
 	int             i;
 
 	i = -1;
-	while (++i < args->number_of_philosophers)
+	while (++i < a->number_of_philosophers)
 	{
-		if (pthread_join(args->t[i], (void **) &args->philo_ptr[i]) != 0)
-			exit_error(args, "Error pthread join");
+		if (pthread_join(a->t[i], (void **) &a->philo_ptr[i]) != 0)
+			exit_error(a, "Error pthread join");
 	}
-	return (1);
 }

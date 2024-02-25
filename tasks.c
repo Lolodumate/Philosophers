@@ -28,23 +28,38 @@ void	ft_pick_forks(t_args *args, t_philo *philo)
 {
 	ft_mutex(args, philo->main_fork, LOCK);
 	ft_write_task(args, philo, FORK);
+
+	ft_mutex(args, &philo->mtx, LOCK);
+	philo->nb_of_fork_to_drop++;
+	ft_mutex(args, &philo->mtx, UNLOCK);
+
 	ft_mutex(args, philo->aux_fork, LOCK);
 	ft_write_task(args, philo, FORK);
+
+	ft_mutex(args, &philo->mtx, LOCK);
+	philo->nb_of_fork_to_drop++;
+	ft_mutex(args, &philo->mtx, UNLOCK);
 }
 
 void	ft_drop_forks(t_args *args, t_philo *philo)
 {
 	ft_mutex(args, &philo->mtx, LOCK);
-	philo->meal_complete = philo_ends_meals(args, philo);
+	philo->nb_of_fork_to_drop--;
 	ft_mutex(args, &philo->mtx, UNLOCK);
+
 	ft_mutex(args, philo->main_fork, UNLOCK);
+	
+	ft_mutex(args, &philo->mtx, LOCK);
+	philo->nb_of_fork_to_drop--;
+	ft_mutex(args, &philo->mtx, UNLOCK);
+
 	ft_mutex(args, philo->aux_fork, UNLOCK);
 }
 
 int	ft_sleep(t_philo *philo)
 {
 	ft_write_task(philo->args_ptr, philo, SLEEP);
-	ft_usleep(philo->args_ptr->time_to_sleep * 1000, philo->args_ptr);
+	ft_usleep(philo->args_ptr->time_to_sleep * 1000, philo->args_ptr, philo->id - 1);
 	return (stop_routine(philo->args_ptr));
 }
 
@@ -56,22 +71,27 @@ int	ft_eat(t_philo *philo)
 	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx, LOCK);
 	philo->last_meal_time = get_time(philo->args_ptr, MS);
 	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx, UNLOCK);
-	
-	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr);
-	ft_drop_forks(philo->args_ptr, philo);
+
+
 	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 	if (philo->args_ptr->target_nb_meals > 0)
 	{
 		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_meal, LOCK);
-		philo->meal_number++;
+		philo->args_ptr->meals[philo->id - 1]++;
+//		printf("philo->args_ptr->meals[%d] = %d\n", philo->id - 1, philo->args_ptr->meals[philo->id - 1]);
 		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx_meal, UNLOCK);
 	}
+
+	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr, philo->id - 1);
 	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
+	ft_drop_forks(philo->args_ptr, philo);
 	return (stop_routine(philo->args_ptr));
 }
 
 int	ft_think(t_philo *philo)
 { 
+//	ft_mutex(philo->args_ptr, &philo->mtx, LOCK);
 	ft_write_task(philo->args_ptr, philo, THINK);
+//	ft_mutex(philo->args_ptr, &philo->mtx, UNLOCK);
 	return (stop_routine(philo->args_ptr));
 }

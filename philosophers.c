@@ -39,9 +39,24 @@
 
 void	philosophers_dinner(t_args *args) // philosophers(&mtx, args)
 {
+	pthread_t	master;
+	pthread_mutex_t	master_mtx;
+
+	ft_mutex(args, &master_mtx, INIT);
+	if (pthread_create(&master, NULL, &threads_create, (void **) args))
+		exit_error(args, "'Error Master thread creation");
+	ft_mutex(args, &master_mtx, LOCK);
+	
 	threads_create(args);
-	threads_join(args);
+
+	mutex_unlock_forks(args, args->number_of_philosophers);
+
+	ft_mutex(args, &master_mtx, UNLOCK);
+	if (pthread_join(master, (void **) args))
+		exit_error(args, "Error Naster thread join)");
+//	mutex_unlock_forks(args, args->number_of_philosophers);
 	destroy_mutex(args, args->number_of_philosophers);
+	ft_mutex(args, &master_mtx, DESTROY);
 	ft_clean(args);
 }
 
@@ -57,11 +72,11 @@ void	*diner_routine(void *philo)
 	while (stop_routine(p->args_ptr) == FALSE)
 	{
 		if (ft_eat(p) == TRUE)
-			return (p);
+			return (NULL);
 		if (ft_sleep(p) == TRUE)
-			return (p);
+			return (NULL);
 		if (ft_think(p) == TRUE)
-			return (p);
+			return (NULL);
 	}
-	return (p);
+	return (NULL);
 }

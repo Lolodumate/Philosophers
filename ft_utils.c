@@ -14,14 +14,13 @@
 
 void	ft_mutex_protect(t_args *args, int mtx_return)
 {
-	if (mtx_return == 0)
-		return ;
-	exit_error(args, "Error mutex");
+	if (mtx_return != 0)
+		exit_error(args, "Error mutex");
 }
 
 void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 {
-	if (m == LOCK)
+	if (m == LOCK/* && args->end_of_diner == FALSE*/)
 		ft_mutex_protect(args, pthread_mutex_lock(mtx));
 	else if (m == UNLOCK)
 		ft_mutex_protect(args, pthread_mutex_unlock(mtx));
@@ -36,12 +35,13 @@ void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 void	ft_write_task(t_args *args, t_philo *philo, int task)
 {
 	ft_mutex(args, &args->mtx_write, LOCK);
-	if (/*args->end_of_diner == TRUE ||*/ philo->meal_complete == TRUE)
+	if (args->end_of_diner == TRUE || philo->meal_complete == TRUE)
 	{
 		ft_mutex(args, &args->mtx_write, UNLOCK);
 		return ;
 	}
-	if (philo->is_dead == FALSE || args->end_of_diner == FALSE)
+	if (stop_routine(args) == FALSE)
+	//if (philo->is_dead == FALSE && args->end_of_diner == FALSE)
 	{
 		if (task == DEAD)
 		{
@@ -58,6 +58,8 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 			ft_output(philo, " is thinking", 3);
 		else
 		{
+//			ft_mutex(args, philo->main_fork, UNLOCK);
+//			ft_mutex(args, philo->aux_fork, UNLOCK);
 			ft_mutex(args, &args->mtx_write, UNLOCK);
 			exit_error(philo->args_ptr, "Error task");
 		}
