@@ -16,11 +16,6 @@ void	ft_clean(t_args *args)
 {
 	if (!args)
 		return ;
-	if(args->stop_routine)
-	{
-		free(args->stop_routine);
-		args->stop_routine = NULL;
-	}
 	if (args->join_threads_monitor)
 	{
 		free(args->join_threads_monitor);
@@ -58,7 +53,10 @@ void	destroy_mutex(t_args *args, int n)
 	if (!args)
 		return ;
 	while (++i < n)
+	{
 		ft_mutex(args, &args->philo_ptr[i].mtx, DESTROY);
+		ft_mutex(args, &args->philo_ptr[i].mtx_routine, DESTROY);
+	}
 	i = -1;
 	while (++i < n)
 		ft_mutex(args, &args->forks[i], DESTROY);

@@ -69,6 +69,8 @@ typedef struct s_philo
 {
 	t_args		*args_ptr;
 	int					id;
+	int					stop_routine;
+	int					mtx_is_unlocked;
 //	int					is_dead;
 	int					meal_complete;
 	int					meal_number;
@@ -91,7 +93,6 @@ typedef struct s_args
 	pthread_mutex_t		mtx_meal;
 	pthread_mutex_t		mtx_write;
 	pthread_mutex_t		*forks;
-	int				*stop_routine;
 	int				*join_threads_monitor;
 	int				nb_of_locked_forks;
 //	int				*mtx_forks;

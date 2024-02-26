@@ -67,10 +67,17 @@ int	check_all_philos_finished_routine(t_args *args)
 	n = 0;
 	while (++i < args->number_of_philosophers)
 	{
-		ft_mutex(args, &args->philo_ptr[i].mtx, LOCK);
-		if (args->stop_routine[i] == TRUE)
+		ft_mutex(args, &args->philo_ptr[i].mtx_routine, LOCK);
+		if (args->philo_ptr[i].stop_routine == TRUE)
 			n++;
-		ft_mutex(args, &args->philo_ptr[i].mtx, UNLOCK);
+/*		if (args->philo_ptr[i].mtx_is_unlocked  == FALSE)
+ 		{
+ 			args->philo_ptr[i].mtx_is_unlocked = TRUE;
+ 			ft_mutex(args, &args->philo_ptr[i].mtx, UNLOCK);
+			ft_mutex(args, &args->philo_ptr[i].mtx_routine, UNLOCK);
+ 		}
+		else
+*/		ft_mutex(args, &args->philo_ptr[i].mtx_routine, UNLOCK);
 	}
 	if (n == args->number_of_philosophers)
 		return (TRUE);

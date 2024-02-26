@@ -46,6 +46,8 @@ t_philo	*init_philos(t_args *args, int n)
 	while (++i < n)
 	{
 		args->philo_ptr[i].id = i + 1;
+		args->philo_ptr[i].stop_routine = FALSE;
+		args->philo_ptr[i].mtx_is_unlocked = FALSE;
 		args->philo_ptr[i].args_ptr = args;
 		args->philo_ptr[i].meal_complete = FALSE;
 		args->philo_ptr[i].meal_number = 0;

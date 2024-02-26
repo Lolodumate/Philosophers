@@ -46,15 +46,15 @@ void	philosophers_dinner(t_args *args) // philosophers(&mtx, args)
 	if (pthread_create(&master, NULL, &threads_create, args))
 		exit_error(args, "'Error Master thread creation");
 
-	ft_mutex(args, &master_mtx, LOCK);
+//	ft_mutex(args, &master_mtx, LOCK);
 	threads_create(args);
-	
 	while (check_all_philos_finished_routine(args) == FALSE)
 		usleep(100);
 
+	printf("Check\n");
 	threads_join(args);
 	destroy_mutex(args, args->number_of_philosophers);
-	ft_mutex(args, &master_mtx, UNLOCK);
+//	ft_mutex(args, &master_mtx, UNLOCK);
 	if (pthread_join(master, (void *) &args))
 		exit_error(args, "Error Naster thread join)");
 	ft_mutex(args, &master_mtx, DESTROY);
@@ -70,7 +70,7 @@ void	*diner_routine(void *philo)
 	ft_mutex(p->args_ptr, &p->mtx, LOCK);
 	p->death_time = get_time(p->args_ptr, MS) + p->args_ptr->time_to_die;
 	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
-	ft_mutex(p->args_ptr, &p->mtx_routine, LOCK);
+	ft_mutex(p->args_ptr, &p[p->id - 1].mtx_routine, LOCK);
 	while (stop_routine(p->args_ptr) == FALSE)
 	{
 		if (ft_eat(p) == TRUE)
@@ -80,10 +80,10 @@ void	*diner_routine(void *philo)
 		if (ft_think(p) == TRUE)
 			break ;
 	}
-//	ft_mutex(p->args_ptr, &p->mtx, LOCK);
-	p->args_ptr->stop_routine[p->id - 1] = TRUE;
+	ft_mutex(p->args_ptr, &p->mtx, LOCK);
+	p->stop_routine = TRUE;
 	printf("diner_routine : p->args_ptr->stop_routine[%d] = TRUE\n", p->id - 1);
-//	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
-	ft_mutex(p->args_ptr, &p->mtx_routine, UNLOCK);
+	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
+	ft_mutex(p->args_ptr, &p[p->id - 1].mtx_routine, UNLOCK);
 	return (NULL);
 }

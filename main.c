@@ -51,11 +51,9 @@ int	main(int argc, char **argv)
 	init_tab(args->meals, args->number_of_philosophers);
 
 	// Monitor
-	args->stop_routine = mem_alloc_tab(args, args->number_of_philosophers);
-	init_tab(args->stop_routine, args->number_of_philosophers);
 	args->join_threads_monitor = mem_alloc_tab(args, args->number_of_philosophers);
 	init_tab(args->join_threads_monitor, args->number_of_philosophers);
-
+	
 	
 	// Mutex
 	ft_mutex(args, &args->master, INIT);
