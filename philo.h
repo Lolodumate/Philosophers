@@ -39,9 +39,12 @@ typedef enum	e_oddeven
 
 typedef enum e_mtx
 {
-	PHILO_MTX,
-	ARGS_MTX,
-	MTX_WRITE,
+	MTX,
+	MASTER,
+	MONITOR,
+	MEAL,
+	WRITE,
+	ROUTINE,
 	FORKS,
 	ALL_MTX_LOCKED,
 	INIT,
@@ -71,7 +74,6 @@ typedef struct s_philo
 	int					id;
 	int					stop_routine;
 	int					mtx_is_unlocked;
-//	int					is_dead;
 	int					meal_complete;
 	int					meal_number;
 	int					nb_of_fork_to_drop;
@@ -80,34 +82,28 @@ typedef struct s_philo
 	long					death_time;
 	pthread_mutex_t		*main_fork;
 	pthread_mutex_t		*aux_fork;
-	pthread_mutex_t		mtx;
-	pthread_mutex_t		mtx_routine;
+	pthread_mutex_t		*mtx;
+
+
 }		t_philo;
 
 typedef struct s_args
 {
 	pthread_t		*t;
-	pthread_mutex_t		master;
-	pthread_mutex_t		monitor;
-	pthread_mutex_t		mtx;
-	pthread_mutex_t		mtx_meal;
-	pthread_mutex_t		mtx_write;
+	pthread_mutex_t		*mtx;
 	pthread_mutex_t		*forks;
 	int				*join_threads_monitor;
 	int				nb_of_locked_forks;
-//	int				*mtx_forks;
-//	int				*mtx_philo;
-//	int				*mtx_args;
 	int				number_of_philosophers;
 	int				meals_complete;
 	int				is_dead;
+	int				end_of_diner;
 	int				*meals;
 	long				time_to_die;
 	long				time_to_eat;
 	long				time_to_sleep;
 	int				target_nb_meals;
 	long		time_start_diner;
-	int		end_of_diner;
 	t_philo		*philo_ptr;
 }               t_args;
 
@@ -129,7 +125,7 @@ void	ft_output(t_philo *philo, const char *task, int color);
 
 // mem_alloc.c
 t_args		*mem_alloc_args(t_args *args);
-pthread_mutex_t	*mem_alloc_forks(t_args *args, pthread_mutex_t *forks);
+pthread_mutex_t	*mem_alloc_mtx(t_args *args, pthread_mutex_t *mtx, int n);
 t_philo		*mem_alloc_philo_ptr(t_args *args, t_philo *philo, int n);
 pthread_t	*mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb);
 int	*mem_alloc_tab(t_args *args, int n);
@@ -174,12 +170,6 @@ void	destroy_mutex(t_args *args, int n);
 // philosophers.c
 void		philosophers_dinner(t_args *args);
 void		*diner_routine(void *philo);
-
-// handle_mutex.c
-int	*mem_alloc_mtx_forks(t_args *args);
-int	*mem_alloc_mtx(t_args *args, int n);
-int	check_mutex_forks(t_args *args);
-int	check_mutex_philo(t_args *args);
 
 // tasks.c
 int	ft_eat(t_philo *philo);

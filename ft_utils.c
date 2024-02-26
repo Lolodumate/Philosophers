@@ -34,10 +34,10 @@ void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 
 void	ft_write_task(t_args *args, t_philo *philo, int task)
 {
-	ft_mutex(args, &args->mtx_write, LOCK);
+	ft_mutex(args, &args->mtx[WRITE], LOCK);
 	if (stop_routine(args) == TRUE)
 	{
-		ft_mutex(args, &args->mtx_write, UNLOCK);
+		ft_mutex(args, &args->mtx[WRITE], UNLOCK);
 		return ;
 	}
 	if (stop_routine(args) == FALSE)
@@ -54,9 +54,9 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 			ft_output(philo, " is thinking", 3);
 		else
 		{
-			ft_mutex(args, &args->mtx_write, UNLOCK);
+			ft_mutex(args, &args->mtx[WRITE], UNLOCK);
 			exit_error(philo->args_ptr, "Error task");
 		}
 	}
-	ft_mutex(args, &args->mtx_write, UNLOCK);
+	ft_mutex(args, &args->mtx[WRITE], UNLOCK);
 }

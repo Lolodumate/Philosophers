@@ -39,12 +39,12 @@ t_philo	*mem_alloc_philo_ptr(t_args *args, t_philo *philo, int n)
 	return (philo);
 }
 
-pthread_mutex_t	*mem_alloc_forks(t_args *args, pthread_mutex_t *forks)
+pthread_mutex_t	*mem_alloc_mtx(t_args *args, pthread_mutex_t *mtx, int n)
 {
-	forks = malloc(sizeof(pthread_mutex_t) * args->number_of_philosophers);
-	if (!forks)
+	mtx = malloc(sizeof(pthread_mutex_t) * n);
+	if (!mtx)
 		exit_error(args, "Error malloc args->forks");
-	return (forks);
+	return (mtx);
 }
 
 // int array to record the number of meals eaten by each philosophers

@@ -37,13 +37,14 @@ int	main(int argc, char **argv)
 	args = mem_alloc_args(args);
 	args = init_args(argc, argv, args);
 	
+	printf("args = %p\n", &args);
+
 	// Philosophes
 	args->philo_ptr = mem_alloc_philo_ptr(args, args->philo_ptr, args->number_of_philosophers);
 	args->philo_ptr = init_philos(args, args->number_of_philosophers);
 
 	// Fourchettes
-	args->forks = mem_alloc_forks(args, args->forks);
-
+	args->forks = mem_alloc_mtx(args, args->forks, args->number_of_philosophers);;
 	args = init_forks(args, args->forks, args->number_of_philosophers);
 
 	// Repas
@@ -54,15 +55,18 @@ int	main(int argc, char **argv)
 	args->join_threads_monitor = mem_alloc_tab(args, args->number_of_philosophers);
 	init_tab(args->join_threads_monitor, args->number_of_philosophers);
 	
-	
 	// Mutex
-	ft_mutex(args, &args->master, INIT);
-	ft_mutex(args, &args->monitor, INIT);
-	ft_mutex(args, &args->mtx, INIT);
-	ft_mutex(args, &args->mtx_meal, INIT);
-	ft_mutex(args, &args->mtx_write, INIT);
+	args->philo_ptr->mtx = mem_alloc_mtx(args, args->mtx, 2);
+	args->mtx = mem_alloc_mtx(args, args->mtx, 5);
 	if (mutex_init(args, args->forks) != args->number_of_philosophers)
 		exit_error(args, "Error initialisation mutex args->forks");
+	ft_mutex(args, &args->mtx[MTX], INIT);
+	ft_mutex(args, &args->mtx[MASTER], INIT);
+	ft_mutex(args, &args->mtx[MONITOR], INIT);
+	ft_mutex(args, &args->mtx[MEAL], INIT);
+	ft_mutex(args, &args->mtx[WRITE], INIT);
+
+	printf("args->mtx = %p\n", &args->mtx);
 	
 	// Threads
 	args->t = mem_alloc_threads(args, args->t, args->number_of_philosophers);
