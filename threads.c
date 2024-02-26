@@ -10,7 +10,7 @@ void	*threads_create(void *args)
 	while (++i < a->number_of_philosophers)
 	{
 		if (pthread_create(&a->t[i], NULL, &diner_routine, &a->philo_ptr[i]) != 0)
-			exit_error(a, "Failure thread creation");
+			exit_error(a, "Error pthread_creation");
 	}
 	return (NULL);
 }
@@ -29,13 +29,20 @@ void	threads_join(void *args)
 	{
 		while (++i < a->number_of_philosophers)
 		{
-			if (a->stop_routine[i] == TRUE && a->join_threads_monitor[i] == FALSE)
+			if (a->join_threads_monitor[i] == 0)
 			{
-				if (pthread_join(a->t[i], NULL) != 0)
-					exit_error(args, "Error pthread_join");
-				a->join_threads_monitor[i] = TRUE;
-				n++;
+				ft_mutex(a, &a->philo_ptr[i].mtx_routine, LOCK);
+				if (a->stop_routine[i] == TRUE)
+				{
+					if (pthread_join(a->t[i], NULL) != 0)
+						exit_error(args, "Error pthread_join");
+					a->join_threads_monitor[i] = TRUE;
+					n++;
+				}
+				ft_mutex(a, &a->philo_ptr[i].mtx_routine, UNLOCK);
 			}
+			printf("a->stop_routine[%d] = %d\n", i, a->stop_routine[i]);
+			printf("a->join_monitor[%d] = %d\n", i, a->join_threads_monitor[i]);
 		}
 		i =- 1;
 	}
