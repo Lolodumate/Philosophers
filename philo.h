@@ -137,8 +137,8 @@ t_args		*init_forks(t_args *args, pthread_mutex_t *forks, int n);
 void	init_tab(int *tab, int size);
 
 // threads.c
-void	*threads_create(void *args);
-void	threads_join(void *args);
+int	threads_create(t_args *args);
+int	threads_join(void *args);
 
 // mutex.c
 int	mutex_init(t_args *args, pthread_mutex_t *mtx);

@@ -39,24 +39,17 @@
 
 void	philosophers_dinner(t_args *args) // philosophers(&mtx, args)
 {
-	pthread_t	master;
-	pthread_mutex_t	master_mtx;
-
-	ft_mutex(args, &master_mtx, INIT);
-	if (pthread_create(&master, NULL, &threads_create, args))
-		exit_error(args, "'Error Master thread creation");
-	threads_create(args);
+	if (threads_create(args) != 0)
+		exit_error(args, "Error threads creation");
 	while (check_all_philos_finished_routine(args, args->philo_ptr) == FALSE)
 		usleep(100);
 	printf("Check\n");
 	printf("args = %p\n", &args);
 	printf("args->mtx = %p\n", &args->mtx);
-	printf("args->number_of_philosophers = %d\nn", args->number_of_philosophers);
-	if (pthread_join(master, (void *) &args))
-		exit_error(args, "Error Naster thread join)");
+	printf("args->number_of_philosophers = %d\n", args->number_of_philosophers);
+	while (threads_join(args) < args->number_of_philosophers)
+		usleep(100);
 	destroy_mutex(args, args->number_of_philosophers);
-	ft_mutex(args, &master_mtx, DESTROY);
-	ft_clean(args);
 }
 
 // Thread routine avec boucle !dead
@@ -78,7 +71,7 @@ void	*diner_routine(void *philo)
 		if (ft_think(p) == TRUE)
 			break ;
 	}
-	ft_mutex(p->args_ptr, &p->mtx[0], LOCK);
+	ft_mutex(p->args_ptr, &p->mtx[MTX], LOCK);
 	p->stop_routine = TRUE;
 	ft_mutex(p->args_ptr, &p->mtx[MTX], UNLOCK);
 	ft_mutex(p->args_ptr, &p->mtx[ROUTINE], UNLOCK);

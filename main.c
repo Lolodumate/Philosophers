@@ -84,6 +84,10 @@ int	main(int argc, char **argv)
 	}
 */
 	philosophers_dinner(args);
+	
+//	threads_join(args);
+	ft_clean(args);
+	
 	printf("***********************END************************\n");
 	return (0);
 }
