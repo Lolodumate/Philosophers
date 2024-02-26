@@ -152,7 +152,7 @@ int	mutex_destroy(t_args *args, pthread_mutex_t *mtx);
 int	philo_is_dead(t_args *args, t_philo *philo, int i);
 int	all_meals_complete(t_args *args);
 int	all_philo_are_alive(t_args *args);
-int	check_all_philos_finished_routine(t_args *args);
+int	check_all_philos_finished_routine(t_args *args, t_philo *philo);
 int	stop_routine(t_args *args);
 
 // ft_args.c

@@ -48,7 +48,7 @@ void	philosophers_dinner(t_args *args) // philosophers(&mtx, args)
 
 //	ft_mutex(args, &master_mtx, LOCK);
 	threads_create(args);
-	while (check_all_philos_finished_routine(args) == FALSE)
+	while (check_all_philos_finished_routine(args, args->philo_ptr) == FALSE)
 		usleep(100);
 
 	printf("Check\n");
@@ -82,7 +82,7 @@ void	*diner_routine(void *philo)
 	}
 	ft_mutex(p->args_ptr, &p->mtx, LOCK);
 	p->stop_routine = TRUE;
-	printf("diner_routine : p->args_ptr->stop_routine[%d] = TRUE\n", p->id - 1);
+	printf("diner_routine : p[%d].stop_routine = %d\n", p->id - 1, p->stop_routine);
 	ft_mutex(p->args_ptr, &p->mtx, UNLOCK);
 	ft_mutex(p->args_ptr, &p[p->id - 1].mtx_routine, UNLOCK);
 	return (NULL);

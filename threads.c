@@ -24,7 +24,8 @@ void	threads_join(void *args)
 	i = -1;
 	n = 0;
 	a = (t_args *)args;
-//	printf("diner_routine : p->args_ptr->stop_routine[%d] = TRUE\n", a->philo_ptr->id - 1);
+//	ft_mutex(a, &a->philo_ptr->mtx_routine, UNLOCK);
+	printf("diner_routine : p->args_ptr->stop_routine[%d] = TRUE\n", a->philo_ptr->id - 1);
 	while (n < a->number_of_philosophers)
 	{
 		while (++i < a->number_of_philosophers)

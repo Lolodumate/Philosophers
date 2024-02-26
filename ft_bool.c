@@ -58,29 +58,34 @@ int	all_meals_complete(t_args *args)
 	return (FALSE);
 }
 
-int	check_all_philos_finished_routine(t_args *args)
+int	check_all_philos_finished_routine(t_args *args, t_philo *philo)
 {
 	int		i;
 	int		n;
 
 	i = -1;
 	n = 0;
+
+/*	if (philo->mtx_is_unlocked  == FALSE)
+	{
+		philo->mtx_is_unlocked = TRUE;
+		ft_mutex(args, &philo->mtx_routine, UNLOCK);
+	}
+*/
 	while (++i < args->number_of_philosophers)
 	{
-		ft_mutex(args, &args->philo_ptr[i].mtx_routine, LOCK);
+		ft_mutex(args, &philo[i].mtx, LOCK);
 		if (args->philo_ptr[i].stop_routine == TRUE)
 			n++;
-/*		if (args->philo_ptr[i].mtx_is_unlocked  == FALSE)
- 		{
- 			args->philo_ptr[i].mtx_is_unlocked = TRUE;
- 			ft_mutex(args, &args->philo_ptr[i].mtx, UNLOCK);
-			ft_mutex(args, &args->philo_ptr[i].mtx_routine, UNLOCK);
- 		}
-		else
-*/		ft_mutex(args, &args->philo_ptr[i].mtx_routine, UNLOCK);
+		printf("args->philo_ptr[%d].stop_routine = %d\n", i, args->philo_ptr[i].stop_routine);
+		ft_mutex(args, &philo[i].mtx, UNLOCK);
 	}
 	if (n == args->number_of_philosophers)
+	{
+//		printf("TRUE\n");
 		return (TRUE);
+	}
+//	printf("FALSE\n");
 	return (FALSE);
 }
 
