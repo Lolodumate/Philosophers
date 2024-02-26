@@ -67,8 +67,10 @@ int	check_all_philos_finished_routine(t_args *args)
 	n = 0;
 	while (++i < args->number_of_philosophers)
 	{
+		ft_mutex(args, &args->philo_ptr[i].mtx, LOCK);
 		if (args->stop_routine[i] == TRUE)
 			n++;
+		ft_mutex(args, &args->philo_ptr[i].mtx, UNLOCK);
 	}
 	if (n == args->number_of_philosophers)
 		return (TRUE);

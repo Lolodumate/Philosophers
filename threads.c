@@ -12,18 +12,31 @@ void	*threads_create(void *args)
 		if (pthread_create(&a->t[i], NULL, &diner_routine, &a->philo_ptr[i]) != 0)
 			exit_error(a, "Failure thread creation");
 	}
-	threads_join(a);
 	return (NULL);
 }
 
-void	threads_join(t_args *a)
+void	threads_join(void *args)
 {
-	int             i;
+	int		i;
+	int		n;
+	t_args	*a;
 
 	i = -1;
-	while (++i < a->number_of_philosophers)
+	n = 0;
+	a = (t_args *)args;
+	printf("diner_routine : p->args_ptr->stop_routine[%d] = TRUE\n", a->philo_ptr->id - 1);
+	while (n < a->number_of_philosophers)
 	{
-		if (pthread_join(a->t[i], NULL) != 0)
-			exit_error(a, "Error pthread join");
+		while (++i < a->number_of_philosophers)
+		{
+			if (a->stop_routine[i] == TRUE && a->join_threads_monitor[i] == FALSE)
+			{
+				if (pthread_join(a->t[i], NULL) != 0)
+					exit_error(args, "Error pthread_join");
+				a->join_threads_monitor[i] = TRUE;
+				n++;
+			}
+		}
+		i =- 1;
 	}
 }

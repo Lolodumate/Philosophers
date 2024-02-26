@@ -79,17 +79,20 @@ typedef struct s_philo
 	pthread_mutex_t		*main_fork;
 	pthread_mutex_t		*aux_fork;
 	pthread_mutex_t		mtx;
+	pthread_mutex_t		mtx_routine;
 }		t_philo;
 
 typedef struct s_args
 {
 	pthread_t		*t;
+	pthread_mutex_t		master;
 	pthread_mutex_t		monitor;
 	pthread_mutex_t		mtx;
 	pthread_mutex_t		mtx_meal;
 	pthread_mutex_t		mtx_write;
 	pthread_mutex_t		*forks;
 	int				*stop_routine;
+	int				*join_threads_monitor;
 	int				nb_of_locked_forks;
 //	int				*mtx_forks;
 //	int				*mtx_philo;
@@ -138,7 +141,7 @@ void	init_tab(int *tab, int size);
 
 // threads.c
 void	*threads_create(void *args);
-void	threads_join(t_args *args);
+void	threads_join(void *args);
 
 // mutex.c
 int	mutex_init(t_args *args, pthread_mutex_t *mtx);

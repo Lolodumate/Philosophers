@@ -16,12 +16,17 @@ void	ft_clean(t_args *args)
 {
 	if (!args)
 		return ;
-	while (check_all_philos_finished_routine(args) == FALSE)
-		usleep(100);
+//	while (check_all_philos_finished_routine(args) == FALSE)
+//		usleep(100);
 	if(args->stop_routine)
 	{
 		free(args->stop_routine);
 		args->stop_routine = NULL;
+	}
+	if (args->join_threads_monitor)
+	{
+		free(args->join_threads_monitor);
+		args->join_threads_monitor = NULL;
 	}
 	if (args->meals)
 	{

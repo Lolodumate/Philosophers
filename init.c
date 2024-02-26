@@ -56,6 +56,7 @@ t_philo	*init_philos(t_args *args, int n)
 		args->philo_ptr[i].main_fork = NULL;
 		args->philo_ptr[i].aux_fork = NULL;
 		ft_mutex(args, &args->philo_ptr[i].mtx, INIT);
+		ft_mutex(args, &args->philo_ptr[i].mtx_routine, INIT);
 	}
 	return (args->philo_ptr);
 }
