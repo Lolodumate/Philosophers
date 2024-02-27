@@ -23,7 +23,6 @@ int	threads_join(void *args)
 	i = -1;
 	n = 0;
 	a = (t_args *)args;
-	ft_mutex(a, &a->philo_ptr[i].mtx[ROUTINE], LOCK);
 	while (n < a->number_of_philosophers)
 	{
 		i = -1;
@@ -31,11 +30,13 @@ int	threads_join(void *args)
 		{
 			if (a->join_threads_monitor[i] == 0)
 			{
+				ft_mutex(a, &a->philo_ptr[i].mtx[ROUTINE], LOCK);
 				if (a->philo_ptr[i].stop_routine == TRUE)
 				{
 					n++;
 					a->join_threads_monitor[i] = TRUE;
-					if (pthread_join(a->t[i], (void *) &a->philo_ptr[i]) != 0)
+					ft_mutex(a, &a->philo_ptr[i].mtx[ROUTINE], UNLOCK);
+					if (pthread_join(a->t[i], (void **) &a->philo_ptr[i]) != 0)
 						exit_error(args, "Error pthread_join");
 					else
 						printf("thread_join[%d] OK\n", i);
@@ -45,6 +46,5 @@ int	threads_join(void *args)
 			printf("a->join_monitor[%d] = %d\n", i, a->join_threads_monitor[i]);
 		}
 	}
-	ft_mutex(a, &a->philo_ptr[i].mtx[ROUTINE], UNLOCK);
 	return (n);
 }
