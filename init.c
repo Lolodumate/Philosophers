@@ -17,13 +17,16 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->meals_complete = FALSE;
 	args->is_dead = FALSE;
 	args->number_of_philosophers = ft_atoi(argv[1]);
+	if (ft_atoi(argv[1]) == 1)
+		args->solo_dinner = TRUE;
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
-	args->time_start_diner = get_time(args, US);
+	args->time_start_dinner = get_time(args, MS);
 	args->nb_of_locked_forks = 0;
 	args->end_of_diner = 0;
 	args->target_nb_meals = -1;
+	args->solo_dinner = FALSE;
 	if (argc == 6)
 		args->target_nb_meals = ft_atoi(argv[5]);
 	args->forks = NULL;

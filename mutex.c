@@ -7,7 +7,6 @@ int	mutex_init(t_args *args, pthread_mutex_t *mtx)
 	i = -1;
 	while (++i < args->number_of_philosophers)
 		ft_mutex(args, &mtx[i], INIT);
-	printf("%d\n", i);
 	return (i);
 }
 

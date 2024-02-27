@@ -38,15 +38,15 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 	if (stop_routine(args) == FALSE)
 	{
 		if (task == DEAD)
-			ft_output(philo, " died", 1);
+			ft_output(philo, " died");
 		else if (task == FORK && args->end_of_diner == FALSE)
-			ft_output(philo, " has taken a fork", 5);
+			ft_output(philo, " has taken a fork");
 		else if (task == EAT && args->end_of_diner == FALSE)
-			ft_output(philo, " is eating", 2);
+			ft_output(philo, " is eating");
 		else if (task == SLEEP && args->end_of_diner == FALSE)
-			ft_output(philo, " is sleeping", 4);
+			ft_output(philo, " is sleeping");
 		else if (task == THINK && args->end_of_diner == FALSE)
-			ft_output(philo, " is thinking", 3);
+			ft_output(philo, " is thinking");
 		else
 		{
 			ft_mutex(args, &args->mtx[WRITE], UNLOCK);
@@ -56,7 +56,9 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 	ft_mutex(args, &args->mtx[WRITE], UNLOCK);
 }
 
-void	ft_output(t_philo *philo, const char *task, int color)
+void	ft_output(t_philo *philo, const char *task)
 {
-	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", get_timestamp(philo), color, philo->id, task);
+//	printf("%ld %d %s\n", get_timestamp(philo), philo->id, task);
+//	printf("%ld %d %s\n", get_time(philo->args_ptr, MS) - philo->start_time, philo->id, task);
+	printf("%ld %d %s\n", get_time(philo->args_ptr, MS) - philo->args_ptr->monitor_ptr->time_start_dinner, philo->id, task);
 }

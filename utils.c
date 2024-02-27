@@ -26,26 +26,27 @@ int	ft_atoi(char *str)
 	}
 	if (res > INT_MAX)
 	{
-		printf("Arguments must be < INT_MAX");
+		printf("Arguments must be < INT_MAX.\n");
 		exit(0);
 	}
 	return ((int)res);
 }
 
-void	strisdigit(char *str)
+int	strisdigit(char *str)
 {
 	int		i;
 
 	i = 0;
 	if (str == NULL)
-		exit(0);
-	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
-		i++;
-	if (str[i])
+		return (FALSE);
+	while (str[i])
 	{
-		printf("Only digits are allowed");
-		exit(0);
+		if (str[i] >= '0' && str[i] <= '9')
+			i++;
+		else
+			return (FALSE);
 	}
+	return (TRUE);
 }
 
 int	odd_or_even(int n)

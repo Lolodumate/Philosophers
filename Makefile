@@ -23,6 +23,7 @@ SRC =	main.c \
 	mem_alloc.c \
 	ft_utils.c \
 	ft_bool.c \
+	monitor.c \
 
 CC = gcc
 

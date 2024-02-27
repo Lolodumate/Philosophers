@@ -12,6 +12,19 @@
 
 #include "philo.h"
 
+void	ft_clean_monitor(t_monitor *m)
+{
+	if (!m)
+		return ;
+	if (m->t)
+	{
+		free(m->t);
+		m->t = NULL;
+	}
+	free(m);
+	m = NULL;
+}
+
 void	ft_clean(t_args *args)
 {
 	if (!args)
@@ -44,6 +57,7 @@ void	ft_clean(t_args *args)
 	free(args);
 	args = NULL;
 }
+
 
 void	free_mutex(t_args *args, pthread_mutex_t *mtx)
 {
@@ -82,6 +96,7 @@ void	exit_error(t_args *args, const char *error)
 	free_mutex(args, args->philo_ptr->mtx);
 	free_mutex(args, args->mtx);
 	ft_clean(args);
+	ft_clean_monitor(args->monitor_ptr);
 	printf("%s\n", error);
 	exit(1);
 }

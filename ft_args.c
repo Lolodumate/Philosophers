@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-void	compliance_args(int argc, char **argv)
+int	compliance_args(int argc, char **argv)
 {
 	int             j;
 
@@ -20,26 +20,31 @@ void	compliance_args(int argc, char **argv)
 	if (argc < 5 || argc > 6)
 	{
 		printf("Number of arguments must be 5 or 6.\n");
-		exit(0);
+		return (FALSE);
 	}
 	while (argv[j] && j <= argc)
 	{
-		strisdigit(argv[j]);
+		if (strisdigit(argv[j]) == FALSE)
+		{
+			printf("Only digits are allowed.\n");
+			return (FALSE);
+		}
 		j++;
 	}
-	compliance_values(argv);
+	return (compliance_values(argv));
 }
 
-void	compliance_values(char **argv)
+int	compliance_values(char **argv)
 {
 	if (ft_atoi(argv[1]) < 1 || ft_atoi(argv[1]) > 200)
 	{
 		printf("Philosophers number must be >0 and <= 200.\n");
-		exit(0);
+		return (FALSE);
 	}
 	if (ft_atoi(argv[1]) < 1 || ft_atoi(argv[2]) < 1 || ft_atoi(argv[3]) < 1 || ft_atoi(argv[4]) < 1)
 	{
 		printf("Arguments must be > 0.\n");
-		exit(0);
+		return (FALSE);
 	}
+	return (TRUE);
 }

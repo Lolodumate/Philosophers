@@ -27,13 +27,27 @@
 int	main(int argc, char **argv)
 {
 	t_args		*args;
-
+	t_monitor	*monitor;
+	
 	args = NULL;
-	compliance_args(argc, argv);
-	args = set_data(args, argc, argv);	
-	args = set_mutex(args);
-	philosophers_dinner(args);
-	ft_clean(args);
-	printf("***********************END************************\n");
+	monitor = NULL;
+	if (compliance_args(argc, argv) == TRUE)
+	{
+		args = set_data(args, argc, argv);
+		args = set_mutex(args);
+		monitor = init_monitor(args, monitor);
+//		printf("&monitor = %p\n", monitor);
+//		printf("&args->monitor_ptr = %p\n", args->monitor_ptr);
+	
+		if (args->number_of_philosophers > 1)
+			philosophers_dinner(args);
+		else if (args->number_of_philosophers == 1)
+		{
+			solo_dinner(&args->philo_ptr[0]);
+			destroy_mutex(args, args->number_of_philosophers);
+		}
+		ft_clean(args);
+		printf("***********************END************************\n");
+	}
 	return (0);
 }
