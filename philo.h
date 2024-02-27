@@ -157,14 +157,14 @@ long	get_timestamp(t_philo *philo);
 void	update_death_time(t_args *args, t_philo *philo);
 
 // clean.c
-void	exit_error(t_args *args, const char *error);
 void	ft_clean(t_args *args);
-void	mutex_unlock_forks(t_args *args, int n);
+void	free_mutex(t_args *args, pthread_mutex_t *mtx);
 void	destroy_mutex(t_args *args, int n);
+void	exit_error(t_args *args, const char *error);
 
 // philosophers.c
 void		philosophers_dinner(t_args *args);
-void		*diner_routine(void *philo);
+void		*dinner_routine(void *philo);
 
 // tasks.c
 int	ft_eat(t_philo *philo);

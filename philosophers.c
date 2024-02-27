@@ -45,7 +45,7 @@ void	philosophers_dinner(t_args *args) // philosophers(&mtx, args)
 }
 
 // Thread routine avec boucle !dead
-void	*diner_routine(void *philo)
+void	*dinner_routine(void *philo)
 {
 	t_philo		*p;
 

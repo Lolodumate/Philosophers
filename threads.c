@@ -7,7 +7,7 @@ int	threads_create(t_args *a)
 	i = -1;
 	while (++i < a->number_of_philosophers)
 	{
-		if (pthread_create(&a->t[i], NULL, &diner_routine, &a->philo_ptr[i]) != 0)
+		if (pthread_create(&a->t[i], NULL, &dinner_routine, &a->philo_ptr[i]) != 0)
 			exit_error(a, "Error pthread_creation");
 	}
 	return (0);
