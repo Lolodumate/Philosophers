@@ -60,7 +60,6 @@ void	*dinner_routine(void *philo)
 	p = (t_philo *)philo;
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MTX], LOCK);
 	p->death_time = p->args_ptr->monitor_ptr->time_start_dinner + p->args_ptr->time_to_die;
-//	p->death_time = p->start_time + p->args_ptr->time_to_die;
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MTX], UNLOCK);
 	ft_mutex(p->args_ptr, &p->mtx[ROUTINE], LOCK);
 	while (stop_routine(p->args_ptr) == FALSE)
@@ -82,7 +81,7 @@ void	*dinner_routine(void *philo)
 void	solo_dinner(t_philo *philo)
 {
 	philo->start_time = get_time(philo->args_ptr, MS);
-	philo->death_time = philo->start_time + philo->args_ptr->time_to_die;
+	philo->death_time = philo->args_ptr->monitor_ptr->time_start_dinner + philo->args_ptr->time_to_die;
 	ft_write_task(philo->args_ptr, philo, FORK);
 	usleep(philo->args_ptr->time_to_die * 1000);
 	ft_write_task(philo->args_ptr, philo, DEAD);

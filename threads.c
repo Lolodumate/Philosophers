@@ -3,7 +3,6 @@
 int	threads_create(t_args *a)
 {
 	int		i;
-	int		signal;
 
 	i = -1;
 	while (++i < a->number_of_philosophers)
@@ -12,17 +11,7 @@ int	threads_create(t_args *a)
 			exit_error(a, "Error pthread_creation");
 		ft_mutex(a, &a->mtx[MTX], LOCK);
 		a->monitor_ptr->threads_created++;
-//		a->time_start_dinner = get_time(a, MS);
 		ft_mutex(a, &a->mtx[MTX], UNLOCK);
-	}
-	while (a->monitor_ptr->start_dinner_signal == 0)
-	{
-		signal = a->monitor_ptr->start_dinner_signal;
-		if (signal != 0)
-		{
-			printf("signal = %d\n", signal);
-		}
-		usleep(10);
 	}
 	return (0);
 }
