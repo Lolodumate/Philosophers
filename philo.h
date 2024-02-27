@@ -107,18 +107,13 @@ typedef struct s_args
 	t_philo		*philo_ptr;
 }               t_args;
 
-// main.c
-void	diner(t_args *args);
-
 // utils.c
 int			ft_atoi(char *str);
 void	strisdigit(char *str);
-void	ft_output(t_philo *philo, const char *task, int color);
 int	odd_or_even(int n);
 
 // ft_utils.c
 void	ft_mutex_protect(t_args *args, int mtx_return);
-int	mtx_tab_update(t_args *args, int i, pthread_mutex_t *mtx, int m);
 void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m);
 void	ft_write_task(t_args *args, t_philo *philo, int task);
 void	ft_output(t_philo *philo, const char *task, int color);
@@ -135,6 +130,7 @@ t_args		*init_args(int argc, char **argv, t_args *args);
 t_philo		*init_philos(t_args *args, int n);
 t_args		*init_forks(t_args *args, pthread_mutex_t *forks, int n);
 void	init_tab(int *tab, int size);
+void		*set_data(t_args *args, int argc, char **argv);
 
 // threads.c
 int	threads_create(t_args *args);
@@ -143,17 +139,16 @@ int	threads_join(void *args);
 // mutex.c
 int	mutex_init(t_args *args, pthread_mutex_t *mtx);
 int	mutex_destroy(t_args *args, pthread_mutex_t *mtx);
-
+void	*set_mutex(t_args *args);
 // bool.c
 int	philo_is_dead(t_args *args, t_philo *philo, int i);
 int	all_meals_complete(t_args *args);
-int	all_philo_are_alive(t_args *args);
 int	check_all_philos_finished_routine(t_args *args, t_philo *philo);
 int	stop_routine(t_args *args);
 
 // ft_args.c
 void	compliance_args(int argc, char **argv);
-void	update_meals_complete(t_philo *philo);
+void	compliance_values(char **argv);
 
 // time.c
 long				get_time(t_args *args, t_time_code time_code);

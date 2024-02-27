@@ -27,16 +27,8 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	if (argc == 6)
 		args->target_nb_meals = ft_atoi(argv[5]);
 	args->forks = NULL;
-//	args->mtx_forks = mem_alloc_mtx_forks(args);
-//	args->mtx_philo = mem_alloc_mtx(args, ft_atoi(argv[1]));
-//	args->mtx_args = mem_alloc_mtx(args, 3);
 	return (args);
 }
-
-/* Si le philo[i] a un voisin a sa droite philo[i - 1] alors :
- * - La fourchette droite de philo[i] correspond a la fourchette gauche de philo[i - 1].
- * - Donc la fourchette gauche de philo[i - 1] est un pointeur vers la fourchette droite de philo[i].
- */
 
 t_philo	*init_philos(t_args *args, int n)
 {
@@ -95,4 +87,24 @@ void	init_tab(int* tab, int size)
 		tab[i] = 0;
 		i++;
 	}
+}
+
+void	*set_data(t_args *args, int argc, char **argv)
+{
+	args = mem_alloc_args(args);
+	args = init_args(argc, argv, args);
+	args->philo_ptr = mem_alloc_philo_ptr(args, args->philo_ptr, args->number_of_philosophers);
+	args->philo_ptr = init_philos(args, args->number_of_philosophers);
+     	args->forks = mem_alloc_mtx(args, args->forks, args->number_of_philosophers);;
+    	args = init_forks(args, args->forks, args->number_of_philosophers);
+   	args->meals = mem_alloc_tab(args, args->number_of_philosophers);
+      	init_tab(args->meals, args->number_of_philosophers);
+     	args->join_threads_monitor = mem_alloc_tab(args, args->number_of_philosophers);
+    	init_tab(args->join_threads_monitor, args->number_of_philosophers);
+   	args->philo_ptr->mtx = mem_alloc_mtx(args, args->mtx, 2);
+  	args->mtx = mem_alloc_mtx(args, args->mtx, 5);
+ 	if (mutex_init(args, args->forks) != args->number_of_philosophers)
+		exit_error(args, "Error initialisation mutex args->forks");
+	args->t = mem_alloc_threads(args, args->t, args->number_of_philosophers);
+	return (args);
 }

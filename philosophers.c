@@ -26,29 +26,21 @@
  *
  * Tuto : https://medium.com/@ruinadd/philosophers-42-guide-the-dining-philosophers-problem-893a24bc0fe2
  * Vizualizer : https://nafuka11.github.io/philosophers-visualizer/
+ *
+ * pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;
+ *************************************************************
+ *************************************************************
+ * CFLAGS = -Wall -Werror -Wextra -g -pthread -fsanitize=thread
+ *
+ *************************************************************
+ *************************************************************
  */
-// pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;
-// *************************************************************
-// *************************************************************
-
-// CFLAGS = -Wall -Werror -Wextra -g -pthread -fsanitize=thread
-
-// *************************************************************
-// *************************************************************
-//
 
 void	philosophers_dinner(t_args *args) // philosophers(&mtx, args)
 {
 	if (threads_create(args) != 0)
 		exit_error(args, "Error threads creation");
-	while (check_all_philos_finished_routine(args, args->philo_ptr) == FALSE)
-		usleep(100);
-	printf("Check\n");
-	printf("args = %p\n", &args);
-	printf("args->mtx = %p\n", &args->mtx);
-	printf("args->number_of_philosophers = %d\n", args->number_of_philosophers);
-	while (threads_join(args) < args->number_of_philosophers)
-		usleep(100);
+	threads_join(args);
 	destroy_mutex(args, args->number_of_philosophers);
 }
 

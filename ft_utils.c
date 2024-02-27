@@ -35,11 +35,6 @@ void	ft_mutex(t_args *args, pthread_mutex_t *mtx, int m)
 void	ft_write_task(t_args *args, t_philo *philo, int task)
 {
 	ft_mutex(args, &args->mtx[WRITE], LOCK);
-	if (stop_routine(args) == TRUE)
-	{
-		ft_mutex(args, &args->mtx[WRITE], UNLOCK);
-		return ;
-	}
 	if (stop_routine(args) == FALSE)
 	{
 		if (task == DEAD)
@@ -59,4 +54,9 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 		}
 	}
 	ft_mutex(args, &args->mtx[WRITE], UNLOCK);
+}
+
+void	ft_output(t_philo *philo, const char *task, int color)
+{
+	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", get_timestamp(philo), color, philo->id, task);
 }

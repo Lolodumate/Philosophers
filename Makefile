@@ -23,11 +23,10 @@ SRC =	main.c \
 	mem_alloc.c \
 	ft_utils.c \
 	ft_bool.c \
-	handle_mutex.c \
 
 CC = gcc
 
-CFLAGS = -Wall -Werror -Wextra -g -pthread -fsanitize=thread
+CFLAGS = -Wall -Werror -Wextra -g3 -pthread -fsanitize=thread
 
 THREADFLAG = -lpthread
 

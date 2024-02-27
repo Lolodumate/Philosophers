@@ -18,12 +18,9 @@ int	philo_is_dead(t_args *args, t_philo *philo, int i)
 	if (get_time(args, MS) >= (philo[i].last_meal_time + args->time_to_die))
 	{
 		ft_write_task(args, philo, DEAD);
-//		ft_mutex(args, &args->mtx_write, LOCK);
-//		args->is_dead = TRUE;
 		ft_mutex(args, &args->mtx[MONITOR], LOCK);
 		args->end_of_diner = TRUE;
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
-//		ft_mutex(args, &args->mtx_write, UNLOCK);
 		ft_mutex(args, &args->mtx[0], UNLOCK);
 		return (TRUE);
 	}	
@@ -71,7 +68,6 @@ int	check_all_philos_finished_routine(t_args *args, t_philo *philo)
 		ft_mutex(args, &philo[i].mtx[MTX], LOCK);
 		if (args->philo_ptr[i].stop_routine == TRUE)
 			n++;
-//		printf("args->philo_ptr[%d].stop_routine = %d\n", i, args->philo_ptr[i].stop_routine);
 		ft_mutex(args, &philo[i].mtx[MTX], UNLOCK);
 	}
 	if (n == args->number_of_philosophers)
@@ -84,19 +80,16 @@ int	stop_routine(t_args *args)
 	ft_mutex(args, &args->mtx[MONITOR], LOCK);
 	if (args->end_of_diner == TRUE)
 	{
-//		printf("ft_bool.c : end_of_diner == TRUE\n");
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
 		return (TRUE);
 	}
 	if (args->is_dead == TRUE)
 	{
-//		printf("ft_bool.c : all_philo_are_alive == FALSE\n");
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
 		return (TRUE);
 	}
 	if (all_meals_complete(args) == TRUE)
 	{
-//		printf("ft_bool.c : all_meals_complete == TRUE\n");
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
 		return (TRUE);
 	}

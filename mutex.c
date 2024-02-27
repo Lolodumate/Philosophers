@@ -20,3 +20,13 @@ int	mutex_destroy(t_args *args, pthread_mutex_t *mtx)
 		ft_mutex(args, &mtx[i], DESTROY);
 	return (i);
 }
+
+void	*set_mutex(t_args *args)
+{
+	ft_mutex(args, &args->mtx[MTX], INIT);
+	ft_mutex(args, &args->mtx[MASTER], INIT);
+	ft_mutex(args, &args->mtx[MONITOR], INIT);
+	ft_mutex(args, &args->mtx[MEAL], INIT);
+	ft_mutex(args, &args->mtx[WRITE], INIT);
+	return (args);
+}

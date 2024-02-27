@@ -48,11 +48,6 @@ void	strisdigit(char *str)
 	}
 }
 
-void	ft_output(t_philo *philo, const char *task, int color)
-{
-	printf("%-6ld \033[1;3%dm%d %s\033[0m\n", get_timestamp(philo), color, philo->id, task);
-}
-
 int	odd_or_even(int n)
 {
 	if (n % 2 == 0)

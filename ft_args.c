@@ -19,7 +19,7 @@ void	compliance_args(int argc, char **argv)
 	j = 1;
 	if (argc < 5 || argc > 6)
 	{
-		printf("Number of arguments must be 5 or 6");
+		printf("Number of arguments must be 5 or 6.\n");
 		exit(0);
 	}
 	while (argv[j] && j <= argc)
@@ -27,21 +27,19 @@ void	compliance_args(int argc, char **argv)
 		strisdigit(argv[j]);
 		j++;
 	}
+	compliance_values(argv);
+}
+
+void	compliance_values(char **argv)
+{
 	if (ft_atoi(argv[1]) < 1 || ft_atoi(argv[1]) > 200)
 	{
-		printf("Philosophers number must be >0 and <= 200");
+		printf("Philosophers number must be >0 and <= 200.\n");
+		exit(0);
+	}
+	if (ft_atoi(argv[1]) < 1 || ft_atoi(argv[2]) < 1 || ft_atoi(argv[3]) < 1 || ft_atoi(argv[4]) < 1)
+	{
+		printf("Arguments must be > 0.\n");
 		exit(0);
 	}
 }
-
-/*void	update_meals_complete(t_philo *philo)
-{
-	if (philo->meal_complete == TRUE || philo->args_ptr->target_nb_meals < 0)
-		return ;
-	if (philo->meal_number >= philo->args_ptr->target_nb_meals)
-	{
-		philo->meal_complete = TRUE;
-		printf("update_meals_complete : philo->args_ptr->meals_complete = %d\n", philo->args_ptr->meals_complete);
-		printf("update_meals_complete : philo->args_ptr->meals[%d] = %d\n", philo->id - 1, philo->args_ptr->meals[philo->id - 1]);
-	}
-}*/

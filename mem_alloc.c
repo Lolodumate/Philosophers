@@ -47,7 +47,6 @@ pthread_mutex_t	*mem_alloc_mtx(t_args *args, pthread_mutex_t *mtx, int n)
 	return (mtx);
 }
 
-// int array to record the number of meals eaten by each philosophers
 int	*mem_alloc_tab(t_args *args, int n)
 {
 	int		*tab;

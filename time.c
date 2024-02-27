@@ -17,7 +17,7 @@ long	get_time(t_args *args, t_time_code time_code)
 	struct timeval	tv;
 
 	if (gettimeofday(&tv, NULL))
-		exit_error(args, "Gettimeofday failed");
+		exit_error(args, "gettimeofday failed");
 	if (time_code == MS)
 		return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 	else if (time_code == US)
