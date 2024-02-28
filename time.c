@@ -44,6 +44,6 @@ long	get_timestamp(t_philo *philo)
 {
 	int             timestamp;
 
-	timestamp = get_time(philo->args_ptr, MS) - philo->start_time;
+	timestamp = get_time(philo->args_ptr, MS) - philo->args_ptr->time_start_dinner;
 	return (timestamp);
 }

@@ -16,13 +16,14 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 {
 	args->meals_complete = FALSE;
 	args->is_dead = FALSE;
-	args->number_of_philosophers = ft_atoi(argv[1]);
+	args->nphilo = ft_atoi(argv[1]);
 	if (ft_atoi(argv[1]) == 1)
 		args->solo_dinner = TRUE;
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
-	args->time_start_dinner = get_time(args, MS);
+	args->threads_created = 0;
+	args->go = FALSE;
 	args->nb_of_locked_forks = 0;
 	args->end_of_diner = 0;
 	args->target_nb_meals = -1;
@@ -30,6 +31,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	if (argc == 6)
 		args->target_nb_meals = ft_atoi(argv[5]);
 	args->forks = NULL;
+	args->time_start_dinner = get_time(args, MS);
 	return (args);
 }
 
@@ -41,7 +43,6 @@ t_philo	*init_philos(t_args *args, int n)
 	while (++i < n)
 	{
 		args->philo_ptr[i].id = i + 1;
-		printf("philo[%d]->id = %d\n", i, args->philo_ptr[i].id);
 		args->philo_ptr[i].stop_routine = FALSE;
 		args->philo_ptr[i].mtx_is_unlocked = FALSE;
 		args->philo_ptr[i].args_ptr = args;
@@ -98,18 +99,18 @@ void	*set_data(t_args *args, int argc, char **argv)
 {
 	args = mem_alloc_args(args);
 	args = init_args(argc, argv, args);
-	args->philo_ptr = mem_alloc_philo_ptr(args, args->philo_ptr, args->number_of_philosophers);
-	args->philo_ptr = init_philos(args, args->number_of_philosophers);
-     	args->forks = mem_alloc_mtx(args, args->forks, args->number_of_philosophers);;
-    	args = init_forks(args, args->forks, args->number_of_philosophers);
-   	args->meals = mem_alloc_tab(args, args->number_of_philosophers);
-      	init_tab(args->meals, args->number_of_philosophers);
-     	args->join_threads_monitor = mem_alloc_tab(args, args->number_of_philosophers);
-    	init_tab(args->join_threads_monitor, args->number_of_philosophers);
-   	args->philo_ptr->mtx = mem_alloc_mtx(args, args->mtx, 2);
-  	args->mtx = mem_alloc_mtx(args, args->mtx, 5);
- 	if (mutex_init(args, args->forks) != args->number_of_philosophers)
+	args->philo_ptr = mem_alloc_philo_ptr(args, args->philo_ptr, args->nphilo);
+	args->philo_ptr = init_philos(args, args->nphilo);
+	args->forks = mem_alloc_mtx(args, args->forks, args->nphilo);;
+	args = init_forks(args, args->forks, args->nphilo);
+	args->meals = mem_alloc_tab(args, args->nphilo);
+	init_tab(args->meals, args->nphilo);
+//     	args->join_threads_monitor = mem_alloc_tab(args, args->nphilo);
+//  	init_tab(args->join_threads_monitor, args->nphilo);
+	args->philo_ptr->mtx = mem_alloc_mtx(args, args->mtx, 2);
+	args->mtx = mem_alloc_mtx(args, args->mtx, 5);
+	if (mutex_init(args, args->forks) != args->nphilo)
 		exit_error(args, "Error initialisation mutex args->forks");
-	args->t = mem_alloc_threads(args, args->t, args->number_of_philosophers);
+	args->t = mem_alloc_threads(args, args->t, args->nphilo);
 	return (args);
 }

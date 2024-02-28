@@ -20,9 +20,6 @@
 # include <sys/time.h>
 # include <limits.h>
 
-// https://medium.com/@ruinadd/philosophers-42-guide-the-dining-philosophers-problem-893a24bc0fe2
-// https://github.com/TommyJD93/Philosophers
-
 typedef struct	s_args	t_args;
 
 typedef enum e_bool
@@ -87,23 +84,15 @@ typedef struct s_philo
 
 }		t_philo;
 
-typedef struct	s_monitor
-{
-	pthread_t		*t;
-	int			start_dinner_signal;
-	int			threads_created;
-	long			time_start_dinner;
-	t_args		*args_ptr;
-}		t_monitor;
-
 typedef struct s_args
 {
 	pthread_t		*t;
 	pthread_mutex_t		*mtx;
 	pthread_mutex_t		*forks;
-	int				*join_threads_monitor;
+	int				threads_created;
+	int				go;
 	int				nb_of_locked_forks;
-	int				number_of_philosophers;
+	int				nphilo;
 	int				meals_complete;
 	int				is_dead;
 	int				end_of_diner;
@@ -115,15 +104,7 @@ typedef struct s_args
 	int				solo_dinner;
 	long		time_start_dinner;
 	t_philo		*philo_ptr;
-	t_monitor	*monitor_ptr;
 }               t_args;
-
-// monitor
-t_monitor	*init_monitor(t_args *args, t_monitor *m);
-int		thread_create_monitor(t_monitor *monitor);
-int		thread_join_monitor(void *monitor);
-void		*monitor_threads_creation(void *args);
-int		wait_threads_creation_to_finish(t_args *args);
 
 // utils.c
 int			ft_atoi(char *str);
@@ -152,6 +133,7 @@ void		*set_data(t_args *args, int argc, char **argv);
 
 // threads.c
 int	threads_create(t_args *args);
+int	wait_threads_creation_to_finish(t_args *args, t_philo *philo);
 void	set_start_time_of_dinner(t_args *args, t_philo *philo);
 int	threads_join(void *args);
 
@@ -177,7 +159,6 @@ void	update_death_time(t_args *args, t_philo *philo);
 
 // clean.c
 void	ft_clean(t_args *args);
-void	ft_clean_monitor(t_monitor *m);
 void	free_mutex(t_args *args, pthread_mutex_t *mtx);
 void	destroy_mutex(t_args *args, int n);
 void	exit_error(t_args *args, const char *error);

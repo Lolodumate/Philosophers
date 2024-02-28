@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-
+/*
 void	ft_clean_monitor(t_monitor *m)
 {
 	if (!m)
@@ -24,16 +24,17 @@ void	ft_clean_monitor(t_monitor *m)
 	free(m);
 	m = NULL;
 }
-
+*/
 void	ft_clean(t_args *args)
 {
 	if (!args)
 		return ;
-	if (args->join_threads_monitor)
+/*	if (args->join_threads_monitor)
 	{
 		free(args->join_threads_monitor);
 		args->join_threads_monitor = NULL;
 	}
+*/
 	if (args->meals)
 	{
 		free(args->meals);
@@ -92,10 +93,10 @@ void	destroy_mutex(t_args *args, int n)
 
 void	exit_error(t_args *args, const char *error)
 {
-	destroy_mutex(args, args->number_of_philosophers);
+	destroy_mutex(args, args->nphilo);
 	free_mutex(args, args->philo_ptr->mtx);
 	free_mutex(args, args->mtx);
-	ft_clean_monitor(args->monitor_ptr);
+//	ft_clean_monitor(args->monitor_ptr);
 	ft_clean(args);
 	printf("%s\n", error);
 	exit(1);

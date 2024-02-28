@@ -38,18 +38,10 @@
 
 void	philosophers_dinner(t_args *args)
 {
-	thread_create_monitor(args->monitor_ptr);
-
-	printf("philosophers_dinner : args->monitor_ptr = %p\n", args->monitor_ptr);
 	if (threads_create(args) != 0)
 		exit_error(args, "Error threads creation");
-
-	monitor_threads_creation(args->monitor_ptr);
-	while (check_all_philos_finished_routine(args) == FALSE)
-		usleep(100);
 	threads_join(args);
-	destroy_mutex(args, args->number_of_philosophers);
-	thread_join_monitor(args->monitor_ptr);
+	destroy_mutex(args, args->nphilo);
 }
 
 void	*dinner_routine(void *philo)
@@ -58,7 +50,7 @@ void	*dinner_routine(void *philo)
 
 	p = (t_philo *)philo;
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MONITOR], LOCK);
-	p->death_time = p->args_ptr->monitor_ptr->time_start_dinner + p->args_ptr->time_to_die;
+	p->death_time = p->args_ptr->time_start_dinner + p->args_ptr->time_to_die;
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MONITOR], UNLOCK);
 	while (stop_routine(p->args_ptr) == FALSE)
 	{
@@ -77,8 +69,8 @@ void	*dinner_routine(void *philo)
 
 void	solo_dinner(t_philo *philo)
 {
-	philo->args_ptr->monitor_ptr->time_start_dinner = get_time(philo->args_ptr, MS);
-	philo->death_time = philo->args_ptr->monitor_ptr->time_start_dinner + philo->args_ptr->time_to_die;
+	philo->args_ptr->time_start_dinner = get_time(philo->args_ptr, MS);
+	philo->death_time = philo->args_ptr->time_start_dinner + philo->args_ptr->time_to_die;
 	ft_write_task(philo->args_ptr, philo, FORK);
 	usleep(philo->args_ptr->time_to_die * 1000);
 	ft_write_task(philo->args_ptr, philo, DEAD);

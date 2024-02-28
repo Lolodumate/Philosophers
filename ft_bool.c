@@ -41,12 +41,12 @@ int	all_meals_complete(t_args *args)
 		ft_mutex(args, &args->mtx[MEAL], UNLOCK);
 			return (FALSE);
 	}
-	while (++i < args->number_of_philosophers)
+	while (++i < args->nphilo)
 	{
 		if (args->meals[i] >= args->target_nb_meals)
 			n++;
 	}
-	if (n >= args->number_of_philosophers)
+	if (n >= args->nphilo)
 	{
 		ft_mutex(args, &args->mtx[MEAL], UNLOCK);
 		return (TRUE);
@@ -64,15 +64,14 @@ int	check_all_philos_finished_routine(t_args *args)
 	i = -1;
 	n = 0;
 	philo = args->philo_ptr;
-	while (++i < args->number_of_philosophers)
+	while (++i < args->nphilo)
 	{
 		ft_mutex(args, &philo[i].mtx[MTX], LOCK);
 		if (args->philo_ptr[i].stop_routine == TRUE)
 			n++;
 		ft_mutex(args, &philo[i].mtx[MTX], UNLOCK);
 	}
-//	printf("n = %d\n", n);
-	if (n >= args->number_of_philosophers)
+	if (n >= args->nphilo)
 		return (TRUE);
 	return (FALSE);
 }
