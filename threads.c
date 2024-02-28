@@ -48,12 +48,10 @@ int	threads_join(void *args)
 	a = (t_args *)args;
 	while (a->t[i] && i < a->number_of_philosophers)
 	{
-		if (a->join_threads_monitor[i] == 0)
+//		if (a->join_threads_monitor[i] == 0)
 		{
-			ft_mutex(a, &a->philo_ptr[i].mtx[ROUTINE], LOCK);
-			if (a->philo_ptr[i].stop_routine == TRUE)
+//			if (a->philo_ptr[i].stop_routine == TRUE)
 			{
-				ft_mutex(a, &a->philo_ptr[i].mtx[ROUTINE], UNLOCK);
 				a->join_threads_monitor[i] = TRUE;
 				if (pthread_join(a->t[i], NULL /* (void **) &a->philo_ptr[i]*/) != 0)
 					exit_error(a, "Error pthread_join");

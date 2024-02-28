@@ -162,7 +162,7 @@ void	*set_mutex(t_args *args);
 // bool.c
 int	philo_is_dead(t_args *args, t_philo *philo, int i);
 int	all_meals_complete(t_args *args);
-int	check_all_philos_finished_routine(t_args *args, t_philo *philo);
+int	check_all_philos_finished_routine(t_args *args);
 int	stop_routine(t_args *args);
 
 // ft_args.c

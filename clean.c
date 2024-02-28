@@ -95,8 +95,8 @@ void	exit_error(t_args *args, const char *error)
 	destroy_mutex(args, args->number_of_philosophers);
 	free_mutex(args, args->philo_ptr->mtx);
 	free_mutex(args, args->mtx);
-	ft_clean(args);
 	ft_clean_monitor(args->monitor_ptr);
+	ft_clean(args);
 	printf("%s\n", error);
 	exit(1);
 }

@@ -41,6 +41,7 @@ t_philo	*init_philos(t_args *args, int n)
 	while (++i < n)
 	{
 		args->philo_ptr[i].id = i + 1;
+		printf("philo[%d]->id = %d\n", i, args->philo_ptr[i].id);
 		args->philo_ptr[i].stop_routine = FALSE;
 		args->philo_ptr[i].mtx_is_unlocked = FALSE;
 		args->philo_ptr[i].args_ptr = args;
@@ -55,6 +56,7 @@ t_philo	*init_philos(t_args *args, int n)
 		args->philo_ptr[i].mtx = mem_alloc_mtx(args, args->mtx, 2);
 		ft_mutex(args, &args->philo_ptr[i].mtx[MTX], INIT);
 		ft_mutex(args, &args->philo_ptr[i].mtx[ROUTINE], INIT);
+		usleep(100);
 	}
 	return (args->philo_ptr);
 }

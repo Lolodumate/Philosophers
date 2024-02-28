@@ -3,6 +3,7 @@
 t_monitor	*init_monitor(t_args *args, t_monitor *m)
 {
 	m = malloc(sizeof(t_monitor));
+       	// Lorsque je change sizeof(t_monitor) en sizeof(t_monitor *) le programme reagit, Y COMPRIS LORSQUE JE N'APPELLE PLUS LES FONCTION ci-dessous dans ce fichier monitor.c !! 
 	if (!m)
 	{
 		printf("Error malloc monitor.");
@@ -47,8 +48,8 @@ void	*monitor_threads_creation(void *monitor)
 	t_monitor	*m;
 
 	m = (t_monitor *)monitor;
-	ft_mutex(m->args_ptr, &m->args_ptr->mtx[MTX], LOCK);
+	ft_mutex(m->args_ptr, &m->args_ptr->mtx[MONITOR], LOCK);
 	m->time_start_dinner = get_time(m->args_ptr, MS);
-	ft_mutex(m->args_ptr, &m->args_ptr->mtx[MTX], UNLOCK);
+	ft_mutex(m->args_ptr, &m->args_ptr->mtx[MONITOR], UNLOCK);
 	return (NULL);
 }

@@ -60,5 +60,7 @@ void	ft_output(t_philo *philo, const char *task)
 {
 //	printf("%ld %d %s\n", get_timestamp(philo), philo->id, task);
 //	printf("%ld %d %s\n", get_time(philo->args_ptr, MS) - philo->start_time, philo->id, task);
+	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MONITOR], LOCK);
 	printf("%ld %d %s\n", get_time(philo->args_ptr, MS) - philo->args_ptr->monitor_ptr->time_start_dinner, philo->id, task);
+	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MONITOR], UNLOCK);
 }
