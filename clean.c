@@ -11,30 +11,12 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-/*
-void	ft_clean_monitor(t_monitor *m)
-{
-	if (!m)
-		return ;
-	if (m->t)
-	{
-		free(m->t);
-		m->t = NULL;
-	}
-	free(m);
-	m = NULL;
-}
-*/
+
 void	ft_clean(t_args *args)
 {
 	if (!args)
 		return ;
-/*	if (args->join_threads_monitor)
-	{
-		free(args->join_threads_monitor);
-		args->join_threads_monitor = NULL;
-	}
-*/
+	free_mutex(args, args->mtx);
 	if (args->meals)
 	{
 		free(args->meals);
@@ -42,6 +24,7 @@ void	ft_clean(t_args *args)
 	}
 	if (args->philo_ptr)
 	{
+		free_philo_ptr(args);
 		free(args->philo_ptr);
 		args->philo_ptr = NULL;
 	}
@@ -59,6 +42,17 @@ void	ft_clean(t_args *args)
 	args = NULL;
 }
 
+void	free_philo_ptr(t_args *args)
+{
+	int		i;
+
+	i = -1;
+	while (++i < args->nphilo)
+	{
+		if (&args->philo_ptr[i].mtx)
+			free(args->philo_ptr[i].mtx);
+	}
+}
 
 void	free_mutex(t_args *args, pthread_mutex_t *mtx)
 {
@@ -78,10 +72,12 @@ void	destroy_mutex(t_args *args, int n)
 		return ;
 	i = -1;
 	while (++i < n)
-	{
 		ft_mutex(args, &args->forks[i], DESTROY);
-		ft_mutex(args, &args->philo_ptr[i].mtx[MTX], DESTROY);
+	i = -1;
+	while (++i < n)
+	{
 		ft_mutex(args, &args->philo_ptr[i].mtx[ROUTINE], DESTROY);
+		ft_mutex(args, &args->philo_ptr[i].mtx[MTX], DESTROY);
 	}
 	ft_mutex(args, &args->philo_ptr->mtx[MTX], DESTROY);
 	ft_mutex(args, &args->philo_ptr->mtx[ROUTINE], DESTROY);
@@ -90,6 +86,7 @@ void	destroy_mutex(t_args *args, int n)
 	ft_mutex(args, &args->mtx[MONITOR], DESTROY);
 	ft_mutex(args, &args->mtx[MEAL], DESTROY);
 	ft_mutex(args, &args->mtx[WRITE], DESTROY);
+	printf("Check destroy mutex OK\n");
 }
 
 void	exit_error(t_args *args, const char *error)

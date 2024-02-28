@@ -103,9 +103,7 @@ void	*set_data(t_args *args, int argc, char **argv)
 	args = init_forks(args, args->forks, args->nphilo);
 	args->meals = mem_alloc_tab(args, args->nphilo);
 	init_tab(args->meals, args->nphilo);
-//     	args->join_threads_monitor = mem_alloc_tab(args, args->nphilo);
-//  	init_tab(args->join_threads_monitor, args->nphilo);
-	args->philo_ptr->mtx = mem_alloc_mtx(args, args->philo_ptr->mtx, 2);
+//	args->philo_ptr->mtx = mem_alloc_mtx(args, args->philo_ptr->mtx, 2);
 	args->mtx = mem_alloc_mtx(args, args->mtx, 5);
 	if (mutex_init(args, args->forks) != args->nphilo)
 		exit_error(args, "Error initialisation mutex args->forks");

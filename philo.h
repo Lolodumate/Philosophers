@@ -80,7 +80,6 @@ typedef struct s_philo
 	int					mtx_is_unlocked;
 	int					meal_complete;
 	int					meal_number;
-//	int					nb_of_fork_to_drop;
 	long					start_time;
 	long					last_meal_time;
 	long					death_time;
@@ -171,6 +170,7 @@ void	ft_clean(t_args *args);
 void	free_mutex(t_args *args, pthread_mutex_t *mtx);
 void	destroy_mutex(t_args *args, int n);
 void	exit_error(t_args *args, const char *error);
+void	free_philo_ptr(t_args *args);
 
 // philosophers.c
 void		philosophers_dinner(t_args *args);
