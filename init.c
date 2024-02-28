@@ -57,7 +57,6 @@ t_philo	*init_philos(t_args *args, int n)
 		args->philo_ptr[i].mtx = mem_alloc_mtx(args, args->mtx, 2);
 		ft_mutex(args, &args->philo_ptr[i].mtx[MTX], INIT);
 		ft_mutex(args, &args->philo_ptr[i].mtx[ROUTINE], INIT);
-		usleep(100);
 	}
 	return (args->philo_ptr);
 }
