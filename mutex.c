@@ -29,3 +29,10 @@ void	*set_mutex(t_args *args)
 	ft_mutex(args, &args->mtx[WRITE], INIT);
 	return (args);
 }
+
+void	*set_philo_mutex(t_philo *philo)
+{
+	ft_mutex(philo->args_ptr, &philo->mtx[MTX], INIT);
+	ft_mutex(philo->args_ptr, &philo->mtx[ROUTINE], INIT);
+	return (philo);
+}

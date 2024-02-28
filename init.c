@@ -50,13 +50,12 @@ t_philo	*init_philos(t_args *args, int n)
 		args->philo_ptr[i].meal_number = 0;
 		args->philo_ptr[i].start_time = get_time(args, MS);
 		args->philo_ptr[i].last_meal_time = 0;
-		args->philo_ptr[i].nb_of_fork_to_drop = 0;
 		args->philo_ptr[i].death_time = 0;
 		args->philo_ptr[i].main_fork = NULL;
 		args->philo_ptr[i].aux_fork = NULL;
 		args->philo_ptr[i].mtx = mem_alloc_mtx(args, args->mtx, 2);
-		ft_mutex(args, &args->philo_ptr[i].mtx[MTX], INIT);
 		ft_mutex(args, &args->philo_ptr[i].mtx[ROUTINE], INIT);
+		ft_mutex(args, &args->philo_ptr[i].mtx[MTX], INIT);
 	}
 	return (args->philo_ptr);
 }
@@ -106,7 +105,7 @@ void	*set_data(t_args *args, int argc, char **argv)
 	init_tab(args->meals, args->nphilo);
 //     	args->join_threads_monitor = mem_alloc_tab(args, args->nphilo);
 //  	init_tab(args->join_threads_monitor, args->nphilo);
-	args->philo_ptr->mtx = mem_alloc_mtx(args, args->mtx, 2);
+	args->philo_ptr->mtx = mem_alloc_mtx(args, args->philo_ptr->mtx, 2);
 	args->mtx = mem_alloc_mtx(args, args->mtx, 5);
 	if (mutex_init(args, args->forks) != args->nphilo)
 		exit_error(args, "Error initialisation mutex args->forks");

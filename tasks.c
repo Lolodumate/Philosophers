@@ -28,25 +28,13 @@ void	ft_pick_forks(t_args *args, t_philo *philo)
 {
 	ft_mutex(args, philo->main_fork, LOCK);
 	ft_write_task(args, philo, FORK);
-	ft_mutex(args, &philo->mtx[MTX], LOCK);
-	philo->nb_of_fork_to_drop++;
-	ft_mutex(args, &philo->mtx[MTX], UNLOCK);
 	ft_mutex(args, philo->aux_fork, LOCK);
 	ft_write_task(args, philo, FORK);
-	ft_mutex(args, &philo->mtx[MTX], LOCK);
-	philo->nb_of_fork_to_drop++;
-	ft_mutex(args, &philo->mtx[MTX], UNLOCK);
 }
 
 void	ft_drop_forks(t_args *args, t_philo *philo)
 {
-	ft_mutex(args, &philo->mtx[MTX], LOCK);
-	philo->nb_of_fork_to_drop--;
-	ft_mutex(args, &philo->mtx[MTX], UNLOCK);
 	ft_mutex(args, philo->main_fork, UNLOCK);
-	ft_mutex(args, &philo->mtx[MTX], LOCK);
-	philo->nb_of_fork_to_drop--;
-	ft_mutex(args, &philo->mtx[MTX], UNLOCK);
 	ft_mutex(args, philo->aux_fork, UNLOCK);
 }
 

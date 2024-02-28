@@ -9,9 +9,6 @@ int	threads_create(t_args *a)
 	{
 		if (pthread_create(&a->t[i], NULL, &dinner_routine, &a->philo_ptr[i]) != 0)
 			exit_error(a, "Error pthread_creation");
-//		ft_mutex(a, &a->mtx[MONITOR], LOCK);
-//		a->philo_ptr[i].start_time = get_time(a, MS);
-//		ft_mutex(a, &a->mtx[MONITOR], UNLOCK);
 	}
 	return (0);
 }
@@ -44,13 +41,12 @@ int	threads_join(void *args)
 	int		i;
 	t_args	*a;
 
-	i = 0;
+	i = -1;
 	a = (t_args *)args;
-	while (a->t[i] && i < a->nphilo)
+	while (++i < a->nphilo)
 	{
 		if (pthread_join(a->t[i], NULL /* (void **) &a->philo_ptr[i]*/) != 0)
 			exit_error(a, "Error pthread_join");
-		i++;
 	}
 	return (0);
 }

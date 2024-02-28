@@ -78,12 +78,13 @@ void	destroy_mutex(t_args *args, int n)
 		return ;
 	i = -1;
 	while (++i < n)
-		ft_mutex(args, &args->forks[i], DESTROY);
-	while (++i < n)
 	{
+		ft_mutex(args, &args->forks[i], DESTROY);
 		ft_mutex(args, &args->philo_ptr[i].mtx[MTX], DESTROY);
 		ft_mutex(args, &args->philo_ptr[i].mtx[ROUTINE], DESTROY);
 	}
+	ft_mutex(args, &args->philo_ptr->mtx[MTX], DESTROY);
+	ft_mutex(args, &args->philo_ptr->mtx[ROUTINE], DESTROY);
 	ft_mutex(args, &args->mtx[MTX], DESTROY);
 	ft_mutex(args, &args->mtx[MASTER], DESTROY);
 	ft_mutex(args, &args->mtx[MONITOR], DESTROY);
@@ -96,7 +97,6 @@ void	exit_error(t_args *args, const char *error)
 	destroy_mutex(args, args->nphilo);
 	free_mutex(args, args->philo_ptr->mtx);
 	free_mutex(args, args->mtx);
-//	ft_clean_monitor(args->monitor_ptr);
 	ft_clean(args);
 	printf("%s\n", error);
 	exit(1);

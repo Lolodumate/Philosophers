@@ -34,16 +34,23 @@ typedef enum	e_oddeven
 	ODD
 }		t_oddeven;
 
-typedef enum e_mtx
+typedef enum e_mtx_philo
 {
 	MTX,
+	ROUTINE
+}		t_mtx_philo;
+
+typedef enum e_mtx_args
+{
 	MASTER,
 	MONITOR,
 	MEAL,
 	WRITE,
-	ROUTINE,
-	FORKS,
-	ALL_MTX_LOCKED,
+	FORKS
+}		t_mtx_args;
+//	ALL_MTX_LOCKED,
+typedef enum e_mtx
+{
 	INIT,
 	LOCK,
 	UNLOCK,
@@ -73,7 +80,7 @@ typedef struct s_philo
 	int					mtx_is_unlocked;
 	int					meal_complete;
 	int					meal_number;
-	int					nb_of_fork_to_drop;
+//	int					nb_of_fork_to_drop;
 	long					start_time;
 	long					last_meal_time;
 	long					death_time;
@@ -141,6 +148,8 @@ int	threads_join(void *args);
 int	mutex_init(t_args *args, pthread_mutex_t *mtx);
 int	mutex_destroy(t_args *args, pthread_mutex_t *mtx);
 void	*set_mutex(t_args *args);
+void	*set_philo_mutex(t_philo *philo);
+
 // bool.c
 int	philo_is_dead(t_args *args, t_philo *philo, int i);
 int	all_meals_complete(t_args *args);
