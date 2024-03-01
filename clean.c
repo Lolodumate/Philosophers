@@ -75,18 +75,12 @@ void	destroy_mutex(t_args *args, int n)
 		ft_mutex(args, &args->forks[i], DESTROY);
 	i = -1;
 	while (++i < n)
-	{
-		ft_mutex(args, &args->philo_ptr[i].mtx[ROUTINE], DESTROY);
 		ft_mutex(args, &args->philo_ptr[i].mtx[MTX], DESTROY);
-	}
-	ft_mutex(args, &args->philo_ptr->mtx[MTX], DESTROY);
-	ft_mutex(args, &args->philo_ptr->mtx[ROUTINE], DESTROY);
 	ft_mutex(args, &args->mtx[MTX], DESTROY);
 	ft_mutex(args, &args->mtx[MASTER], DESTROY);
 	ft_mutex(args, &args->mtx[MONITOR], DESTROY);
 	ft_mutex(args, &args->mtx[MEAL], DESTROY);
 	ft_mutex(args, &args->mtx[WRITE], DESTROY);
-	printf("Check destroy mutex OK\n");
 }
 
 void	exit_error(t_args *args, const char *error)

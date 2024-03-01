@@ -34,23 +34,14 @@ typedef enum	e_oddeven
 	ODD
 }		t_oddeven;
 
-typedef enum e_mtx_philo
+typedef enum e_mtx
 {
 	MTX,
-	ROUTINE
-}		t_mtx_philo;
-
-typedef enum e_mtx_args
-{
 	MASTER,
 	MONITOR,
 	MEAL,
 	WRITE,
-	FORKS
-}		t_mtx_args;
-//	ALL_MTX_LOCKED,
-typedef enum e_mtx
-{
+	FORKS,
 	INIT,
 	LOCK,
 	UNLOCK,
