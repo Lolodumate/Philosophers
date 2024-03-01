@@ -14,17 +14,20 @@
 
 int	philo_is_dead(t_args *args, t_philo *philo, int i)
 {
-	ft_mutex(args, &args->mtx[0], LOCK);
-	if (get_time(args, MS) >= (philo[i].last_meal_time + args->time_to_die))
+	ft_mutex(args, &args->mtx[MTX], LOCK);
+	if (get_time(args, MS) >= (philo[i].last_meal_time + args->time_to_die)
+		|| (philo[i].death_time < get_time(args, MS)))
 	{
+//		printf("get_time = %ld\n", get_time(args, MS));
+//		printf("philo[%d].last_meal_time = %ld", philo->id - 1, philo->last_meal_time);
 		ft_write_task(args, philo, DEAD);
 		ft_mutex(args, &args->mtx[MONITOR], LOCK);
 		args->end_of_diner = TRUE;
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
-		ft_mutex(args, &args->mtx[0], UNLOCK);
+		ft_mutex(args, &args->mtx[MTX], UNLOCK);
 		return (TRUE);
 	}	
-	ft_mutex(args, &args->mtx[0], UNLOCK);
+	ft_mutex(args, &args->mtx[MTX], UNLOCK);
 	return (FALSE);
 }
 

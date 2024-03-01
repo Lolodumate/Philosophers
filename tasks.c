@@ -51,6 +51,8 @@ int	ft_eat(t_philo *philo)
 	ft_write_task(philo->args_ptr, philo, EAT);
 	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MTX], LOCK);
 	philo->last_meal_time = get_time(philo->args_ptr, MS);
+	printf("philo[%d].last_meal_time = %ld\n", philo->id - 1, philo->last_meal_time);
+	printf("philo[%d].last_meal_time + args->time_to_die = %ld + %ld = %ld\n", philo->id - 1, philo->last_meal_time, philo->args_ptr->time_to_die, philo->last_meal_time + philo->args_ptr->time_to_die);
 	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MTX], UNLOCK);
 	ft_mutex(philo->args_ptr, &philo->mtx[MTX], LOCK);
 	if (philo->args_ptr->target_nb_meals > 0)
@@ -60,6 +62,13 @@ int	ft_eat(t_philo *philo)
 		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MEAL], UNLOCK);
 	}
 	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr, philo->id - 1);
+	
+	// Faire une fonction qui gere la mort pendant le repas et qui unlock les mutex pour nettoyage de la memoire.
+
+	printf("get_time = %ld\n", get_time(philo->args_ptr, MS));
+
+	philo->death_time = philo->last_meal_time + philo->args_ptr->time_to_die;	
+
 	ft_mutex(philo->args_ptr, &philo->mtx[MTX], UNLOCK);
 	ft_drop_forks(philo->args_ptr, philo);
 	return (stop_routine(philo->args_ptr));
