@@ -142,6 +142,7 @@ void	*set_philo_mutex(t_philo *philo);
 
 // bool.c
 int	philo_is_dead(t_args *args, t_philo *philo, int i);
+int	should_even_philos_die(t_args *args, t_philo *philo);
 int	all_meals_complete(t_args *args);
 int	check_all_philos_finished_routine(t_args *args);
 int	stop_routine(t_args *args);

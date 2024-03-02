@@ -15,19 +15,43 @@
 int	philo_is_dead(t_args *args, t_philo *philo, int i)
 {
 	ft_mutex(args, &args->mtx[MTX], LOCK);
-	if (get_time(args, MS) >= (philo[i].last_meal_time + args->time_to_die)
-		|| (philo[i].death_time < get_time(args, MS)))
+	
+	if (get_time(args, MS) >= (philo[i].last_meal_time + args->time_to_die))		
 	{
-//		printf("get_time = %ld\n", get_time(args, MS));
-//		printf("philo[%d].last_meal_time = %ld", philo->id - 1, philo->last_meal_time);
 		ft_write_task(args, philo, DEAD);
 		ft_mutex(args, &args->mtx[MONITOR], LOCK);
 		args->end_of_diner = TRUE;
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
 		ft_mutex(args, &args->mtx[MTX], UNLOCK);
 		return (TRUE);
-	}	
+	}
 	ft_mutex(args, &args->mtx[MTX], UNLOCK);
+	return (FALSE);
+}
+
+int	should_even_philos_die(t_args *args, t_philo *philo)
+{
+	long		n;
+	long		wait_til_die;
+
+	n = 0;
+	wait_til_die = 0;
+	if (odd_or_even(args->nphilo) == ODD)
+		return (FALSE);
+	if (args->time_to_sleep > args->time_to_eat)
+		n = args->time_to_eat + args->time_to_sleep;
+	else
+		n = args->time_to_eat * 2;
+	if (n > args->time_to_die)
+	{
+		wait_til_die = (philo->last_meal_time + args->time_to_die) - get_time(args, MS);
+		usleep(wait_til_die * 1000);
+		ft_write_task(args, philo, DEAD);
+		ft_mutex(args, &args->mtx[MONITOR], LOCK);
+		args->end_of_diner = TRUE;
+		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
+		return (TRUE);
+	}
 	return (FALSE);
 }
 

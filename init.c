@@ -49,7 +49,7 @@ t_philo	*init_philos(t_args *args, int n)
 		args->philo_ptr[i].meal_complete = FALSE;
 		args->philo_ptr[i].meal_number = 0;
 		args->philo_ptr[i].start_time = get_time(args, MS);
-		args->philo_ptr[i].last_meal_time = 0;
+		args->philo_ptr[i].last_meal_time = args->time_start_dinner;
 		args->philo_ptr[i].death_time = 0;
 		args->philo_ptr[i].main_fork = NULL;
 		args->philo_ptr[i].aux_fork = NULL;

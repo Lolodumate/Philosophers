@@ -22,6 +22,8 @@
  * Verifier :
  *      - Le nombre d'arguments.
  *      - Le contenu des arguments (ils ne doivent comporter que les caracteres numeriques).
+ *
+ *      -pthread -fsanitize=thread
 */
 
 int	main(int argc, char **argv)
@@ -33,7 +35,6 @@ int	main(int argc, char **argv)
 	{
 		args = set_data(args, argc, argv);
 		args = set_mutex(args);
-	//	args->philo_ptr = set_philo_mutex(args->philo_ptr);
 		args->time_start_dinner = get_time(args, MS);
 		if (args->nphilo > 1)
 			philosophers_dinner(args);
