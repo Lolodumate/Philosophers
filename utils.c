@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:22:45 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 20:12:24 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/02 17:11:10 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	ft_atoi(char *str)
 {
 	unsigned int		i;
-	long			res;
+	long				res;
 
 	i = 0;
 	res = 0;

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 13:14:12 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 18:23:08 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/02 17:13:27 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 int	philo_is_dead(t_args *args, t_philo *philo, int i)
 {
 	ft_mutex(args, &args->mtx[MTX], LOCK);
-	
-	if (get_time(args, MS) >= (philo[i].last_meal_time + args->time_to_die))		
+	if (get_time(args, MS) >= (philo[i].last_meal + args->time_to_die))
 	{
 		ft_write_task(args, philo, DEAD);
 		ft_mutex(args, &args->mtx[MONITOR], LOCK);
@@ -29,7 +28,7 @@ int	philo_is_dead(t_args *args, t_philo *philo, int i)
 	return (FALSE);
 }
 
-int	should_even_philos_die(t_args *args, t_philo *philo)
+int	should_even_philos_die(t_args *args, t_philo *p)
 {
 	long		n;
 	long		wait_til_die;
@@ -44,9 +43,9 @@ int	should_even_philos_die(t_args *args, t_philo *philo)
 		n = args->time_to_eat * 2;
 	if (n > args->time_to_die)
 	{
-		wait_til_die = (philo->last_meal_time + args->time_to_die) - get_time(args, MS);
+		wait_til_die = (p->last_meal + args->time_to_die) - get_time(args, MS);
 		usleep(wait_til_die * 1000);
-		ft_write_task(args, philo, DEAD);
+		ft_write_task(args, p, DEAD);
 		ft_mutex(args, &args->mtx[MONITOR], LOCK);
 		args->end_of_diner = TRUE;
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
@@ -57,16 +56,16 @@ int	should_even_philos_die(t_args *args, t_philo *philo)
 
 int	all_meals_complete(t_args *args)
 {
-	int             i;
-	int             n;
+	int		i;
+	int		n;
 
-        i = -1;
+	i = -1;
 	n = 0;
 	ft_mutex(args, &args->mtx[MEAL], LOCK);
 	if (args->target_nb_meals < 0)
 	{
 		ft_mutex(args, &args->mtx[MEAL], UNLOCK);
-			return (FALSE);
+		return (FALSE);
 	}
 	while (++i < args->nphilo)
 	{

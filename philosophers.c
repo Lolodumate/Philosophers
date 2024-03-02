@@ -6,35 +6,11 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 20:38:17 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/02 17:18:57 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-/* Ressources :
- *      https://www.youtube.com/watch?v=o_GbRujGCnM
- *      https://www.youtube.com/watch?v=d9s_d28yJq0&list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2
- *      Differences entre threads et processus : https://www.youtube.com/watch?v=IKG1P4rgm54&list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2&index=2
- * 
- * - Contrairement aux processus parent/enfant (fork), les threads partagent les memes variables.
- * - N threads au sein d'un programme = un seul processus id (pid).
- *
- * Compiler avec le flag -lpthread
- * Instruction usleep(<millisecondes>) permet de temporiser un thread.
- * usleep : 1 seconde = 1000000 microsecondes
- *
- * Tuto : https://medium.com/@ruinadd/philosophers-42-guide-the-dining-philosophers-problem-893a24bc0fe2
- * Vizualizer : https://nafuka11.github.io/philosophers-visualizer/
- *
- * pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;
- *************************************************************
- *************************************************************
- * CFLAGS = -Wall -Werror -Wextra -g -pthread -fsanitize=thread
- *
- *************************************************************
- *************************************************************
- */
 
 void	philosophers_dinner(t_args *args)
 {
@@ -44,13 +20,13 @@ void	philosophers_dinner(t_args *args)
 	destroy_mutex(args, args->nphilo);
 }
 
-void	*dinner_routine(void *philo)
+void	*dinner(void *philo)
 {
 	t_philo		*p;
 
 	p = (t_philo *)philo;
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MONITOR], LOCK);
-	p->death_time = p->args_ptr->time_start_dinner + p->args_ptr->time_to_die;
+	p->death_time = p->args_ptr->time_start + p->args_ptr->time_to_die;
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MONITOR], UNLOCK);
 	while (stop_routine(p->args_ptr) == FALSE)
 	{
@@ -67,11 +43,11 @@ void	*dinner_routine(void *philo)
 	return (NULL);
 }
 
-void	solo_dinner(t_philo *philo)
+void	solo_dinner(t_philo *p)
 {
-	philo->args_ptr->time_start_dinner = get_time(philo->args_ptr, MS);
-	philo->death_time = philo->args_ptr->time_start_dinner + philo->args_ptr->time_to_die;
-	ft_write_task(philo->args_ptr, philo, FORK);
-	usleep(philo->args_ptr->time_to_die * 1000);
-	ft_write_task(philo->args_ptr, philo, DEAD);
+	p->args_ptr->time_start = get_time(p->args_ptr, MS);
+	p->death_time = p->args_ptr->time_start + p->args_ptr->time_to_die;
+	ft_write_task(p->args_ptr, p, FORK);
+	usleep(p->args_ptr->time_to_die * 1000);
+	ft_write_task(p->args_ptr, p, DEAD);
 }

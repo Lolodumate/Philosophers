@@ -5,68 +5,56 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2[MTX]24/[MTX]1/19 14:34:[MTX]2 by laroges           #+#    #+#             */
-/*   Updated: 2[MTX]24/[MTX]2/2[MTX] 2[MTX]:28:56 by laroges          ###   ########.fr       */
+/*   Created: 2024/03/02 15:05:25 by laroges           #+#    #+#             */
+/*   Updated: 2024/03/02 17:13:39 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/*	1. Picking the two forks.
- *	2. Eating.
- *	3. Dropping the forks.
- *	4. Sleeping.
- *
- *	Note : 
- *	- Monitor checks the time it takes to a philosopher to die. If the time remaining before his death is smaller than the "time_to_eat" then the philosopher will survive.
- *	- Monitor also checks the number of times a philosopher has eaten and when he reaches it so the philosopher is set as "complete".
- *	- Monitor's thread must be started in first,  before the philosopher's threads.
- *	- When all the philosophers are set as "complete" the program ends.
- */
-
-void	ft_pick_forks(t_args *args, t_philo *philo)
+void	ft_pick_forks(t_args *args, t_philo *p)
 {
-	ft_mutex(args, philo->main_fork, LOCK);
-	ft_write_task(args, philo, FORK);
-	ft_mutex(args, philo->aux_fork, LOCK);
-	ft_write_task(args, philo, FORK);
+	ft_mutex(args, p->main_fork, LOCK);
+	ft_write_task(args, p, FORK);
+	ft_mutex(args, p->aux_fork, LOCK);
+	ft_write_task(args, p, FORK);
 }
 
-void	ft_drop_forks(t_args *args, t_philo *philo)
+void	ft_drop_forks(t_args *args, t_philo *p)
 {
-	ft_mutex(args, philo->main_fork, UNLOCK);
-	ft_mutex(args, philo->aux_fork, UNLOCK);
+	ft_mutex(args, p->main_fork, UNLOCK);
+	ft_mutex(args, p->aux_fork, UNLOCK);
 }
 
-int	ft_sleep(t_philo *philo)
+int	ft_sleep(t_philo *p)
 {
-	ft_write_task(philo->args_ptr, philo, SLEEP);
-	ft_usleep(philo->args_ptr->time_to_sleep * 1000, philo->args_ptr, philo->id - 1);
-	return (stop_routine(philo->args_ptr));
+	ft_write_task(p->args_ptr, p, SLEEP);
+	ft_usleep(p->args_ptr->time_to_sleep * 1000, p->args_ptr, p->id - 1);
+	return (stop_routine(p->args_ptr));
 }
 
-int	ft_eat(t_philo *philo)
+int	ft_eat(t_philo *p)
 {
-	ft_pick_forks(philo->args_ptr, philo);
-	ft_write_task(philo->args_ptr, philo, EAT);
-	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MTX], LOCK);
-	philo->last_meal_time = get_time(philo->args_ptr, MS);
-	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MTX], UNLOCK);
-	ft_mutex(philo->args_ptr, &philo->mtx[MTX], LOCK);
-	if (philo->args_ptr->target_nb_meals > 0)
+	ft_pick_forks(p->args_ptr, p);
+	ft_write_task(p->args_ptr, p, EAT);
+	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MTX], LOCK);
+	p->last_meal = get_time(p->args_ptr, MS);
+	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MTX], UNLOCK);
+	ft_mutex(p->args_ptr, &p->mtx[MTX], LOCK);
+	if (p->args_ptr->target_nb_meals > 0)
 	{
-		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MEAL], LOCK);
-		philo->args_ptr->meals[philo->id - 1]++;
-		ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MEAL], UNLOCK);
+		ft_mutex(p->args_ptr, &p->args_ptr->mtx[MEAL], LOCK);
+		p->args_ptr->meals[p->id - 1]++;
+		ft_mutex(p->args_ptr, &p->args_ptr->mtx[MEAL], UNLOCK);
 	}
-	ft_usleep(philo->args_ptr->time_to_eat * 1000, philo->args_ptr, philo->id - 1);
-	ft_mutex(philo->args_ptr, &philo->mtx[MTX], UNLOCK);
-	ft_drop_forks(philo->args_ptr, philo);
-	return (stop_routine(philo->args_ptr));
+	ft_usleep(p->args_ptr->time_to_eat * 1000, p->args_ptr, p->id - 1);
+	ft_mutex(p->args_ptr, &p->mtx[MTX], UNLOCK);
+	ft_drop_forks(p->args_ptr, p);
+	return (stop_routine(p->args_ptr));
 }
 
-int	ft_think(t_philo *philo)
-{ 
-	ft_write_task(philo->args_ptr, philo, THINK);
-        return (should_even_philos_die(philo->args_ptr, philo));
+int	ft_think(t_philo *p)
+{
+	ft_write_task(p->args_ptr, p, THINK);
+	return (should_even_philos_die(p->args_ptr, p));
 }

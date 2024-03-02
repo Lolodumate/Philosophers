@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 20:05:12 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/02 17:38:11 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	if (argc == 6)
 		args->target_nb_meals = ft_atoi(argv[5]);
 	args->forks = NULL;
-	args->time_start_dinner = get_time(args, MS);
+	args->time_start = get_time(args, MS);
 	return (args);
 }
 
 t_philo	*init_philos(t_args *args, int n)
 {
-	int             i;
+	int		i;
 
 	i = -1;
 	while (++i < n)
@@ -49,7 +49,7 @@ t_philo	*init_philos(t_args *args, int n)
 		args->philo_ptr[i].meal_complete = FALSE;
 		args->philo_ptr[i].meal_number = 0;
 		args->philo_ptr[i].start_time = get_time(args, MS);
-		args->philo_ptr[i].last_meal_time = args->time_start_dinner;
+		args->philo_ptr[i].last_meal = args->time_start;
 		args->philo_ptr[i].death_time = 0;
 		args->philo_ptr[i].main_fork = NULL;
 		args->philo_ptr[i].aux_fork = NULL;
@@ -80,7 +80,7 @@ t_args	*init_forks(t_args *args, pthread_mutex_t *forks, int n)
 	return (args);
 }
 
-void	init_tab(int* tab, int size)
+void	init_tab(int *tab, int size)
 {
 	int		i;
 
@@ -98,11 +98,11 @@ void	*set_data(t_args *args, int argc, char **argv)
 	args = init_args(argc, argv, args);
 	args->philo_ptr = mem_alloc_philo_ptr(args, args->philo_ptr, args->nphilo);
 	args->philo_ptr = init_philos(args, args->nphilo);
-	args->forks = mem_alloc_mtx(args, args->forks, args->nphilo);;
+	args->forks = mem_alloc_mtx(args, args->forks, args->nphilo);
 	args = init_forks(args, args->forks, args->nphilo);
 	args->meals = mem_alloc_tab(args, args->nphilo);
 	init_tab(args->meals, args->nphilo);
-	args->mtx = mem_alloc_mtx(args, args->mtx, 5);
+	args->mtx = mem_alloc_mtx(args, args->mtx, 4);
 	if (mutex_init(args, args->forks) != args->nphilo)
 		exit_error(args, "Error initialisation mutex args->forks");
 	args->t = mem_alloc_threads(args, args->t, args->nphilo);

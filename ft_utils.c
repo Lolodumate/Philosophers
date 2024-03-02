@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 12:18:12 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 13:59:04 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/02 15:21:05 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,7 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 
 void	ft_output(t_philo *philo, const char *task)
 {
-//	printf("%ld %d %s\n", get_timestamp(philo), philo->id, task);
-//	printf("%ld %d %s\n", get_time(philo->args_ptr, MS) - philo->start_time, philo->id, task);
 	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MONITOR], LOCK);
-//	printf("%ld %d %s\n", get_time(philo->args_ptr, MS) - philo->args_ptr->monitor_ptr->time_start_dinner, philo->id, task);
 	printf("%ld %d %s\n", get_timestamp(philo), philo->id, task);
 	ft_mutex(philo->args_ptr, &philo->args_ptr->mtx[MONITOR], UNLOCK);
 }

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:38:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/20 16:32:50 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/02 16:48:19 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	ft_usleep(long time, t_args *args, int i)
 
 long	get_timestamp(t_philo *philo)
 {
-	int             timestamp;
+	int		timestamp;
 
-	timestamp = get_time(philo->args_ptr, MS) - philo->args_ptr->time_start_dinner;
+	timestamp = get_time(philo->args_ptr, MS) - philo->args_ptr->time_start;
 	return (timestamp);
 }
