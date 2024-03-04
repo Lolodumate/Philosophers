@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 16:37:37 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/02 17:18:37 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/04 17:24:41 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,12 @@ int	threads_create(t_args *a)
 	while (++i < a->nphilo)
 	{
 		if (pthread_create(&a->t[i], NULL, &dinner, &a->philo_ptr[i]) != 0)
+		{
+			printf("exit_error pthread_create\n");
 			exit_error(a, "Error pthread_creation");
+		}
+		else
+			printf("Thread[%d] created\n", i);
 	}
 	return (0);
 }

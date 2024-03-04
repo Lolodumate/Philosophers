@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:28:04 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/04 12:48:33 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/04 17:34:11 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ void	free_mutex(t_args *args, pthread_mutex_t *mtx)
 void	exit_error(t_args *args, const char *error)
 {
 	destroy_mutex(args, args->nphilo);
-	free_mutex(args, args->philo_ptr->mtx);
 	ft_clean(args);
 	printf("%s\n", error);
 	exit(1);

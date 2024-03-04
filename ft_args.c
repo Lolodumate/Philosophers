@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 16:43:17 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/02 15:03:26 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/04 16:11:50 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	compliance_args(int argc, char **argv)
 	j = 1;
 	if (argc < 5 || argc > 6)
 	{
-		printf("Number of arguments must be 5 or 6.\n");
+		printf("Wrong number of arguments.\n");
 		return (FALSE);
 	}
 	while (argv[j] && j <= argc)
@@ -36,11 +36,6 @@ int	compliance_args(int argc, char **argv)
 
 int	compliance_values(char **argv)
 {
-	if (ft_atoi(argv[1]) < 1 || ft_atoi(argv[1]) > 200)
-	{
-		printf("Philosophers number must be >0 and <= 200.\n");
-		return (FALSE);
-	}
 	if (ft_atoi(argv[1]) < 1 || ft_atoi(argv[2]) < 1
 		|| ft_atoi(argv[3]) < 1 || ft_atoi(argv[4]) < 1)
 	{

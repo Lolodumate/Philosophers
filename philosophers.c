@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/02 17:18:57 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/04 16:49:23 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 void	philosophers_dinner(t_args *args)
 {
-	if (threads_create(args) != 0)
-		exit_error(args, "Error threads creation");
+//	if (threads_create(args) != 0)
+//		exit_error(args, "Error threads creation");
+	threads_create(args);
 	threads_join(args);
 	destroy_mutex(args, args->nphilo);
 }
