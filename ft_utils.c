@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 12:18:12 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/02 15:21:05 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/04 14:48:02 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,15 @@ void	ft_write_task(t_args *args, t_philo *philo, int task)
 	if (stop_routine(args) == FALSE)
 	{
 		if (task == DEAD)
-			ft_output(philo, " died");
+			ft_output(philo, "died");
 		else if (task == FORK && args->end_of_diner == FALSE)
-			ft_output(philo, " has taken a fork");
+			ft_output(philo, "has taken a fork");
 		else if (task == EAT && args->end_of_diner == FALSE)
-			ft_output(philo, " is eating");
+			ft_output(philo, "is eating");
 		else if (task == SLEEP && args->end_of_diner == FALSE)
-			ft_output(philo, " is sleeping");
+			ft_output(philo, "is sleeping");
 		else if (task == THINK && args->end_of_diner == FALSE)
-			ft_output(philo, " is thinking");
+			ft_output(philo, "is thinking");
 		else
 		{
 			ft_mutex(args, &args->mtx[WRITE], UNLOCK);

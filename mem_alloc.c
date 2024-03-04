@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 17:57:22 by laroges           #+#    #+#             */
-/*   Updated: 2024/02/19 09:00:39 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/04 13:01:05 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ t_philo	*mem_alloc_philo_ptr(t_args *args, t_philo *philo, int n)
 	return (philo);
 }
 
-pthread_mutex_t	*mem_alloc_mtx(t_args *args, pthread_mutex_t *mtx, int n)
+void	*mem_alloc_mtx(t_args *args, pthread_mutex_t *mtx, int n)
 {
 	mtx = malloc(sizeof(pthread_mutex_t) * n);
 	if (!mtx)
 		exit_error(args, "Error malloc args->forks");
-	return (mtx);
+	return ((void *)mtx);
 }
 
 int	*mem_alloc_tab(t_args *args, int n)

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/02 17:44:38 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/04 13:03:02 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,12 @@ typedef struct s_philo
 	long					start_time;
 	long					last_meal;
 	long					death_time;
-	t_args				*args_ptr;
+	t_args					*args_ptr;
 }		t_philo;
 
 typedef struct s_args
 {
-	pthread_t			*t;
+	pthread_t				*t;
 	pthread_mutex_t			*mtx;
 	pthread_mutex_t			*forks;
 	int						threads_created;
@@ -97,7 +97,7 @@ typedef struct s_args
 	long					time_to_eat;
 	long					time_to_sleep;
 	long					time_start;
-	t_philo				*philo_ptr;
+	t_philo					*philo_ptr;
 }	t_args;
 
 // utils.c
@@ -113,7 +113,7 @@ void		ft_output(t_philo *philo, const char *task);
 
 // mem_alloc.c
 int			*mem_alloc_tab(t_args *args, int n);
-pthread_mutex_t	*mem_alloc_mtx(t_args *args, pthread_mutex_t *mtx, int n);
+void		*mem_alloc_mtx(t_args *args, pthread_mutex_t *mtx, int n);
 t_args		*mem_alloc_args(t_args *args);
 t_philo		*mem_alloc_philo_ptr(t_args *args, t_philo *philo, int n);
 pthread_t	*mem_alloc_threads(t_args *args, pthread_t *t, int philo_nb);
