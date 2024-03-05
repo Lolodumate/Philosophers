@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/04 17:26:54 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/04 13:03:02 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ typedef struct s_args
 	int						go;
 	int						nb_of_locked_forks;
 	int						nphilo;
-//	int						threads_counter;
 	int						meals_complete;
 	int						is_dead;
 	int						end_of_diner;
@@ -134,7 +133,9 @@ int			threads_join(void *args);
 
 // mutex.c
 int			mutex_init(t_args *args, pthread_mutex_t *mtx);
+int			mutex_destroy(t_args *args, pthread_mutex_t *mtx);
 void		*set_mutex(t_args *args);
+void		*set_philo_mutex(t_philo *philo);
 void		destroy_mutex(t_args *args, int n);
 
 // bool.c

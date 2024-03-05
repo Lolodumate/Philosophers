@@ -22,7 +22,6 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->time_to_die = ft_atoi(argv[2]);
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
-//	args->threads_counter = 0;
 	args->threads_created = 0;
 	args->go = FALSE;
 	args->nb_of_locked_forks = 0;

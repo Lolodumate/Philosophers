@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:13:56 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/04 16:49:23 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/02 17:18:57 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 void	philosophers_dinner(t_args *args)
 {
-//	if (threads_create(args) != 0)
-//		exit_error(args, "Error threads creation");
-	threads_create(args);
+	if (threads_create(args) != 0)
+		exit_error(args, "Error threads creation");
 	threads_join(args);
 	destroy_mutex(args, args->nphilo);
 }
@@ -29,11 +28,7 @@ void	*dinner(void *philo)
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MONITOR], LOCK);
 	p->death_time = p->args_ptr->time_start + p->args_ptr->time_to_die;
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MONITOR], UNLOCK);
-/*	while (p->args_ptr->threads_counter < p->args_ptr->nphilo)
-	{
-		usleep(10);
-	}
-*/	while (stop_routine(p->args_ptr) == FALSE)
+	while (stop_routine(p->args_ptr) == FALSE)
 	{
 		if (ft_eat(p) == TRUE)
 			break ;
