@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:38:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/05 19:34:52 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/05 19:57:39 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_usleep(long time, t_args *args, int i)
 	{
 		if (philo_is_dead(args, args->philo_ptr, i) == TRUE)
 			break ;
-		usleep(3000);
+		usleep(1000);
 	}
 }
 
