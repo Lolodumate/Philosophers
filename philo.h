@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 15:16:28 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/05 18:55:40 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/05 19:49:51 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ typedef struct s_args
 	int						nb_of_locked_forks;
 	int						nphilo;
 	int						meals_complete;
-	int						is_dead;
 	int						end_of_diner;
 	int						*meals;
 	int						target_nb_meals;
@@ -154,7 +153,7 @@ long		get_time(t_args *args, t_time_code time_code);
 void		ft_usleep(long usec, t_args *args, int i);
 long		get_timestamp(t_philo *philo);
 void		update_death_time(t_args *args, t_philo *philo);
-void		thinking_time(t_args *args, t_philo *philo);
+void		thinking_time(t_args *a, t_philo *p);
 
 // clean.c
 void		ft_clean(t_args *args);

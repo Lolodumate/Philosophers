@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 13:14:12 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/05 19:13:33 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/05 19:49:59 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,12 +113,7 @@ int	stop_routine(t_args *args)
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
 		return (TRUE);
 	}
-/*	if (args->is_dead == TRUE)
-	{
-		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
-		return (TRUE);
-	}
-*/	if (all_meals_complete(args) == TRUE)
+	if (all_meals_complete(args) == TRUE)
 	{
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
 		return (TRUE);

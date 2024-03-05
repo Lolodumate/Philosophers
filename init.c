@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/05 17:28:03 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/05 19:49:44 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 t_args	*init_args(int argc, char **argv, t_args *args)
 {
 	args->meals_complete = FALSE;
-	args->is_dead = FALSE;
 	args->nphilo = ft_atoi(argv[1]);
 	if (ft_atoi(argv[1]) == 1)
 		args->solo_dinner = TRUE;

@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 11:38:02 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/05 19:13:20 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/05 19:34:52 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,13 @@ long	get_timestamp(t_philo *philo)
 	return (timestamp);
 }
 
-/* ft_thinking(t_data *data, int indice_philo)
+void	thinking_time(t_args *a, t_philo *p)
 {
-    log_state_philosopher(data, indice_philo + 1, THINKING);
-    if (data->time_to_eat > data->time_to_sleep)
-        ft_sleep(data, data->time_to_eat - data->time_to_sleep + 5);
-    else
-        ft_sleep(data, 5);
-    return (false);
-}*/
+	long		t;
 
-void	thinking_time(t_args *args, t_philo *philo)
-{
-	if (args->time_to_eat > args->time_to_sleep)
-		ft_usleep(args->time_to_eat - args->time_to_sleep + 5000, args, philo->id - 1);
+	t = 5000;
+	if (a->time_to_eat > a->time_to_sleep)
+		ft_usleep(a->time_to_eat - a->time_to_sleep + t, a, p->id - 1);
 	else
-		ft_usleep(5000, args, philo->id - 1);
+		ft_usleep(5000, a, p->id - 1);
 }
