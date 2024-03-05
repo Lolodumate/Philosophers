@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 16:27:46 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/02 17:38:11 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/05 17:28:03 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_args	*init_args(int argc, char **argv, t_args *args)
 	args->time_to_eat = ft_atoi(argv[3]);
 	args->time_to_sleep = ft_atoi(argv[4]);
 	args->threads_created = 0;
-	args->go = FALSE;
+	args->go = 0;
 	args->nb_of_locked_forks = 0;
 	args->end_of_diner = 0;
 	args->target_nb_meals = -1;

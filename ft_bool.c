@@ -6,7 +6,7 @@
 /*   By: laroges <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 13:14:12 by laroges           #+#    #+#             */
-/*   Updated: 2024/03/02 17:13:27 by laroges          ###   ########.fr       */
+/*   Updated: 2024/03/05 19:13:33 by laroges          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ int	should_even_philos_die(t_args *args, t_philo *p)
 	n = 0;
 	wait_til_die = 0;
 	if (odd_or_even(args->nphilo) == ODD)
+	{
+		thinking_time(args, p);
 		return (FALSE);
+	}
 	if (args->time_to_sleep > args->time_to_eat)
 		n = args->time_to_eat + args->time_to_sleep;
 	else
@@ -110,12 +113,12 @@ int	stop_routine(t_args *args)
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
 		return (TRUE);
 	}
-	if (args->is_dead == TRUE)
+/*	if (args->is_dead == TRUE)
 	{
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
 		return (TRUE);
 	}
-	if (all_meals_complete(args) == TRUE)
+*/	if (all_meals_complete(args) == TRUE)
 	{
 		ft_mutex(args, &args->mtx[MONITOR], UNLOCK);
 		return (TRUE);

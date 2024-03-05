@@ -6,7 +6,7 @@
 #    By: laroges <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/18 16:16:20 by laroges           #+#    #+#              #
-#    Updated: 2024/03/04 13:30:07 by laroges          ###   ########.fr        #
+#    Updated: 2024/03/05 16:26:45 by laroges          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ SRC =	main.c \
 
 CC = gcc
 
-CFLAGS = -Wall -Werror -Wextra -g3
+CFLAGS = -Wall -Werror -Wextra -g3 -fsanitize=thread
 
 THREADFLAG = -lpthread
 
