@@ -29,7 +29,11 @@ void	*dinner(void *philo)
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MONITOR], LOCK);
 	p->death_time = p->args_ptr->time_start + p->args_ptr->time_to_die;
 	ft_mutex(p->args_ptr, &p->args_ptr->mtx[MONITOR], UNLOCK);
-	while (stop_routine(p->args_ptr) == FALSE)
+/*	while (p->args_ptr->threads_counter < p->args_ptr->nphilo)
+	{
+		usleep(10);
+	}
+*/	while (stop_routine(p->args_ptr) == FALSE)
 	{
 		if (ft_eat(p) == TRUE)
 			break ;

@@ -87,6 +87,7 @@ typedef struct s_args
 	int						go;
 	int						nb_of_locked_forks;
 	int						nphilo;
+//	int						threads_counter;
 	int						meals_complete;
 	int						is_dead;
 	int						end_of_diner;

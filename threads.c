@@ -24,9 +24,12 @@ int	threads_create(t_args *a)
 			printf("exit_error pthread_create\n");
 			exit_error(a, "Error pthread_creation");
 		}
-		else
+/*		else
+		{
+			a->threads_counter++;
 			printf("Thread[%d] created\n", i);
-	}
+		}
+*/	}
 	return (0);
 }
 
